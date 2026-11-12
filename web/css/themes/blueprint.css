@@ -1,0 +1,57 @@
+/* BLUEPRINT — technical drawing (default). Figure labels, crop marks, dimension rulers, title block. Layout: side. */
+:root:not([data-theme]), [data-theme="blueprint"] {
+  --bg: #0d3870; --bg-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+  --bg-image: linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px);
+  --surface: rgba(9,44,92,.94); --surface-2: rgba(255,255,255,.07); --surface-3: rgba(255,255,255,.13);
+  --text: #eaf2ff; --muted: #9db8de; --line: rgba(220,235,255,.34); --line-soft: rgba(220,235,255,.14);
+  --accent: #eaf2ff; --accent-ink: #0d3870; --accent-soft: rgba(234,242,255,.14); --accent-text: #fff; --accent-2: #ffd84d;
+  --good: #5ee6a8; --good-soft: rgba(94,230,168,.15); --warn: #ffc94d; --warn-soft: rgba(255,201,77,.15); --bad: #ff8a9a; --bad-soft: rgba(255,138,154,.15);
+  --nav-bg: rgba(7,34,74,.96); --nav-text: #dbe8ff; --nav-muted: #86a3cc; --nav-hover: rgba(255,255,255,.07); --nav-active-bg: rgba(234,242,255,.12); --nav-active-text: #fff; --nav-active-border: rgba(234,242,255,.6);
+  --topbar-bg: rgba(13,56,112,.95); --drawer-bg: #0b3166; --link: #fff;
+  --font-body: "Space Grotesk", "Segoe UI", sans-serif; --font-display: "Share Tech Mono", Consolas, monospace; --font-num: "Share Tech Mono", Consolas, monospace; --display-weight: 400;
+  --h1-size: 28px; --h1-tt: uppercase; --h1-ls: .1em; --h2-size: 14px; --h2-tt: uppercase; --h2-ls: .12em; --btn-font: "Share Tech Mono", Consolas, monospace; --btn-tt: uppercase; --btn-ls: .08em; --btn-fw: 400; --nav-font: "Share Tech Mono", Consolas, monospace;
+  --radius: 2px; --radius-sm: 2px; --radius-btn: 2px; --nav-r: 2px; --tag-r: 2px; --card-shadow: none; --pad: 18px;
+  --deal-color: #5ee6a8; --personal-color: #ffd84d; --ruler-ask: #ffd84d; --ruler-range: rgba(234,242,255,.16); --ruler-range-border: rgba(234,242,255,.7); --ruler-typ: #fff;
+  --chart-1: #eaf2ff; --chart-2: #5ee6a8; --chart-3: #ffd84d; --chart-area: rgba(234,242,255,.1);
+}
+[data-theme="blueprint"] .view { counter-reset: fig; }
+[data-theme="blueprint"] .card { counter-increment: fig; }
+/* crop marks at the corners */
+[data-theme="blueprint"] .card::before { content: ""; position: absolute; inset: -5px; pointer-events: none;
+  background: linear-gradient(#eaf2ff, #eaf2ff) 0 0 / 9px 1px no-repeat, linear-gradient(#eaf2ff, #eaf2ff) 0 0 / 1px 9px no-repeat, linear-gradient(#eaf2ff, #eaf2ff) 100% 0 / 9px 1px no-repeat, linear-gradient(#eaf2ff, #eaf2ff) 100% 0 / 1px 9px no-repeat,
+    linear-gradient(#eaf2ff, #eaf2ff) 0 100% / 9px 1px no-repeat, linear-gradient(#eaf2ff, #eaf2ff) 0 100% / 1px 9px no-repeat, linear-gradient(#eaf2ff, #eaf2ff) 100% 100% / 9px 1px no-repeat, linear-gradient(#eaf2ff, #eaf2ff) 100% 100% / 1px 9px no-repeat; }
+[data-theme="blueprint"] .card::after { content: "FIG. " counter(fig, decimal-leading-zero); position: absolute; top: -8px; right: 16px; padding: 0 6px; background: #0e3a74; font: 10px/14px "Share Tech Mono", monospace; letter-spacing: .14em; color: var(--muted); }
+[data-theme="blueprint"] .card > h2::before, [data-theme="blueprint"] .card-head h2::before { content: "▸ "; color: var(--muted); }
+/* dimension line under every page title */
+[data-theme="blueprint"] .page-head h1::after { content: ""; display: block; height: 9px; margin-top: 10px; width: min(100%, 440px); border-bottom: 1px solid var(--line); background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 10px), repeating-linear-gradient(90deg, #eaf2ff 0 1px, transparent 1px 50px); background-size: 100% 5px, 100% 9px; background-repeat: no-repeat; }
+[data-theme="blueprint"] .page-head p { font-size: 13px; }
+[data-theme="blueprint"] .nav { border-right: 1px solid var(--line); }
+[data-theme="blueprint"] .nav a { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; } [data-theme="blueprint"] .nav a.active { box-shadow: inset 3px 0 0 #ffd84d; }
+[data-theme="blueprint"] .brand { font-family: "Share Tech Mono", monospace; font-weight: 400; letter-spacing: .06em; text-transform: uppercase; } [data-theme="blueprint"] .brand-mark { fill: none; stroke: #eaf2ff; stroke-width: 1.5; } [data-theme="blueprint"] .brand svg { color: #eaf2ff; }
+[data-theme="blueprint"] .nav-group { text-transform: uppercase; letter-spacing: .14em; font-family: "Share Tech Mono", monospace; font-size: 10px; }
+/* title block */
+[data-theme="blueprint"] .nav-foot { margin: 10px 4px 0; padding: 8px; border: 1px solid var(--line); font: 10px/1.5 "Share Tech Mono", monospace; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); background: repeating-linear-gradient(0deg, transparent 0 20px, var(--line-soft) 20px 21px); }
+[data-theme="blueprint"] .nav-foot::before { content: "DWG NO. SSD-001 · REV A\A SCALE 1:1 · SHEET 1/1\A"; white-space: pre; display: block; color: #eaf2ff; padding-bottom: 4px; }
+[data-theme="blueprint"] .figures { border-style: solid; } [data-theme="blueprint"] .figure .v { font-size: 26px; font-weight: 400; } [data-theme="blueprint"] .figure .l { text-transform: uppercase; letter-spacing: .08em; font-size: 10px; font-family: "Share Tech Mono", monospace; }
+[data-theme="blueprint"] .btn { background: transparent; border-color: rgba(234,242,255,.7); } [data-theme="blueprint"] .btn:hover { background: rgba(234,242,255,.14); }
+[data-theme="blueprint"] .btn.primary { background: #eaf2ff; color: #0d3870; } [data-theme="blueprint"] .btn.primary:hover { background: #fff; }
+[data-theme="blueprint"] .btn.good { background: transparent; color: #5ee6a8; border-color: #5ee6a8; } [data-theme="blueprint"] .btn.good:hover { background: rgba(94,230,168,.18); }
+[data-theme="blueprint"] .tag, [data-theme="blueprint"] .level { background: transparent !important; border: 1px solid currentColor; text-transform: uppercase; letter-spacing: .08em; font-family: "Share Tech Mono", monospace; font-weight: 400; font-size: 10px; }
+[data-theme="blueprint"] .level.GOOD_DEAL { color: #5ee6a8; } [data-theme="blueprint"] .level.INTERESTING { color: #ffc94d; } [data-theme="blueprint"] .level.IGNORE { color: var(--muted); }
+[data-theme="blueprint"] .score-chip { background: transparent; border-color: var(--line); } [data-theme="blueprint"] .score-chip b { font-weight: 400; font-size: 17px; }
+[data-theme="blueprint"] input, [data-theme="blueprint"] select, [data-theme="blueprint"] textarea { background: rgba(0,20,55,.35); border-color: rgba(234,242,255,.4); }
+[data-theme="blueprint"] table.data th { text-transform: uppercase; letter-spacing: .1em; font-family: "Share Tech Mono", monospace; font-weight: 400; font-size: 10px; border-bottom: 1px double var(--line); } [data-theme="blueprint"] table.data td { border-bottom: 1px dashed var(--line-soft); }
+[data-theme="blueprint"] .thumb { border-color: var(--line); filter: grayscale(1) contrast(1.1) brightness(1.1); mix-blend-mode: screen; opacity: .85; }
+[data-theme="blueprint"] .scan-pill { border-radius: 2px; font-family: "Share Tech Mono", monospace; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; }
+[data-theme="blueprint"] .chart .gridline { stroke-dasharray: 4 4; } [data-theme="blueprint"] .chart .bar { rx: 0; fill-opacity: .22; stroke: currentColor; stroke-width: 1.2; }
+[data-theme="blueprint"] .chart .bar.b1 { stroke: #eaf2ff; fill: #eaf2ff; } [data-theme="blueprint"] .chart .bar.b2 { stroke: #5ee6a8; fill: #5ee6a8; } [data-theme="blueprint"] .chart .bar.b3 { stroke: #ffd84d; fill: #ffd84d; }
+[data-theme="blueprint"] .chart .s1, [data-theme="blueprint"] .chart .s2 { stroke-width: 1.6; } [data-theme="blueprint"] .chart .dot { fill: #0d3870; stroke: #eaf2ff; }
+[data-theme="blueprint"] .chart .axis { font-family: "Share Tech Mono", monospace; }
+[data-theme="blueprint"] .ruler .ask { border-radius: 0; transform: rotate(45deg); border-width: 1px; } [data-theme="blueprint"] .ruler .lbl { font-family: "Share Tech Mono", monospace; }
+[data-theme="blueprint"] .modal-box, [data-theme="blueprint"] .drawer { border-color: var(--line); }
+html[data-motion="smooth"] [data-theme="blueprint"] .page-head h1::after { animation: drawRule 900ms var(--ease) both; transform-origin: 0 50%; }
+html[data-motion="smooth"] [data-theme="blueprint"] .card { animation: bpIn 420ms var(--ease) both; }
+@keyframes drawRule { from { transform: scaleX(0); } to { transform: none; } } @keyframes bpIn { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(-10px); } }
+
+/* dotted/dashed row rules drawn as a tiled gradient: real dotted borders on every table cell cost ~9x more raster time while scrolling */
+[data-theme="blueprint"] table.data td { border-bottom-style: solid; border-bottom-color: transparent; background-image: linear-gradient(90deg, var(--line-soft) 0 50%, transparent 0); background-size: 8px 1px; background-position: left bottom; background-repeat: repeat-x; }

@@ -1,0 +1,56 @@
+/* SPLIT-FLAP — departure board. Flip tiles, bolted bezel panels, brass top bar. Layout: top. */
+[data-theme="split-flap"] {
+  --bg: #121212; --bg-image: linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px); --bg-size: 100% 4px;
+  --surface: #1c1c1c; --surface-2: #272727; --surface-3: #323232;
+  --text: #f1f1ec; --muted: #9b9b92; --line: #3a3a36; --line-soft: #272724;
+  --accent: #f5c518; --accent-ink: #141414; --accent-soft: rgba(245,197,24,.14); --accent-2: #f5c518; --accent-text: #f5c518;
+  --good: #4ee07b; --good-soft: rgba(78,224,123,.12); --warn: #f5c518; --warn-soft: rgba(245,197,24,.12); --bad: #ff5a4e; --bad-soft: rgba(255,90,78,.12);
+  --nav-bg: linear-gradient(#2a2a26, #191917); --nav-text: #e9e6d6; --nav-line: #000; --nav-hover: rgba(245,197,24,.1); --nav-active-bg: #f5c518; --nav-active-text: #141414;
+  --topbar-bg: #141414; --drawer-bg: #181818;
+  --font-body: "Inter", "Segoe UI", sans-serif; --font-display: "Oswald", "Arial Narrow", sans-serif; --font-num: "Jetbrains Mono", Consolas, monospace; --display-weight: 700;
+  --h1-size: 34px; --h1-tt: uppercase; --h1-ls: .08em; --h2-size: 15px; --h2-tt: uppercase; --h2-ls: .16em; --btn-font: "Oswald", sans-serif; --btn-tt: uppercase; --btn-ls: .12em; --nav-font: "Oswald", sans-serif; --nav-tt: uppercase; --nav-r: 3px;
+  --radius: 6px; --radius-sm: 3px; --radius-btn: 3px; --tag-r: 2px; --pad: 18px;
+  --card-bg: linear-gradient(#222220, #1a1a19); --card-border: #000;
+  --card-shadow: inset 0 1px 0 #44443f, inset 0 -1px 0 #000, 0 4px 0 #000, 0 10px 20px rgba(0,0,0,.4);
+  --tile: linear-gradient(#303030 0 48.5%, #000 48.5% 51.5%, #262626 51.5% 100%);
+  --chart-1: #f5c518; --chart-2: #4ee07b; --chart-3: #ff5a4e; --chart-area: rgba(245,197,24,.08); --personal-color: #8bd3ff; --ruler-ask: #f5c518;
+}
+[data-theme="split-flap"] .nav { padding: 6px 22px; border-bottom: 3px solid #000; box-shadow: 0 3px 0 #5b4a10, 0 8px 18px rgba(0,0,0,.5); }
+[data-theme="split-flap"] .brand { font-family: "Oswald", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #f5c518; } [data-theme="split-flap"] .brand-mark { fill: #f5c518; } [data-theme="split-flap"] .brand svg { color: #141414; }
+[data-theme="split-flap"] .nav a { font-size: 13px; letter-spacing: .06em; padding: 6px 8px; border: 1px solid transparent; }
+[data-theme="split-flap"] .nav a .ic { display: none; }
+[data-theme="split-flap"] .nav a.active { background: var(--tile); color: #f5c518; border-color: #000; box-shadow: inset 0 1px 0 #555; }
+/* bolts */
+[data-theme="split-flap"] .card::before, [data-theme="split-flap"] .card::after { content: ""; position: absolute; top: 6px; width: 7px; height: 7px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #8a8a82, #3a3a36 70%); box-shadow: 0 1px 0 #000; }
+[data-theme="split-flap"] .card::before { left: 6px; } [data-theme="split-flap"] .card::after { right: 6px; }
+[data-theme="split-flap"] .card { padding-top: 22px; }
+[data-theme="split-flap"] .card > h2, [data-theme="split-flap"] .card-head h2 { color: #f5c518; }
+/* flip tiles for every figure */
+[data-theme="split-flap"] .figure .v, [data-theme="split-flap"] .score-chip b, [data-theme="split-flap"] .price, [data-theme="split-flap"] table.data td.num {
+  display: inline-block; background: var(--tile); color: #f5c518; padding: 1px 8px; border-radius: 3px; font-family: "Jetbrains Mono", Consolas, monospace; font-weight: 700; letter-spacing: .06em; box-shadow: inset 0 1px 0 #4a4a46, 0 2px 0 #000; }
+[data-theme="split-flap"] .figure .v { font-size: 30px; padding: 2px 12px; margin-bottom: 4px; }
+[data-theme="split-flap"] .figure.good .v { color: #4ee07b; } [data-theme="split-flap"] .figure.warn .v { color: #ff9f43; }
+[data-theme="split-flap"] .figure .l { text-transform: uppercase; letter-spacing: .12em; font-size: 10px; }
+[data-theme="split-flap"] .price { font-size: 16px; } [data-theme="split-flap"] .price-old { color: #8a8a82; }
+[data-theme="split-flap"] .score-chip { background: transparent; border: 0; padding: 0 2px; } [data-theme="split-flap"] .score-chip b { font-size: 15px; padding: 1px 7px; }
+[data-theme="split-flap"] .score-chip.deal b { color: #4ee07b; } [data-theme="split-flap"] .score-chip.personal b { color: #8bd3ff; } [data-theme="split-flap"] .score-chip.dim b { color: #8a8a82; }
+[data-theme="split-flap"] table.data th { font-family: "Oswald", sans-serif; text-transform: uppercase; letter-spacing: .14em; color: #f5c518; background: #0f0f0e; border-bottom: 2px solid #000; font-size: 11px; }
+[data-theme="split-flap"] table.data tr:nth-child(even) td { background: rgba(255,255,255,.025); } [data-theme="split-flap"] table.data td { border-bottom: 1px solid #000; box-shadow: 0 1px 0 #2b2b28; }
+[data-theme="split-flap"] .btn { background: var(--tile); border: 1px solid #000; box-shadow: inset 0 1px 0 #555, 0 3px 0 #000; padding: 6px 14px; color: #f1f1ec; }
+[data-theme="split-flap"] .btn:hover { color: #f5c518; } [data-theme="split-flap"] .btn:active { transform: translateY(2px); box-shadow: inset 0 1px 0 #555, 0 1px 0 #000; }
+[data-theme="split-flap"] .btn.primary { background: linear-gradient(#f9d548 0 48.5%, #7a6006 48.5% 51.5%, #e8b90f 51.5%); color: #141414; box-shadow: inset 0 1px 0 #fff3b0, 0 3px 0 #000; }
+[data-theme="split-flap"] .btn.good { background: linear-gradient(#63ee8f 0 48.5%, #0f6b2c 48.5% 51.5%, #36c862 51.5%); }
+[data-theme="split-flap"] .tag { background: #0f0f0e; border: 1px solid #000; box-shadow: 0 1px 0 #3a3a36; text-transform: uppercase; letter-spacing: .08em; font-size: 10px; }
+[data-theme="split-flap"] .level { font-family: "Oswald", sans-serif; letter-spacing: .1em; text-transform: uppercase; background: var(--tile) !important; box-shadow: inset 0 1px 0 #4a4a46, 0 2px 0 #000; } [data-theme="split-flap"] .level.GOOD_DEAL { color: #4ee07b; } [data-theme="split-flap"] .level.INTERESTING { color: #f5c518; } [data-theme="split-flap"] .level.IGNORE { color: #8a8a82; }
+[data-theme="split-flap"] input, [data-theme="split-flap"] select, [data-theme="split-flap"] textarea { background: #0d0d0c; border: 1px solid #000; box-shadow: inset 0 2px 4px rgba(0,0,0,.6), 0 1px 0 #3a3a36; font-family: "Jetbrains Mono", monospace; }
+[data-theme="split-flap"] .scan-pill { background: #0d0d0c; border-color: #000; font-family: "Jetbrains Mono", monospace; text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #f5c518; }
+[data-theme="split-flap"] .thumb { border-color: #000; filter: grayscale(.6) contrast(1.1); }
+[data-theme="split-flap"] .deal-item { border-bottom: 1px solid #000; box-shadow: 0 1px 0 #2b2b28; }
+[data-theme="split-flap"] .chart .bar { rx: 1px; stroke: #000; stroke-width: 1; } [data-theme="split-flap"] .chart .gridline { stroke: #3a3a36; }
+[data-theme="split-flap"] .chart .s1, [data-theme="split-flap"] .chart .s2 { stroke-width: 2.5; stroke-linejoin: miter; }
+[data-theme="split-flap"] .modal-box, [data-theme="split-flap"] .drawer { border-color: #000; box-shadow: inset 0 1px 0 #44443f, 0 20px 50px rgba(0,0,0,.7); }
+html[data-motion="smooth"] [data-theme="split-flap"] .figure .v { animation: flap 520ms steps(5) both; transform-origin: 50% 50%; }
+html[data-motion="smooth"] [data-theme="split-flap"] .figure:nth-child(2) .v { animation-delay: 80ms; } html[data-motion="smooth"] [data-theme="split-flap"] .figure:nth-child(3) .v { animation-delay: 160ms; } html[data-motion="smooth"] [data-theme="split-flap"] .figure:nth-child(4) .v { animation-delay: 240ms; }
+html[data-motion="smooth"] [data-theme="split-flap"] .figure:nth-child(5) .v { animation-delay: 320ms; } html[data-motion="smooth"] [data-theme="split-flap"] .figure:nth-child(n+6) .v { animation-delay: 400ms; }
+html[data-motion="smooth"] [data-theme="split-flap"] .price, html[data-motion="smooth"] [data-theme="split-flap"] .score-chip b { animation: flap 420ms steps(4) both; }
+@keyframes flap { 0% { transform: perspective(300px) rotateX(-90deg); opacity: .2; } 60% { transform: perspective(300px) rotateX(25deg); opacity: 1; } 100% { transform: none; } }

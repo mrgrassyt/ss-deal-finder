@@ -1,0 +1,54 @@
+/* BAUHAUS — circle, square, triangle. Primary colours, asymmetric composition, icon rail. Layout: rail. */
+[data-theme="bauhaus"] {
+  --bg: #efebe2; --bg-image: none; --surface: #faf8f3; --surface-2: #ebe6da; --surface-3: #ddd6c6;
+  --text: #141414; --muted: #5a554c; --line: #141414; --line-soft: #d9d2c2;
+  --accent: #d62828; --accent-ink: #fff; --accent-soft: #f7d4d4; --accent-text: #b81f1f; --accent-2: #1d4ed8;
+  --good: #1d4ed8; --good-soft: #dbe5ff; --good-ink: #fff; --warn: #a77800; --warn-soft: #fbf0c4; --bad: #d62828; --bad-soft: #f7d4d4;
+  --nav-bg: #141414; --nav-text: #f4f1ea; --nav-muted: #a19c92; --nav-hover: rgba(255,255,255,.1); --nav-active-bg: #f6c90e; --nav-active-text: #141414; --nav-line: #141414;
+  --topbar-bg: transparent; --drawer-bg: #faf8f3;
+  --font-body: "Josefin Sans", "Century Gothic", sans-serif; --font-display: "Josefin Sans", "Century Gothic", sans-serif; --font-num: "Josefin Sans", "Century Gothic", sans-serif; --display-weight: 700;
+  --h1-size: 54px; --h1-tt: uppercase; --h1-ls: .02em; --h2-size: 20px; --h2-tt: uppercase; --h2-ls: .06em; --btn-tt: uppercase; --btn-ls: .1em; --btn-fw: 700; --btn-font: "Josefin Sans", sans-serif;
+  --border-w: 3px; --radius: 0; --radius-sm: 0; --radius-btn: 999px; --nav-r: 0; --tag-r: 0; --pad: 20px; --gap: 22px; --view-pad: 28px; --card-shadow: none;
+  --chart-1: #141414; --chart-2: #1d4ed8; --chart-3: #d62828; --chart-area: rgba(246,201,14,.3); --deal-color: #1d4ed8; --personal-color: #d62828; --ruler-ask: #d62828;
+}
+html body, html .tprev { font-size: 14.5px; }
+[data-theme="bauhaus"] { --nav-w: 90px; }
+/* composition of pure shapes behind the page */
+[data-theme="bauhaus"] .bgfx .a { right: 4%; top: -6%; width: 22%; aspect-ratio: 1; border-radius: 50%; background: #f6c90e; }
+[data-theme="bauhaus"] .bgfx .b { left: 2%; bottom: -2%; width: 16%; aspect-ratio: 1.15; background: #1d4ed8; clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+[data-theme="bauhaus"] .bgfx .c { right: 20%; bottom: 8%; width: 9%; aspect-ratio: 1; background: #d62828; transform: rotate(18deg); }
+[data-theme="bauhaus"] .nav { padding-top: 14px; }
+[data-theme="bauhaus"] .brand-mark { fill: #d62828; } [data-theme="bauhaus"] .brand svg { color: #fff; }
+[data-theme="bauhaus"] .nav a { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
+[data-theme="bauhaus"] .nav a .ic { font-size: 22px; }
+[data-theme="bauhaus"] .nav a.active { color: #141414; }
+[data-theme="bauhaus"] .nav a.active::after { content: ""; position: absolute; right: 5px; top: 5px; width: 9px; height: 9px; border-radius: 50%; background: #d62828; }
+[data-theme="bauhaus"] .nav a:hover:not(.active) .ic { color: #f6c90e; }
+[data-theme="bauhaus"] .topbar { border-bottom: 0; padding-bottom: 0; }
+[data-theme="bauhaus"] .page-head { align-items: flex-start; margin-bottom: 26px; }
+[data-theme="bauhaus"] .page-head h1 { border-left: 18px solid #d62828; padding-left: 14px; line-height: .95; position: relative; }
+[data-theme="bauhaus"] .page-head h1::after { content: ""; position: absolute; left: -18px; bottom: -16px; width: 120px; height: 8px; background: #f6c90e; }
+[data-theme="bauhaus"] .page-head p { margin-top: 26px; max-width: 54ch; }
+[data-theme="bauhaus"] .card { border-top-width: 10px; background: var(--surface); }
+[data-theme="bauhaus"] .card:nth-child(3n+1) { border-top-color: #d62828; } [data-theme="bauhaus"] .card:nth-child(3n+2) { border-top-color: #1d4ed8; } [data-theme="bauhaus"] .card:nth-child(3n) { border-top-color: #f6c90e; }
+/* each panel carries one geometric primitive */
+[data-theme="bauhaus"] .card::before { content: ""; position: absolute; right: 14px; top: 14px; width: 18px; height: 18px; background: #d62828; border-radius: 50%; pointer-events: none; }
+[data-theme="bauhaus"] .card:nth-child(3n+2)::before { background: #1d4ed8; border-radius: 0; } [data-theme="bauhaus"] .card:nth-child(3n)::before { background: #f6c90e; border-radius: 0; clip-path: polygon(50% 0, 100% 100%, 0 100%); border: 0; }
+[data-theme="bauhaus"] .card-head { padding-right: 34px; }
+[data-theme="bauhaus"] .figures { border-width: 3px; grid-template-columns: repeat(auto-fit, minmax(124px, 1fr)); }
+[data-theme="bauhaus"] .figure { border-top: 10px solid #141414; border-right-width: 3px; } [data-theme="bauhaus"] .figure:nth-child(3n+1) { border-top-color: #d62828; } [data-theme="bauhaus"] .figure:nth-child(3n+2) { border-top-color: #1d4ed8; } [data-theme="bauhaus"] .figure:nth-child(3n) { border-top-color: #f6c90e; }
+[data-theme="bauhaus"] .figure .v { font-size: 38px; font-weight: 700; } [data-theme="bauhaus"] .figure .l { text-transform: uppercase; letter-spacing: .08em; font-weight: 700; font-size: 11px; }
+[data-theme="bauhaus"] .btn { background: #faf8f3; border-radius: 0; padding: 8px 16px; } [data-theme="bauhaus"] .btn:hover { background: #f6c90e; }
+[data-theme="bauhaus"] .btn.primary { background: #d62828; border-radius: 999px; } [data-theme="bauhaus"] .btn.primary:hover { background: #141414; } [data-theme="bauhaus"] .btn.good { background: #1d4ed8; border-radius: 999px; } [data-theme="bauhaus"] .btn.good:hover { background: #141414; }
+[data-theme="bauhaus"] .btn.ghost { border-color: transparent; }
+[data-theme="bauhaus"] .tag { border: 2px solid #141414; background: #faf8f3; color: #141414; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; } [data-theme="bauhaus"] .tag.good { background: #1d4ed8; color: #fff; border-color: #141414; } [data-theme="bauhaus"] .tag.warn { background: #f6c90e; color: #141414; border-color: #141414; } [data-theme="bauhaus"] .tag.bad { background: #d62828; color: #fff; border-color: #141414; } [data-theme="bauhaus"] .tag.accent { background: #141414; color: #f6c90e; border-color: #141414; }
+[data-theme="bauhaus"] .level { border-radius: 999px; padding: 3px 12px; border: 2px solid #141414; text-transform: uppercase; letter-spacing: .06em; } [data-theme="bauhaus"] .level.GOOD_DEAL { background: #1d4ed8; color: #fff; } [data-theme="bauhaus"] .level.INTERESTING { background: #f6c90e; color: #141414; }
+[data-theme="bauhaus"] .score-chip { border: 2px solid #141414; background: #faf8f3; } [data-theme="bauhaus"] .score-chip.deal { border-radius: 999px; } [data-theme="bauhaus"] .score-chip b { font-size: 20px; }
+[data-theme="bauhaus"] table.data th { text-transform: uppercase; letter-spacing: .08em; color: #141414; border-bottom: 3px solid #141414; } [data-theme="bauhaus"] table.data td { border-bottom: 2px solid #d9d2c2; }
+[data-theme="bauhaus"] .thumb { border: 2px solid #141414; } [data-theme="bauhaus"] .scan-pill { border: 3px solid #141414; background: #faf8f3; font-weight: 700; } [data-theme="bauhaus"] .scan-pill .dot { width: 10px; height: 10px; }
+[data-theme="bauhaus"] input, [data-theme="bauhaus"] select, [data-theme="bauhaus"] textarea { background: #faf8f3; border: 3px solid #141414; font-weight: 600; }
+[data-theme="bauhaus"] .chart .bar { rx: 0; } [data-theme="bauhaus"] .chart .s1, [data-theme="bauhaus"] .chart .s2, [data-theme="bauhaus"] .chart .s3 { stroke-width: 4; stroke-linejoin: miter; } [data-theme="bauhaus"] .chart .gridline { stroke-width: 2; stroke: #d9d2c2; }
+[data-theme="bauhaus"] .chart .dot { r: 5; fill: #d62828; }
+[data-theme="bauhaus"] .ruler .ask { border-radius: 0; transform: rotate(45deg); } [data-theme="bauhaus"] .ruler .range { border-width: 2px; background: #f6c90e66; }
+html[data-motion="smooth"] [data-theme="bauhaus"] .bgfx .a { animation: bhFloat 14s ease-in-out infinite alternate; } html[data-motion="smooth"] [data-theme="bauhaus"] .bgfx .c { animation: bhSpin 30s linear infinite; } html[data-motion="smooth"] [data-theme="bauhaus"] .bgfx .b { animation: bhFloat 18s ease-in-out infinite alternate-reverse; }
+@keyframes bhFloat { to { transform: translate(-6%, 10%); } } @keyframes bhSpin { to { transform: rotate(378deg); } }

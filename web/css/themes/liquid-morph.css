@@ -1,0 +1,100 @@
+/* LIQUID MORPH — iOS-style liquid glass on a light, bright field. Morphing blobs, floating dock, jelly controls. Layout: dock. */
+[data-theme="liquid-morph"] {
+  --bg: #dfe9ff; --bg-image: linear-gradient(160deg, #e8f0ff 0%, #f3e8ff 48%, #e2fbf4 100%); --bg-size: auto;
+  --surface: rgba(255,255,255,.58); --surface-2: rgba(255,255,255,.55); --surface-3: rgba(255,255,255,.85);
+  --text: #16213f; --muted: #58658a; --line: rgba(70,90,160,.17); --line-soft: rgba(70,90,160,.09);
+  --accent: #5767f5; --accent-ink: #fff; --accent-soft: rgba(87,103,245,.14); --accent-text: #3a49d6; --accent-2: #ff5fa2;
+  --good: #067252; --good-soft: rgba(6,114,82,.13); --good-ink: #fff; --warn: #b86a00; --warn-soft: rgba(184,106,0,.13); --bad: #d92d52; --bad-soft: rgba(217,45,82,.12);
+  --nav-bg: rgba(255,255,255,.62); --nav-text: #1f2a4d; --nav-line: rgba(255,255,255,.9); --nav-hover: rgba(255,255,255,.7); --nav-active-bg: rgba(255,255,255,.95); --nav-active-text: #3a49d6;
+  --topbar-bg: transparent; --drawer-bg: #eef1ff; --toast-bg: rgba(255,255,255,.9); --input-bg: rgba(255,255,255,.7); --input-border: rgba(255,255,255,.95);
+  --font-body: "Dm Sans", "Segoe UI", sans-serif; --font-display: "Dm Sans", "Segoe UI", sans-serif; --font-num: "Dm Sans", "Segoe UI", sans-serif;
+  --display-weight: 700; --h1-size: 34px; --h1-ls: -.025em; --h2-size: 19px;
+  --radius: 30px; --radius-sm: 18px; --radius-btn: 999px; --nav-r: 22px; --pad: 20px; --gap: 18px; --view-pad: 26px;
+  --border-w: 1px; --card-border: rgba(255,255,255,.95);
+  --card-shadow: 0 14px 44px rgba(80,100,200,.18), inset 0 1px 0 #fff, inset 0 -1px 0 rgba(255,255,255,.4);
+  --card-blur: blur(22px) saturate(170%);
+  --btn-bg: rgba(255,255,255,.7); --btn-border: rgba(255,255,255,.95); --btn-shadow: 0 6px 16px rgba(80,100,200,.16), inset 0 1px 0 #fff;
+  --chart-1: #5767f5; --chart-2: #12b48a; --chart-3: #ff9a3d; --chart-area: rgba(87,103,245,.12); --personal-color: #e0408a; --deal-color: #0c9a73;
+  --ruler-ask: #e0408a; --ruler-range: rgba(87,103,245,.18); --ruler-range-border: rgba(87,103,245,.5); --ruler-typ: #5767f5;
+}
+[data-theme="liquid-morph"] .bgfx > i { background: var(--b, #ff8fd0); opacity: .75; }
+[data-theme="liquid-morph"] .bgfx .a { --b: radial-gradient(circle at 35% 35%, #ffb3dc, #ff7cc0 60%, transparent 72%); left: -6%; top: -10%; width: 46%; aspect-ratio: 1.1; border-radius: 58% 42% 55% 45% / 48% 58% 42% 52%; background: var(--b); }
+[data-theme="liquid-morph"] .bgfx .b { --b: radial-gradient(circle at 60% 40%, #9bd0ff, #6aa8ff 60%, transparent 72%); right: -8%; top: 6%; width: 44%; aspect-ratio: 1; border-radius: 45% 55% 40% 60% / 55% 45% 58% 42%; background: var(--b); }
+[data-theme="liquid-morph"] .bgfx .c { --b: radial-gradient(circle at 50% 50%, #c4b0ff, #a58bff 60%, transparent 72%); left: 28%; bottom: -16%; width: 50%; aspect-ratio: 1.2; border-radius: 52% 48% 60% 40% / 42% 58% 42% 58%; background: var(--b); }
+[data-theme="liquid-morph"] .bgfx .d { --b: radial-gradient(circle, #8cf5d6, #53e3bd 58%, transparent 72%); right: 12%; bottom: -8%; width: 26%; aspect-ratio: 1; border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%; background: var(--b); opacity: .6; }
+html[data-motion="performance"] [data-theme="liquid-morph"] .card, html[data-motion="performance"] [data-theme="liquid-morph"] .figures { background: rgba(255,255,255,.74); }
+[data-theme="liquid-morph"] h1 { background: linear-gradient(120deg, #2a3580, #5767f5 55%, #e0408a); -webkit-background-clip: text; background-clip: text; color: transparent; }
+[data-theme="liquid-morph"] .nav { box-shadow: 0 18px 50px rgba(80,100,200,.28), inset 0 1px 0 #fff; }
+[data-theme="liquid-morph"] .nav a.active { box-shadow: 0 4px 14px rgba(80,100,200,.2); }
+[data-theme="liquid-morph"] .brand-mark { fill: url(#none); fill: #5767f5; }
+[data-theme="liquid-morph"] .btn { position: relative; overflow: hidden; }
+[data-theme="liquid-morph"] .btn.primary { background: linear-gradient(180deg, #7b88ff, #4656ee); border-color: rgba(255,255,255,.55); box-shadow: 0 8px 20px rgba(70,86,238,.38), inset 0 1px 0 rgba(255,255,255,.7); }
+[data-theme="liquid-morph"] .btn.primary::after, [data-theme="liquid-morph"] .btn.good::after { content: ""; position: absolute; left: 8%; right: 8%; top: 2px; height: 46%; border-radius: 999px; background: linear-gradient(rgba(255,255,255,.55), rgba(255,255,255,0)); pointer-events: none; }
+[data-theme="liquid-morph"] .btn.good { background: linear-gradient(180deg, #2fd3a4, #0c9a73); }
+[data-theme="liquid-morph"] input[type=text], [data-theme="liquid-morph"] input[type=number], [data-theme="liquid-morph"] input[type=search], [data-theme="liquid-morph"] input[type=password], [data-theme="liquid-morph"] select, [data-theme="liquid-morph"] textarea { border-radius: 999px; padding: 9px 16px; box-shadow: inset 0 2px 5px rgba(80,100,200,.1); }
+[data-theme="liquid-morph"] textarea { border-radius: 20px; }
+[data-theme="liquid-morph"] .tag, [data-theme="liquid-morph"] .score-chip { background: rgba(255,255,255,.75); border-color: #fff; box-shadow: 0 2px 8px rgba(80,100,200,.12), inset 0 1px 0 #fff; }
+[data-theme="liquid-morph"] .score-chip { border-radius: 16px; }
+[data-theme="liquid-morph"] .thumb { border-radius: 14px; border-color: #fff; }
+[data-theme="liquid-morph"] .chart .s1, [data-theme="liquid-morph"] .chart .s2, [data-theme="liquid-morph"] .chart .s3 { stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+[data-theme="liquid-morph"] .chart .bar { rx: 8px; }
+[data-theme="liquid-morph"] .chart .gridline { stroke-dasharray: 2 6; stroke-linecap: round; stroke-width: 2; }
+[data-theme="liquid-morph"] .ruler .range, [data-theme="liquid-morph"] .ruler .track { border-radius: 999px; }
+[data-theme="liquid-morph"] .drawer, [data-theme="liquid-morph"] .modal-box { border-radius: 30px 0 0 30px; backdrop-filter: blur(24px); }
+[data-theme="liquid-morph"] .modal-box { border-radius: 30px; }
+[data-theme="liquid-morph"] table.data th { text-transform: uppercase; letter-spacing: .06em; font-size: 11px; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .bgfx .a { animation: blobA 17s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .bgfx .b { animation: blobB 21s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .bgfx .c { animation: blobA 25s ease-in-out infinite alternate-reverse; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .bgfx .d { animation: blobB 19s ease-in-out infinite alternate-reverse; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .btn:active { transform: scale(1.06, .9); transition: transform 120ms; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .btn { transition: transform 380ms cubic-bezier(.3,1.8,.4,1), box-shadow 200ms; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .nav a { transition: background 260ms, transform 360ms cubic-bezier(.3,1.8,.4,1); }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .nav a:hover { transform: translateY(-4px) scale(1.12); }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .card { animation: cardMorph 16s ease-in-out infinite alternate; }
+@keyframes blobA { 0% { border-radius: 58% 42% 55% 45% / 48% 58% 42% 52%; transform: translate(0,0) rotate(0) scale(1); } 100% { border-radius: 40% 60% 42% 58% / 58% 40% 60% 42%; transform: translate(8%, 10%) rotate(35deg) scale(1.15); } }
+@keyframes blobB { 0% { border-radius: 45% 55% 40% 60% / 55% 45% 58% 42%; transform: translate(0,0) rotate(0) scale(1); } 100% { border-radius: 60% 40% 55% 45% / 42% 60% 40% 58%; transform: translate(-9%, 7%) rotate(-40deg) scale(1.1); } }
+@keyframes cardMorph { 0% { border-radius: 30px 26px 32px 28px; } 50% { border-radius: 26px 34px 26px 32px; } 100% { border-radius: 32px 28px 30px 24px; } }
+
+/* ---- water-droplet buttons: round beads of glass with a bright highlight, a shaded belly and a soft caustic ---- */
+[data-theme="liquid-morph"] .btn, [data-theme="liquid-morph"] .icon-btn {
+  border-radius: 999px; border: 1px solid rgba(255,255,255,.9);
+  background: radial-gradient(120% 150% at 28% 12%, rgba(255,255,255,.98) 0%, rgba(255,255,255,.7) 34%, rgba(205,218,255,.55) 68%, rgba(160,180,255,.6) 100%);
+  box-shadow: 0 10px 18px -4px rgba(70,90,200,.34), 0 2px 4px rgba(70,90,200,.18), inset 0 -7px 11px rgba(110,130,240,.28), inset 0 3px 5px #fff, inset 0 0 0 1px rgba(255,255,255,.35);
+}
+[data-theme="liquid-morph"] .btn::before, [data-theme="liquid-morph"] .icon-btn::before {
+  content: ""; position: absolute; left: 14%; top: 7%; width: 44%; height: 30%; border-radius: 50%;
+  background: radial-gradient(ellipse at 40% 40%, rgba(255,255,255,.95), rgba(255,255,255,0) 72%); transform: rotate(-12deg); pointer-events: none;
+}
+[data-theme="liquid-morph"] .btn.primary {
+  background: radial-gradient(120% 150% at 28% 10%, #b9c2ff 0%, #7f8cff 30%, #4656ee 72%, #3441d3 100%);
+  border-color: rgba(255,255,255,.7); color: #fff;
+  box-shadow: 0 12px 22px -4px rgba(70,86,238,.5), 0 2px 5px rgba(70,86,238,.3), inset 0 -8px 12px rgba(30,40,170,.38), inset 0 3px 6px rgba(255,255,255,.65);
+}
+[data-theme="liquid-morph"] .btn.good {
+  background: radial-gradient(120% 150% at 28% 10%, #b4f6e0 0%, #45dcb0 32%, #0c9a73 78%, #087458 100%); color: #fff; border-color: rgba(255,255,255,.7);
+  box-shadow: 0 12px 22px -4px rgba(8,116,88,.45), inset 0 -8px 12px rgba(4,70,52,.35), inset 0 3px 6px rgba(255,255,255,.6);
+}
+[data-theme="liquid-morph"] .btn.primary::after, [data-theme="liquid-morph"] .btn.good::after { display: none; }
+[data-theme="liquid-morph"] .btn.sm { padding-top: 4px; padding-bottom: 4px; }
+[data-theme="liquid-morph"] .seg { border-radius: 999px; }
+[data-theme="liquid-morph"] .seg button { border-radius: 999px; }
+.drop-ripple { position: absolute; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgba(255,255,255,.75) 0%, rgba(255,255,255,.35) 38%, rgba(255,255,255,0) 68%); transform: scale(0); animation: dropRipple 650ms cubic-bezier(.2,.7,.3,1) forwards; }
+@keyframes dropRipple { 0% { transform: scale(0); opacity: 1; } 100% { transform: scale(1); opacity: 0; } }
+/* squash-and-stretch like a bead of water on press and release */
+html[data-motion="smooth"] [data-theme="liquid-morph"] .btn:hover { transform: translateY(-3px) scale(1.04, 1.02); }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .btn:active { transform: translateY(1px) scale(1.08, .88); transition: transform 110ms ease-out; }
+
+/* ---- swish: one droplet slides between nav items (position comes from app.js as --ax/--ay/--aw/--ah) ---- */
+[data-theme="liquid-morph"] .nav-links { position: relative; }
+[data-theme="liquid-morph"] .nav-links::before {
+  content: ""; position: absolute; z-index: 0; left: var(--ax, 0); top: var(--ay, 0); width: var(--aw, 0); height: var(--ah, 0); border-radius: 999px; pointer-events: none;
+  background: radial-gradient(120% 160% at 28% 10%, #fff 0%, rgba(255,255,255,.9) 40%, rgba(214,224,255,.85) 100%);
+  box-shadow: 0 6px 16px rgba(80,100,200,.28), inset 0 -5px 9px rgba(110,130,240,.25), inset 0 2px 4px #fff;
+}
+[data-theme="liquid-morph"] .nav a { position: relative; z-index: 1; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .nav a.active { background: transparent; box-shadow: none; }
+html[data-motion="smooth"] [data-theme="liquid-morph"] .nav-links::before {
+  transition: left 620ms cubic-bezier(.34,1.56,.5,1), top 620ms cubic-bezier(.34,1.56,.5,1), width 760ms cubic-bezier(.3,1.7,.45,1), height 560ms cubic-bezier(.3,1.5,.45,1);
+}
+html[data-motion="performance"] [data-theme="liquid-morph"] .nav-links::before { display: none; }

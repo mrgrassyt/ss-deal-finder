@@ -1,0 +1,24 @@
+{
+  "name": "SS Deal Finder",
+  "short_name": "SS Deals",
+  "description": "Finds underpriced electronics on SS.lv and shows buy price, resale, profit and ROI.",
+  "id": "./",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#0b1020",
+  "theme_color": "#1d4ed8",
+  "categories": ["shopping", "finance", "utilities"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Listings", "url": "./#/listings", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Notifications", "url": "./#/notifications", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "My items", "url": "./#/myitems", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

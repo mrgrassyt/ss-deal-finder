@@ -1,0 +1,41 @@
+/* PARTICLES — constellation map. Star field, node-and-link panels, glowing data points. Layout: side. */
+[data-theme="particles"] {
+  --bg: #050914;
+  --bg-image: radial-gradient(rgba(125,211,252,.26) 1px, transparent 1.7px), radial-gradient(rgba(192,132,252,.18) 1px, transparent 1.7px), radial-gradient(rgba(255,255,255,.12) .8px, transparent 1.4px);
+  --bg-size: 47px 47px, 97px 97px, 29px 29px;
+  --surface: rgba(10,17,36,.9); --surface-2: rgba(56,189,248,.07); --surface-3: rgba(56,189,248,.15);
+  --text: #e6f1ff; --muted: #8aa0c2; --line: rgba(125,211,252,.22); --line-soft: rgba(125,211,252,.09);
+  --accent: #38bdf8; --accent-ink: #04121f; --accent-soft: rgba(56,189,248,.16); --accent-2: #c084fc;
+  --good: #34d399; --good-soft: rgba(52,211,153,.14); --warn: #fbbf24; --warn-soft: rgba(251,191,36,.14); --bad: #f87171; --bad-soft: rgba(248,113,113,.14);
+  --nav-bg: rgba(5,9,20,.88); --nav-text: #cfe3ff; --topbar-bg: rgba(5,9,20,.82); --drawer-bg: #0a1126;
+  --font-body: "Space Grotesk", "Segoe UI", sans-serif; --font-display: "Space Grotesk", "Segoe UI", sans-serif; --font-num: "Jetbrains Mono", Consolas, monospace;
+  --display-weight: 600; --h1-size: 30px; --radius: 16px; --radius-sm: 10px; --radius-btn: 999px; --nav-r: 999px;
+  --card-shadow: 0 0 0 1px rgba(56,189,248,.05), 0 16px 44px rgba(0,0,0,.45);
+  --chart-1: #38bdf8; --chart-2: #34d399; --chart-3: #c084fc; --chart-area: rgba(56,189,248,.10); --personal-color: #c084fc;
+}
+[data-theme="particles"] .bgfx .a { left: -8%; top: -10%; width: 48%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(56,189,248,.16), transparent 68%); }
+[data-theme="particles"] .bgfx .b { right: -10%; bottom: -14%; width: 52%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(192,132,252,.15), transparent 68%); }
+/* panels are nodes: a lit dot on two corners and a hairline "link" under the title */
+[data-theme="particles"] .card::before, [data-theme="particles"] .card::after { content: ""; position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(56,189,248,.14), 0 0 12px var(--accent); }
+[data-theme="particles"] .card::before { left: -4px; top: 18px; }
+[data-theme="particles"] .card::after { right: -4px; bottom: 18px; background: var(--accent-2); box-shadow: 0 0 0 3px rgba(192,132,252,.14), 0 0 12px var(--accent-2); }
+[data-theme="particles"] .page-head h1::after { content: ""; display: inline-block; width: 70px; height: 1px; margin-left: 14px; vertical-align: middle; background: linear-gradient(90deg, var(--accent), transparent); }
+[data-theme="particles"] .card > h2, [data-theme="particles"] .card-head h2 { font-size: 15px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+[data-theme="particles"] .nav a.active { background: linear-gradient(90deg, rgba(56,189,248,.22), rgba(56,189,248,.04)); color: #fff; border-color: rgba(56,189,248,.35); }
+[data-theme="particles"] .nav a.active::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); position: absolute; left: -3px; }
+[data-theme="particles"] .btn { background: rgba(56,189,248,.08); border-color: rgba(56,189,248,.35); }
+[data-theme="particles"] .btn:hover { background: rgba(56,189,248,.18); box-shadow: 0 0 18px rgba(56,189,248,.25); }
+[data-theme="particles"] .btn.primary { background: var(--accent); box-shadow: 0 0 20px rgba(56,189,248,.45); }
+[data-theme="particles"] .chart .dot, [data-theme="particles"] .ruler .ask { filter: drop-shadow(0 0 4px var(--accent)); }
+[data-theme="particles"] .chart .s1, [data-theme="particles"] .chart .s2 { stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px currentColor); }
+[data-theme="particles"] .chart .bar { rx: 6px; opacity: .9; }
+[data-theme="particles"] .chart .gridline { stroke-dasharray: 1 5; stroke-linecap: round; stroke-width: 2; }
+[data-theme="particles"] .tag { background: transparent; }
+[data-theme="particles"] .scores .score-chip { border-radius: 999px; padding: 3px 10px; flex-direction: row; gap: 6px; align-items: baseline; }
+[data-theme="particles"] table.data tr.clickable:hover td { background: linear-gradient(90deg, rgba(56,189,248,.10), transparent); }
+html[data-motion="smooth"] [data-theme="particles"] .card::before { animation: twinkle 3.4s ease-in-out infinite; }
+html[data-motion="smooth"] [data-theme="particles"] .card::after { animation: twinkle 4.6s ease-in-out infinite .8s; }
+html[data-motion="smooth"] [data-theme="particles"] .bgfx .a { animation: drift 26s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="particles"] .bgfx .b { animation: drift 31s ease-in-out infinite alternate-reverse; }
+@keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.65); } }
+@keyframes drift { to { transform: translate(6%, 8%) scale(1.12); } }

@@ -1,0 +1,64 @@
+/* WIREFRAME 3D — vector workstation. Extruded outlines, rotating wireframe objects, top bar. Layout: top. */
+[data-theme="wireframe-3d"] {
+  --bg: #030806; --bg-image: linear-gradient(rgba(74,222,128,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(74,222,128,.07) 1px, transparent 1px), linear-gradient(rgba(74,222,128,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(74,222,128,.13) 1px, transparent 1px);
+  --bg-size: 20px 20px, 20px 20px, 100px 100px, 100px 100px;
+  --surface: rgba(3,12,7,.78); --surface-2: rgba(74,222,128,.06); --surface-3: rgba(74,222,128,.13);
+  --text: #d6ffe2; --muted: #6fb287; --line: #2f8a52; --line-soft: rgba(74,222,128,.2);
+  --accent: #4ade80; --accent-ink: #021006; --accent-soft: rgba(74,222,128,.14); --accent-2: #a3e635;
+  --good: #4ade80; --good-soft: rgba(74,222,128,.12); --warn: #facc15; --warn-soft: rgba(250,204,21,.12); --bad: #f87171; --bad-soft: rgba(248,113,113,.12);
+  --nav-bg: #020604; --nav-text: #b9f3cc; --topbar-bg: rgba(3,8,6,.9); --drawer-bg: #04100a;
+  --font-body: "Jetbrains Mono", Consolas, monospace; --font-display: "Jetbrains Mono", Consolas, monospace; --font-num: "Jetbrains Mono", Consolas, monospace;
+  --display-weight: 700; --h1-size: 24px; --h1-tt: uppercase; --h1-ls: .12em; --h2-size: 13px; --h2-tt: uppercase; --h2-ls: .14em;
+  --btn-tt: uppercase; --btn-ls: .08em; --btn-font: "Jetbrains Mono", monospace; --nav-tt: uppercase;
+  --radius: 0; --radius-sm: 0; --radius-btn: 0; --nav-r: 0; --tag-r: 0; --ext: 8px; --ext-c: #1c5a36;
+  --card-bg: rgba(3,12,7,.72); --card-shadow: var(--ext) var(--ext) 0 -1px var(--bg), var(--ext) var(--ext) 0 0 var(--ext-c);
+  --chart-1: #4ade80; --chart-2: #a3e635; --chart-3: #facc15; --chart-area: rgba(74,222,128,.08); --personal-color: #a3e635; --ruler-ask: #facc15;
+}
+[data-theme="wireframe-3d"] .bgfx { perspective: 900px; }
+[data-theme="wireframe-3d"] .bgfx .e, [data-theme="wireframe-3d"] .bgfx .f { transform-style: preserve-3d; border: 1px solid rgba(74,222,128,.55); }
+/* globe: three orthogonal rings */
+[data-theme="wireframe-3d"] .bgfx .e { right: 6%; top: 24%; width: 24%; aspect-ratio: 1; border-radius: 50%; opacity: .5; transform: rotateX(-20deg) rotateY(20deg); }
+[data-theme="wireframe-3d"] .bgfx .e::before, [data-theme="wireframe-3d"] .bgfx .e::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid rgba(74,222,128,.55); }
+[data-theme="wireframe-3d"] .bgfx .e::before { transform: rotateY(60deg); } [data-theme="wireframe-3d"] .bgfx .e::after { transform: rotateY(120deg); }
+/* cube skeleton: three orthogonal squares */
+[data-theme="wireframe-3d"] .bgfx .f { left: 3%; bottom: 8%; width: 12%; aspect-ratio: 1; opacity: .45; transform: rotateX(25deg) rotateY(35deg); }
+[data-theme="wireframe-3d"] .bgfx .f::before, [data-theme="wireframe-3d"] .bgfx .f::after { content: ""; position: absolute; inset: -1px; border: 1px solid rgba(74,222,128,.55); }
+[data-theme="wireframe-3d"] .bgfx .f::before { transform: rotateY(90deg); } [data-theme="wireframe-3d"] .bgfx .f::after { transform: rotateX(90deg); }
+[data-theme="wireframe-3d"] .nav { background: #020604; padding: 6px 20px; box-shadow: 0 4px 0 #0e3320; }
+[data-theme="wireframe-3d"] .nav a { border: 1px solid transparent; font-size: 11px; letter-spacing: .04em; padding: 5px 8px; }
+[data-theme="wireframe-3d"] .nav a:hover { border-color: #2f8a52; }
+[data-theme="wireframe-3d"] .nav a.active { color: #021006; background: var(--accent); box-shadow: 3px 3px 0 #1c5a36; }
+[data-theme="wireframe-3d"] .nav a .ic { display: none; }
+[data-theme="wireframe-3d"] .brand-name::before { content: "◇ "; color: var(--accent); }
+/* L-shaped corner brackets + extruded depth edges */
+[data-theme="wireframe-3d"] .card::before { content: ""; position: absolute; left: -1px; top: -1px; width: 12px; height: 12px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); pointer-events: none; }
+[data-theme="wireframe-3d"] .card::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 12px; height: 12px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); pointer-events: none; }
+[data-theme="wireframe-3d"] .card > h2::before, [data-theme="wireframe-3d"] .card-head h2::before { content: "// "; color: var(--accent); }
+[data-theme="wireframe-3d"] .figures { border-width: 1px; }
+[data-theme="wireframe-3d"] .figure .v { font-size: 22px; } [data-theme="wireframe-3d"] .figure .l { text-transform: uppercase; font-size: 10px; letter-spacing: .1em; }
+[data-theme="wireframe-3d"] .btn { background: transparent; border-color: var(--accent); color: var(--accent); box-shadow: 3px 3px 0 #1c5a36; }
+[data-theme="wireframe-3d"] .btn:hover { background: var(--accent-soft); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #1c5a36; }
+[data-theme="wireframe-3d"] .btn:active { transform: translate(3px, 3px); box-shadow: none; }
+[data-theme="wireframe-3d"] .btn.primary { background: var(--accent); color: #021006; }
+[data-theme="wireframe-3d"] .btn.danger { color: var(--bad); border-color: var(--bad); box-shadow: 3px 3px 0 #5a1c1c; }
+[data-theme="wireframe-3d"] .tag, [data-theme="wireframe-3d"] .level { background: transparent !important; border: 1px solid currentColor; }
+[data-theme="wireframe-3d"] .level.GOOD_DEAL { color: var(--good); } [data-theme="wireframe-3d"] .level.INTERESTING { color: var(--warn); } [data-theme="wireframe-3d"] .level.IGNORE { color: var(--muted); }
+[data-theme="wireframe-3d"] input, [data-theme="wireframe-3d"] select, [data-theme="wireframe-3d"] textarea { background: transparent; border-color: #2f8a52; }
+[data-theme="wireframe-3d"] table.data td, [data-theme="wireframe-3d"] table.data th { border-bottom-style: dashed; }
+[data-theme="wireframe-3d"] .score-chip { background: transparent; box-shadow: 2px 2px 0 #1c5a36; }
+[data-theme="wireframe-3d"] .thumb { border-color: #2f8a52; filter: grayscale(1) contrast(1.1) brightness(.9) sepia(1) hue-rotate(70deg) saturate(2.4); }
+[data-theme="wireframe-3d"] .chart .bar { fill-opacity: .12; stroke: currentColor; stroke-width: 1.4; rx: 0; }
+[data-theme="wireframe-3d"] .chart .bar.b1 { color: #4ade80; stroke: #4ade80; fill: #4ade80; } [data-theme="wireframe-3d"] .chart .bar.b2 { stroke: #a3e635; fill: #a3e635; } [data-theme="wireframe-3d"] .chart .bar.b3 { stroke: #facc15; fill: #facc15; }
+[data-theme="wireframe-3d"] .chart .s1, [data-theme="wireframe-3d"] .chart .s2 { stroke-width: 1.5; stroke-linejoin: miter; }
+[data-theme="wireframe-3d"] .chart .dot { fill: none; stroke: var(--accent); }
+[data-theme="wireframe-3d"] .chart .gridline { stroke-dasharray: 3 4; }
+[data-theme="wireframe-3d"] .drawer, [data-theme="wireframe-3d"] .modal-box { box-shadow: -8px 0 0 #0e3320; }
+html[data-motion="smooth"] [data-theme="wireframe-3d"] .bgfx .e { animation: wfSpinY 22s linear infinite; }
+html[data-motion="smooth"] [data-theme="wireframe-3d"] .bgfx .f { animation: wfSpinXY 17s linear infinite; }
+html[data-motion="smooth"] [data-theme="wireframe-3d"] .card { transition: transform 200ms var(--ease), box-shadow 200ms var(--ease); }
+html[data-motion="smooth"] [data-theme="wireframe-3d"] .card:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 -1px var(--bg), 11px 11px 0 0 #2f8a52; }
+@keyframes wfSpinY { from { transform: rotateX(-20deg) rotateY(0); } to { transform: rotateX(-20deg) rotateY(360deg); } }
+@keyframes wfSpinXY { from { transform: rotateX(25deg) rotateY(0); } to { transform: rotateX(385deg) rotateY(360deg); } }
+
+/* dotted/dashed row rules drawn as a tiled gradient: real dotted borders on every table cell cost ~9x more raster time while scrolling */
+[data-theme="wireframe-3d"] table.data td { border-bottom-style: solid; border-bottom-color: transparent; background-image: linear-gradient(90deg, var(--line-soft, var(--line)) 0 50%, transparent 0); background-size: 8px 1px; background-position: left bottom; background-repeat: repeat-x; }

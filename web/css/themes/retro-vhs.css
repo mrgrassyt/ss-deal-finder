@@ -1,0 +1,52 @@
+/* RETRO VHS — CRT and tape. Scanlines, tracking glitch, chromatic fringes, VCR on-screen display. Layout: side. */
+[data-theme="retro-vhs"] {
+  --bg: #12081d; --bg-image: radial-gradient(900px 480px at 50% 0%, rgba(255,79,154,.2), transparent 70%), radial-gradient(700px 400px at 100% 100%, rgba(124,232,255,.1), transparent 70%); --bg-size: auto;
+  --surface: rgba(28,14,46,.94); --surface-2: rgba(255,255,255,.06); --surface-3: rgba(255,255,255,.12);
+  --text: #f6ecff; --muted: #b8a2cf; --line: rgba(255,79,154,.38); --line-soft: rgba(124,232,255,.14);
+  --accent: #ff4f9a; --accent-ink: #1a0010; --accent-soft: rgba(255,79,154,.16); --accent-2: #7ce8ff; --accent-text: #ff8cbd;
+  --good: #7cffb2; --good-soft: rgba(124,255,178,.12); --warn: #ffd36b; --warn-soft: rgba(255,211,107,.12); --bad: #ff6b6b; --bad-soft: rgba(255,107,107,.12);
+  --nav-bg: #0d0516; --nav-text: #f0dcff; --nav-active-bg: rgba(255,79,154,.2); --nav-active-text: #fff; --nav-active-border: #ff4f9a; --topbar-bg: rgba(18,8,29,.95); --drawer-bg: #150a23;
+  --font-body: "Space Mono", Consolas, monospace; --font-display: "Vt323", "Space Mono", monospace; --font-num: "Share Tech Mono", Consolas, monospace; --display-weight: 400;
+  --h1-size: 46px; --h1-tt: uppercase; --h1-ls: .06em; --h2-size: 26px; --h2-tt: uppercase; --h2-ls: .06em; --btn-font: "Vt323", monospace; --btn-tt: uppercase; --btn-ls: .08em; --btn-fw: 400; --nav-font: "Vt323", monospace; --nav-tt: uppercase;
+  --radius: 14px / 10px; --radius-sm: 4px; --radius-btn: 3px; --nav-r: 3px; --tag-r: 2px; --border-w: 2px;
+  --card-shadow: inset 0 0 28px rgba(255,79,154,.10), 0 0 0 1px rgba(124,232,255,.14), 0 0 22px rgba(255,79,154,.14);
+  --chart-1: #ff4f9a; --chart-2: #7ce8ff; --chart-3: #ffd36b; --chart-area: rgba(255,79,154,.1); --personal-color: #7ce8ff; --ruler-ask: #7cffb2;
+}
+html body, html .tprev { font-size: 13px; }
+[data-theme="retro-vhs"] .fxtop::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.26) 0 1px, transparent 1px 3px); }
+[data-theme="retro-vhs"] .fxtop::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.6) 100%); }
+/* tracking band + static */
+[data-theme="retro-vhs"] .bgfx .a { left: 0; right: 0; top: 38%; height: 9%; background: linear-gradient(transparent, rgba(255,255,255,.07) 40%, rgba(255,255,255,.12) 50%, rgba(255,79,154,.08) 60%, transparent); }
+[data-theme="retro-vhs"] .bgfx .b { left: 0; right: 0; top: 41%; height: 1.2%; background: rgba(124,232,255,.14); }
+[data-theme="retro-vhs"] .topbar { position: sticky; }
+[data-theme="retro-vhs"] .topbar::before { content: "▶ PLAY"; font: 24px/1 "Vt323", monospace; color: #7cffb2; text-shadow: 0 0 6px rgba(124,255,178,.7), 2px 0 rgba(255,0,80,.5); letter-spacing: .08em; white-space: nowrap; }
+[data-theme="retro-vhs"] .topbar .nav-toggle + .search { margin-left: 4px; }
+[data-theme="retro-vhs"] .brand { font-family: "Vt323", monospace; font-size: 26px; font-weight: 400; letter-spacing: .06em; text-shadow: 2px 0 rgba(255,0,80,.7), -2px 0 rgba(0,220,255,.7); }
+[data-theme="retro-vhs"] h1, [data-theme="retro-vhs"] .figure .v, [data-theme="retro-vhs"] h2 { text-shadow: 2px 0 rgba(255,0,80,.65), -2px 0 rgba(0,220,255,.65); }
+[data-theme="retro-vhs"] h1::before { content: "CH 03 "; font-size: 20px; color: #7cffb2; letter-spacing: .1em; text-shadow: none; vertical-align: middle; margin-right: 8px; }
+[data-theme="retro-vhs"] .card > h2::before, [data-theme="retro-vhs"] .card-head h2::before { content: "▶ "; color: var(--accent); }
+[data-theme="retro-vhs"] .card { border-color: rgba(255,79,154,.5); } [data-theme="retro-vhs"] .card:nth-child(even) { border-color: rgba(124,232,255,.45); }
+[data-theme="retro-vhs"] .figure .v { font-family: "Vt323", monospace; font-size: 40px; line-height: 1; font-weight: 400; } [data-theme="retro-vhs"] .figure .l { text-transform: uppercase; letter-spacing: .1em; font-size: 10px; }
+[data-theme="retro-vhs"] .nav a { font-size: 20px; padding: 3px 10px; letter-spacing: .06em; } [data-theme="retro-vhs"] .nav a .ic { display: none; }
+[data-theme="retro-vhs"] .nav-links { counter-reset: ch; } [data-theme="retro-vhs"] .nav a { counter-increment: ch; } [data-theme="retro-vhs"] .nav a::before { content: counter(ch, decimal-leading-zero); color: #7cffb2; font-size: 15px; width: 22px; }
+[data-theme="retro-vhs"] .nav a.active { text-shadow: 2px 0 rgba(255,0,80,.7), -2px 0 rgba(0,220,255,.7); }
+[data-theme="retro-vhs"] .nav-foot { font-family: "Vt323", monospace; font-size: 18px; color: #7cffb2; } [data-theme="retro-vhs"] .nav-foot::before { content: "● REC SP  "; color: #ff4f4f; }
+[data-theme="retro-vhs"] .btn { background: linear-gradient(#2c1a42, #170c26); border: 2px solid #5b3a85; border-bottom-width: 4px; font-size: 18px; padding: 2px 14px; color: #f6ecff; }
+[data-theme="retro-vhs"] .btn:hover { border-color: #ff4f9a; color: #fff; } [data-theme="retro-vhs"] .btn:active { border-bottom-width: 2px; transform: translateY(2px); }
+[data-theme="retro-vhs"] .btn.primary { background: linear-gradient(#ff6fae, #d2347d); border-color: #ff9fc9; color: #1a0010; } [data-theme="retro-vhs"] .btn.good { background: linear-gradient(#8bffbd, #3fc983); border-color: #c1ffd9; }
+[data-theme="retro-vhs"] .tag { text-transform: uppercase; letter-spacing: .06em; font-size: 10px; background: rgba(0,0,0,.35); } [data-theme="retro-vhs"] .level { font-family: "Vt323", monospace; font-size: 16px; letter-spacing: .08em; text-transform: uppercase; padding: 0 8px; }
+[data-theme="retro-vhs"] .score-chip { background: rgba(0,0,0,.35); } [data-theme="retro-vhs"] .score-chip b { font-family: "Vt323", monospace; font-size: 22px; font-weight: 400; }
+[data-theme="retro-vhs"] input, [data-theme="retro-vhs"] select, [data-theme="retro-vhs"] textarea { background: #0d0516; border: 2px solid #5b3a85; border-radius: 2px; }
+[data-theme="retro-vhs"] .scan-pill { background: #0d0516; border: 2px solid #5b3a85; border-radius: 2px; font-family: "Vt323", monospace; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; }
+[data-theme="retro-vhs"] table.data th { font-family: "Vt323", monospace; font-size: 16px; text-transform: uppercase; letter-spacing: .08em; color: #7ce8ff; }
+[data-theme="retro-vhs"] .price { font-family: "Share Tech Mono", monospace; text-shadow: 1px 0 rgba(255,0,80,.6), -1px 0 rgba(0,220,255,.6); }
+[data-theme="retro-vhs"] .thumb { filter: saturate(1.4) contrast(1.1) hue-rotate(-8deg); border: 2px solid #5b3a85; border-radius: 2px; }
+[data-theme="retro-vhs"] .chart .s1, [data-theme="retro-vhs"] .chart .s2 { stroke-width: 2.5; filter: drop-shadow(2px 0 rgba(255,0,80,.6)) drop-shadow(-2px 0 rgba(0,220,255,.6)); }
+[data-theme="retro-vhs"] .chart .bar { rx: 0; filter: drop-shadow(2px 0 rgba(0,220,255,.5)); } [data-theme="retro-vhs"] .chart .gridline { stroke-dasharray: 2 3; } [data-theme="retro-vhs"] .chart .axis { font-family: "Vt323", monospace; font-size: 12px; }
+html[data-motion="smooth"] [data-theme="retro-vhs"] .bgfx .a { animation: tracking 7s linear infinite; } html[data-motion="smooth"] [data-theme="retro-vhs"] .bgfx .b { animation: tracking 7s linear infinite; }
+html[data-motion="smooth"] [data-theme="retro-vhs"] h1 { animation: jitter 4s infinite steps(1); }
+html[data-motion="smooth"] [data-theme="retro-vhs"] .topbar::before { animation: blink 1.6s steps(1) infinite; }
+html[data-motion="smooth"] [data-theme="retro-vhs"] .fxtop::before { animation: scan 9s linear infinite; }
+@keyframes tracking { from { transform: translateY(-420%); } to { transform: translateY(1100%); } }
+@keyframes jitter { 0%, 94%, 100% { transform: none; } 95% { transform: translateX(3px) skewX(-6deg); } 97% { transform: translateX(-3px); } }
+@keyframes blink { 50% { opacity: .2; } } @keyframes scan { to { transform: translateY(3px); } }

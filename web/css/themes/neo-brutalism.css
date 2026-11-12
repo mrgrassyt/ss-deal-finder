@@ -1,0 +1,57 @@
+/* NEO-BRUTALISM — raw blocks. Thick outlines, hard shadows, sticker tags, colour-blocked panels. Layout: side. */
+[data-theme="neo-brutalism"] {
+  --bg: #f4f1ff; --bg-image: linear-gradient(rgba(0,0,0,.06) 2px, transparent 2px), linear-gradient(90deg, rgba(0,0,0,.06) 2px, transparent 2px); --bg-size: 40px 40px;
+  --surface: #ffffff; --surface-2: #fff2a8; --surface-3: #ffe45c;
+  --text: #000000; --muted: #3a3a3a; --line: #000000; --line-soft: #cfc9e6;
+  --accent: #b6ff3b; --accent-ink: #000; --accent-border: #000; --accent-soft: #e4ffb0; --accent-text: #000; --accent-2: #ff5fd0;
+  --good: #00a04a; --good-soft: #bff5d3; --good-ink: #fff; --warn: #e68a00; --warn-soft: #ffe0a8; --bad: #ff2e2e; --bad-soft: #ffc9c9;
+  --nav-bg: #ff7ad9; --nav-text: #000; --nav-muted: #4a0a3d; --nav-hover: rgba(255,255,255,.5); --nav-active-bg: #000; --nav-active-text: #b6ff3b; --nav-line: #000;
+  --topbar-bg: #ffe45c; --drawer-bg: #fff; --link: #0036ff;
+  --font-body: "Space Grotesk", "Segoe UI", sans-serif; --font-display: "Archivo Black", Impact, sans-serif; --font-num: "Archivo Black", Impact, sans-serif; --display-weight: 400;
+  --h1-size: 38px; --h1-tt: uppercase; --h1-ls: -.01em; --h2-size: 20px; --h2-tt: uppercase; --btn-font: "Archivo Black", Impact, sans-serif; --btn-tt: uppercase; --btn-fw: 400; --btn-ls: .02em; --nav-font: "Archivo Black", Impact, sans-serif; --nav-tt: uppercase;
+  --border-w: 3px; --radius: 8px; --radius-sm: 6px; --radius-btn: 8px; --nav-r: 8px; --tag-r: 6px; --pad: 18px; --gap: 22px;
+  --card-shadow: 6px 6px 0 #000; --btn-shadow: 4px 4px 0 #000;
+  --chart-1: #000; --chart-2: #00a04a; --chart-3: #ff5fd0; --chart-area: #e4ffb0; --personal-color: #c2009a; --ruler-ask: #000;
+}
+html body, html .tprev { font-weight: 500; }
+[data-theme="neo-brutalism"] .bgfx .a { right: 3%; top: 10%; width: 8%; aspect-ratio: 1; border: 3px solid #000; border-radius: 50%; background: #ff5fd0; box-shadow: 4px 4px 0 #000; }
+[data-theme="neo-brutalism"] .bgfx .b { left: 4%; bottom: 6%; width: 7%; aspect-ratio: 1; border: 3px solid #000; background: #6ee7ff; box-shadow: 4px 4px 0 #000; transform: rotate(12deg); }
+[data-theme="neo-brutalism"] .bgfx .c { right: 12%; bottom: 8%; width: 7%; aspect-ratio: 1.1; background: #b6ff3b; clip-path: polygon(50% 0, 100% 100%, 0 100%); filter: drop-shadow(4px 4px 0 #000); }
+[data-theme="neo-brutalism"] .nav { border-right-width: 4px; }
+[data-theme="neo-brutalism"] .brand { font-family: "Archivo Black", sans-serif; font-weight: 400; text-transform: uppercase; font-size: 17px; line-height: 1; } [data-theme="neo-brutalism"] .brand-mark { fill: #000; } [data-theme="neo-brutalism"] .brand svg { color: #b6ff3b; }
+[data-theme="neo-brutalism"] .nav a { font-size: 12.5px; background: #fff; border: 3px solid #000; box-shadow: 3px 3px 0 #000; margin-bottom: 4px; padding: 6px 9px; } [data-theme="neo-brutalism"] .nav a:hover { background: #ffe45c; transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #000; }
+[data-theme="neo-brutalism"] .nav a.active { background: #000; color: #b6ff3b; transform: translate(3px, 3px); box-shadow: none; }
+[data-theme="neo-brutalism"] .nav-group { font-family: "Archivo Black", sans-serif; text-transform: uppercase; color: #000; }
+[data-theme="neo-brutalism"] .topbar { border-bottom-width: 4px; }
+[data-theme="neo-brutalism"] .page-head h1 { display: inline-block; background: linear-gradient(transparent 58%, #b6ff3b 58%, #b6ff3b 92%, transparent 92%); padding: 0 4px; margin-left: -4px; }
+[data-theme="neo-brutalism"] .page-head p { font-weight: 600; color: #000; }
+/* colour-blocked panels */
+[data-theme="neo-brutalism"] .card:nth-child(4n+2) { background: #fff2a8; } [data-theme="neo-brutalism"] .card:nth-child(4n+3) { background: #c9f6ff; } [data-theme="neo-brutalism"] .card:nth-child(4n) { background: #ffd6f1; }
+[data-theme="neo-brutalism"] .card > h2, [data-theme="neo-brutalism"] .card-head h2 { display: inline-block; background: #000; color: #fff; padding: 2px 10px; margin-left: -4px; transform: rotate(-1deg); }
+[data-theme="neo-brutalism"] .figures { box-shadow: 6px 6px 0 #000; background: #fff; } [data-theme="neo-brutalism"] .figure:nth-child(4n+1) { background: #b6ff3b; } [data-theme="neo-brutalism"] .figure:nth-child(4n+2) { background: #ffe45c; } [data-theme="neo-brutalism"] .figure:nth-child(4n+3) { background: #6ee7ff; } [data-theme="neo-brutalism"] .figure:nth-child(4n) { background: #ff9de2; }
+[data-theme="neo-brutalism"] .figure .v { font-size: 30px; color: #000 !important; } [data-theme="neo-brutalism"] .figure .l { color: #000; font-weight: 700; }
+[data-theme="neo-brutalism"] .btn { background: #fff; padding: 7px 14px; font-size: 12.5px; } [data-theme="neo-brutalism"] .btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #000; background: #ffe45c; }
+[data-theme="neo-brutalism"] .btn:active { transform: translate(4px, 4px); box-shadow: none; } [data-theme="neo-brutalism"] .btn.primary:hover { background: #caff6b; } [data-theme="neo-brutalism"] .btn.good:hover { background: #12c964; } [data-theme="neo-brutalism"] .btn.ghost { box-shadow: none; }
+[data-theme="neo-brutalism"] .btn.danger { color: #d40000; }
+[data-theme="neo-brutalism"] .card-head h2 .muted, [data-theme="neo-brutalism"] .card > h2 .muted { color: #ddd; }
+/* stickers */
+[data-theme="neo-brutalism"] .tag, [data-theme="neo-brutalism"] .level { border: 2px solid #000; box-shadow: 2px 2px 0 #000; color: #000; background: #fff; font-weight: 800; text-transform: uppercase; transform: rotate(-2deg); font-size: 10.5px; }
+[data-theme="neo-brutalism"] .tag.good { background: #7dff9f; color: #000; } [data-theme="neo-brutalism"] .tag.warn { background: #ffd23d; color: #000; } [data-theme="neo-brutalism"] .tag.bad { background: #ff7a7a; color: #000; } [data-theme="neo-brutalism"] .tag.accent { background: #b6ff3b; color: #000; }
+[data-theme="neo-brutalism"] .level.GOOD_DEAL { background: #7dff9f; color: #000; transform: rotate(2deg); font-size: 12px; } [data-theme="neo-brutalism"] .level.INTERESTING { background: #ffd23d; color: #000; } [data-theme="neo-brutalism"] .level.IGNORE { background: #ddd; color: #000; }
+[data-theme="neo-brutalism"] .score-chip { border: 3px solid #000; background: #fff; box-shadow: 3px 3px 0 #000; } [data-theme="neo-brutalism"] .score-chip b { font-size: 18px; font-weight: 400; }
+[data-theme="neo-brutalism"] .thumb { border: 3px solid #000; box-shadow: 3px 3px 0 #000; }
+[data-theme="neo-brutalism"] .scan-pill { border: 3px solid #000; box-shadow: 3px 3px 0 #000; background: #fff; font-weight: 800; }
+[data-theme="neo-brutalism"] .icon-btn { border-width: 3px; box-shadow: 3px 3px 0 #000; background: #fff; }
+[data-theme="neo-brutalism"] input, [data-theme="neo-brutalism"] select, [data-theme="neo-brutalism"] textarea { background: #fff; border: 3px solid #000; font-weight: 600; } [data-theme="neo-brutalism"] input:focus, [data-theme="neo-brutalism"] select:focus, [data-theme="neo-brutalism"] textarea:focus { box-shadow: 4px 4px 0 #b6ff3b, 4px 4px 0 3px #000; outline: 0; }
+[data-theme="neo-brutalism"] table.data th { background: #000; color: #fff; font-family: "Archivo Black", sans-serif; font-weight: 400; text-transform: uppercase; font-size: 11px; } [data-theme="neo-brutalism"] table.data td { border-bottom: 2px solid #000; }
+[data-theme="neo-brutalism"] .deal-item { border-bottom: 2px solid #000; } [data-theme="neo-brutalism"] .price { font-family: "Archivo Black", sans-serif; font-weight: 400; }
+[data-theme="neo-brutalism"] .seg { border-width: 3px; box-shadow: 3px 3px 0 #000; } [data-theme="neo-brutalism"] .seg button.on { background: #000; color: #b6ff3b; }
+[data-theme="neo-brutalism"] .tabs button.on { border-bottom-width: 5px; color: #000; }
+[data-theme="neo-brutalism"] .chart .bar { rx: 0; stroke: #000; stroke-width: 2.5; } [data-theme="neo-brutalism"] .chart .bar.b1 { fill: #fff; } [data-theme="neo-brutalism"] .chart .bar.b2 { fill: #7dff9f; } [data-theme="neo-brutalism"] .chart .bar.b3 { fill: #ffd23d; }
+[data-theme="neo-brutalism"] .chart .s1, [data-theme="neo-brutalism"] .chart .s2, [data-theme="neo-brutalism"] .chart .s3 { stroke-width: 4; stroke-linejoin: round; } [data-theme="neo-brutalism"] .chart .gridline { stroke: #000; stroke-width: 1; stroke-dasharray: 3 3; opacity: .35; } [data-theme="neo-brutalism"] .chart .dot { stroke: #000; stroke-width: 2; r: 4; fill: #b6ff3b; }
+[data-theme="neo-brutalism"] .ruler .range { border: 2px solid #000; background: #b6ff3b; } [data-theme="neo-brutalism"] .ruler .ask { border: 3px solid #000; background: #ff5fd0; box-shadow: 2px 2px 0 #000; } [data-theme="neo-brutalism"] .ruler .ask.over { background: #ff2e2e; box-shadow: 2px 2px 0 #000; }
+[data-theme="neo-brutalism"] .modal-box { box-shadow: 10px 10px 0 #000; border-width: 4px; } [data-theme="neo-brutalism"] .drawer { border-left-width: 4px; box-shadow: -8px 0 0 #000; } [data-theme="neo-brutalism"] .toast { border: 3px solid #000; border-left-width: 10px; box-shadow: 5px 5px 0 #000; }
+html[data-motion="smooth"] [data-theme="neo-brutalism"] .btn, html[data-motion="smooth"] [data-theme="neo-brutalism"] .nav a { transition: transform 90ms, box-shadow 90ms, background 90ms; }
+html[data-motion="smooth"] [data-theme="neo-brutalism"] .bgfx .a { animation: nbBob 3s ease-in-out infinite alternate; } html[data-motion="smooth"] [data-theme="neo-brutalism"] .bgfx .b { animation: nbSpin 9s linear infinite; } html[data-motion="smooth"] [data-theme="neo-brutalism"] .bgfx .c { animation: nbBob 2.4s ease-in-out infinite alternate-reverse; }
+html[data-motion="smooth"] [data-theme="neo-brutalism"] .card { animation: nbPop 320ms cubic-bezier(.3,1.6,.5,1) both; }
+@keyframes nbBob { to { transform: translateY(-14px) rotate(8deg); } } @keyframes nbSpin { to { transform: rotate(372deg); } } @keyframes nbPop { from { transform: translate(-8px,-8px); box-shadow: 14px 14px 0 #000; opacity: .3; } to { transform: none; opacity: 1; } }

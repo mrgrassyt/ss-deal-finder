@@ -1,0 +1,2 @@
+The bundled fonts are open-source families distributed under the SIL Open Font License 1.1
+(https://openfontlicense.org), sourced from Google Fonts / Fontsource. They are included so themes render offline.

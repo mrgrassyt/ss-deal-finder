@@ -1,0 +1,91 @@
+/* LIQUID GLASS — clear, lens-like glass over a bright wallpaper. Specular rims brighter at the corners, capsule controls,
+   a floating capsule navigation with a sliding glass lens. Layout: float. Performance mode swaps glass for frosted fills. */
+[data-theme="liquid-glass"] {
+  --bg: #cfe3ff; --bg-image: radial-gradient(120% 90% at 0% 0%, #ffd6ec 0%, rgba(255,214,236,0) 55%), radial-gradient(90% 80% at 100% 10%, #b9f3ff 0%, rgba(185,243,255,0) 60%), radial-gradient(120% 100% at 60% 100%, #c9c2ff 0%, rgba(201,194,255,0) 60%), linear-gradient(160deg, #e9f2ff, #f6efff);
+  --bg-size: auto;
+  --surface: rgba(255,255,255,.34); --surface-2: rgba(255,255,255,.42); --surface-3: rgba(255,255,255,.66);
+  --text: #0c1830; --muted: #4a5873; --line: rgba(255,255,255,.62); --line-soft: rgba(12,24,48,.08);
+  --accent: #0a6cff; --accent-ink: #fff; --accent-soft: rgba(10,108,255,.14); --accent-text: #0058d6; --accent-2: #ff3d8b;
+  --good: #047a55; --good-soft: rgba(4,122,85,.14); --good-ink: #fff; --warn: #a85b00; --warn-soft: rgba(168,91,0,.14); --bad: #d0213f; --bad-soft: rgba(208,33,63,.13);
+  --nav-bg: rgba(255,255,255,.3); --nav-text: #0c1830; --nav-line: rgba(255,255,255,.75); --nav-hover: rgba(255,255,255,.35); --nav-active-bg: transparent; --nav-active-text: #0058d6;
+  --topbar-bg: transparent; --drawer-bg: rgba(240,246,255,.94); --toast-bg: rgba(250,252,255,.92); --input-bg: rgba(255,255,255,.45); --input-border: rgba(255,255,255,.8);
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif; --font-display: "Inter", "Segoe UI", sans-serif; --font-num: "Inter", "Segoe UI", sans-serif;
+  --display-weight: 700; --display-tracking: -.02em; --h1-size: 34px; --h1-ls: -.03em; --h2-size: 17px;
+  --radius: 28px; --radius-sm: 16px; --radius-btn: 999px; --nav-r: 999px; --tag-r: 999px; --pad: 20px; --gap: 18px; --view-pad: 26px;
+  --card-border: rgba(255,255,255,.7); --card-blur: blur(14px) saturate(190%);
+  /* rim light from sharp inset shadows (cheap): bright top-left edge, softer bottom-right edge, so corners catch the light */
+  --card-shadow: 0 12px 34px rgba(30,60,140,.16), inset 1.5px 1.5px 0 rgba(255,255,255,.95), inset -1px -1px 0 rgba(255,255,255,.55), inset 0 0 0 1px rgba(255,255,255,.18);
+  --card-shadow-perf: 0 6px 16px rgba(30,60,140,.12);
+  --btn-bg: rgba(255,255,255,.42); --btn-border: rgba(255,255,255,.85); --btn-text: #0c1830; --btn-hover: rgba(255,255,255,.62);
+  --btn-shadow: 0 4px 12px rgba(30,60,140,.12), inset 0 1px 0 rgba(255,255,255,.95);
+  --chart-1: #0a6cff; --chart-2: #10b981; --chart-3: #ff9f0a; --chart-area: rgba(10,108,255,.12); --personal-color: #ff3d8b; --deal-color: #047a55;
+  --ruler-ask: #ff3d8b; --ruler-range: rgba(10,108,255,.16); --ruler-range-border: rgba(10,108,255,.45); --ruler-typ: #0a6cff; --row-hover: rgba(255,255,255,.35);
+}
+/* wallpaper shapes: a few crisp ones, so the glass has something to bend */
+[data-theme="liquid-glass"] .bgfx .a { left: 6%; top: 18%; width: 18%; aspect-ratio: 1; border-radius: 50%; background: linear-gradient(140deg, #ff8ac4, #ff4d97); opacity: .55; }
+[data-theme="liquid-glass"] .bgfx .b { right: 8%; top: 12%; width: 22%; aspect-ratio: 1.6; border-radius: 40px; transform: rotate(-12deg); background: linear-gradient(140deg, #63d6ff, #2f7bff); opacity: .45; }
+[data-theme="liquid-glass"] .bgfx .c { left: 40%; bottom: 6%; width: 26%; aspect-ratio: 1; border-radius: 50%; background: linear-gradient(140deg, #b7a6ff, #7a5cff); opacity: .4; }
+[data-theme="liquid-glass"] .bgfx .d { right: 26%; bottom: 30%; width: 9%; aspect-ratio: 1; border-radius: 30%; transform: rotate(20deg); background: linear-gradient(140deg, #ffe08a, #ffb020); opacity: .55; }
+
+/* the glass material: clear fill, saturated backdrop; the capsule nav gets a gradient rim that is strongest at the corners */
+[data-theme="liquid-glass"] .card, [data-theme="liquid-glass"] .figures { background: linear-gradient(160deg, rgba(255,255,255,.42), rgba(255,255,255,.16)); }
+[data-theme="liquid-glass"] .nav::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1.5px;
+  background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,255,255,.15) 30%, rgba(255,255,255,0) 50%, rgba(255,255,255,.25) 70%, rgba(255,255,255,.9));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+[data-theme="liquid-glass"] .card .card { background: rgba(255,255,255,.3); box-shadow: inset 0 1px 0 rgba(255,255,255,.8); backdrop-filter: none; }
+[data-theme="liquid-glass"] .figures { border-radius: 28px; }
+[data-theme="liquid-glass"] .figure { border-right-color: rgba(255,255,255,.5); }
+[data-theme="liquid-glass"] .figure .v { font-size: 30px; font-weight: 700; letter-spacing: -.03em; }
+
+/* floating capsule navigation with a glass lens that slides to the active tab (position from app.js: --ax/--aw) */
+[data-theme="liquid-glass"] .nav { background: linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.22)); backdrop-filter: blur(16px) saturate(200%); -webkit-backdrop-filter: blur(16px) saturate(200%);
+  box-shadow: 0 14px 40px rgba(30,60,140,.22), inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.4); }
+[data-theme="liquid-glass"] .nav a { position: relative; z-index: 1; font-weight: 600; font-size: 13px; color: #24324f; }
+[data-theme="liquid-glass"] .nav a.active { color: #0058d6; background: transparent; }
+[data-theme="liquid-glass"] .nav-links::before { content: ""; position: absolute; z-index: 0; left: var(--ax, 0); top: var(--ay, 0); width: var(--aw, 0); height: var(--ah, 0); border-radius: 999px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.6)); box-shadow: 0 4px 14px rgba(30,60,140,.2), inset 0 1px 0 #fff, inset 0 -2px 5px rgba(10,108,255,.12); }
+html[data-motion="smooth"] [data-theme="liquid-glass"] .nav-links::before { transition: left 520ms cubic-bezier(.3,1.35,.45,1), width 520ms cubic-bezier(.3,1.35,.45,1), top 520ms cubic-bezier(.3,1.35,.45,1); }
+[data-theme="liquid-glass"] .brand-mark { fill: #0a6cff; }
+[data-theme="liquid-glass"] .topbar { padding-top: 14px; }
+[data-theme="liquid-glass"] .topbar .search input, [data-theme="liquid-glass"] .scan-pill, [data-theme="liquid-glass"] .icon-btn, [data-theme="liquid-glass"] .seg { border-radius: 999px; background: rgba(255,255,255,.4); border-color: rgba(255,255,255,.85); box-shadow: inset 0 1px 0 #fff, 0 4px 12px rgba(30,60,140,.1); }
+[data-theme="liquid-glass"] .topbar .search input { padding: 9px 16px; }
+
+/* controls: capsules; primary is tinted glass, not a flat colour */
+[data-theme="liquid-glass"] .btn { font-weight: 600; padding: 8px 16px; }
+[data-theme="liquid-glass"] .btn.primary { background: linear-gradient(180deg, rgba(64,146,255,.92), rgba(10,108,255,.92)); border-color: rgba(255,255,255,.6); box-shadow: 0 8px 20px rgba(10,108,255,.32), inset 0 1px 0 rgba(255,255,255,.7), inset 0 -2px 6px rgba(0,40,140,.25); }
+[data-theme="liquid-glass"] .btn.good { background: linear-gradient(180deg, #34d399, #059669); color: #fff; border-color: rgba(255,255,255,.6); }
+[data-theme="liquid-glass"] .seg button.on { background: rgba(255,255,255,.9); color: #0058d6; box-shadow: 0 2px 8px rgba(30,60,140,.16); border-radius: 999px; }
+[data-theme="liquid-glass"] .seg { padding: 3px; gap: 2px; }
+[data-theme="liquid-glass"] .seg button { border-radius: 999px; }
+[data-theme="liquid-glass"] .tabs { border-bottom: 0; background: rgba(255,255,255,.3); border: 1px solid rgba(255,255,255,.8); border-radius: 999px; padding: 4px; display: inline-flex; box-shadow: inset 0 1px 0 #fff; }
+[data-theme="liquid-glass"] .tabs button { border-radius: 999px; border-bottom: 0; padding: 7px 14px; }
+[data-theme="liquid-glass"] .tabs button.on { background: rgba(255,255,255,.92); color: #0058d6; box-shadow: 0 3px 10px rgba(30,60,140,.16); }
+[data-theme="liquid-glass"] input[type=text], [data-theme="liquid-glass"] input[type=number], [data-theme="liquid-glass"] input[type=search], [data-theme="liquid-glass"] select { border-radius: 14px; box-shadow: inset 0 1px 2px rgba(12,24,48,.08); }
+[data-theme="liquid-glass"] .tag, [data-theme="liquid-glass"] .score-chip { background: rgba(255,255,255,.5); border-color: rgba(255,255,255,.9); box-shadow: inset 0 1px 0 #fff; }
+[data-theme="liquid-glass"] .score-chip { border-radius: 14px; }
+[data-theme="liquid-glass"] .level { border-radius: 999px; }
+[data-theme="liquid-glass"] .thumb { border-radius: 12px; border-color: rgba(255,255,255,.9); }
+[data-theme="liquid-glass"] .deal-item { border-bottom-color: rgba(12,24,48,.07); }
+[data-theme="liquid-glass"] table.data th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; border-bottom-color: rgba(12,24,48,.1); }
+[data-theme="liquid-glass"] .kicker { color: #4a5873; }
+[data-theme="liquid-glass"] .drawer { border-radius: 28px 0 0 28px; background: linear-gradient(170deg, rgba(246,250,255,.96), rgba(236,240,255,.96)); }
+[data-theme="liquid-glass"] .modal-box { border-radius: 28px; background: rgba(246,250,255,.96); }
+[data-theme="liquid-glass"] .toast { border-radius: 18px; border-left-width: 1px; box-shadow: 0 14px 36px rgba(30,60,140,.22); }
+[data-theme="liquid-glass"] .chart .s1, [data-theme="liquid-glass"] .chart .s2 { stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+[data-theme="liquid-glass"] .chart .bar { rx: 6px; }
+[data-theme="liquid-glass"] .ruler .range, [data-theme="liquid-glass"] .ruler .track { border-radius: 999px; }
+/* Performance: no blur at all; panels become milky frosted fills so text stays readable */
+html[data-motion="performance"] [data-theme="liquid-glass"] .card, html[data-motion="performance"] [data-theme="liquid-glass"] .figures { background: rgba(255,255,255,.72); }
+html[data-motion="performance"] [data-theme="liquid-glass"] .nav { background: rgba(255,255,255,.82); }
+/* Smooth: the wallpaper drifts very slowly; buttons squash a little when pressed */
+html[data-motion="smooth"] [data-theme="liquid-glass"] .bgfx .a { animation: lgDrift 26s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="liquid-glass"] .bgfx .b { animation: lgDrift 32s ease-in-out infinite alternate-reverse; }
+html[data-motion="smooth"] [data-theme="liquid-glass"] .btn:active { transform: scale(.95, .92); }
+@keyframes lgDrift { to { transform: translate(6%, 8%) rotate(8deg); } }
+@media (max-width: 820px) {
+  [data-theme="liquid-glass"] .nav-links::before { display: none; }
+  [data-theme="liquid-glass"] .nav { background: rgba(246,250,255,.97); border-radius: 0 28px 28px 0 !important; }
+  [data-theme="liquid-glass"] .nav a.active { background: rgba(10,108,255,.12); }
+}

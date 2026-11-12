@@ -1,0 +1,67 @@
+/* COMIC BOOK — panels and captions. Heavy ink, halftone, action lines, starburst badges, speech-bubble toasts. Layout: side. */
+[data-theme="comic-book"] {
+  --bg: #ffd84a; --bg-image: radial-gradient(rgba(0,0,0,.14) 1.5px, transparent 1.9px); --bg-size: 12px 12px;
+  --surface: #ffffff; --surface-2: #fff6cc; --surface-3: #ffee99;
+  --text: #111111; --muted: #4a4a4a; --line: #111111; --line-soft: #d9cf9f;
+  --accent: #e5173f; --accent-ink: #fff; --accent-border: #111; --accent-soft: #ffd0da; --accent-text: #c4102f; --accent-2: #1d6bf3;
+  --good: #11893a; --good-soft: #d1f5d9; --good-ink: #fff; --warn: #c26500; --warn-soft: #ffe9b8; --bad: #e5173f; --bad-soft: #ffd0da;
+  --nav-bg: #1d6bf3; --nav-text: #ffffff; --nav-muted: #d3e3ff; --nav-active-bg: #ffd84a; --nav-active-text: #111; --nav-active-border: #111; --nav-line: #111; --nav-hover: rgba(255,255,255,.18);
+  --topbar-bg: #ffffff; --drawer-bg: #fffdf2; --link: #1d58c9;
+  --font-body: "Comic Neue", "Comic Sans MS", sans-serif; --font-display: "Bangers", Impact, sans-serif; --font-num: "Bangers", Impact, sans-serif; --display-weight: 400;
+  --h1-size: 40px; --h1-ls: .03em; --h1-tt: uppercase; --h2-size: 22px; --h2-tt: uppercase; --h2-ls: .04em;
+  --btn-font: "Bangers", Impact, sans-serif; --btn-tt: uppercase; --btn-ls: .06em; --btn-fw: 400; --nav-font: "Bangers", Impact, sans-serif; --nav-tt: uppercase;
+  --border-w: 3px; --radius: 6px; --radius-sm: 4px; --radius-btn: 8px; --nav-r: 6px; --tag-r: 4px; --pad: 18px; --gap: 20px;
+  --card-shadow: 6px 6px 0 #111; --btn-shadow: 3px 3px 0 #111;
+  --chart-1: #1d6bf3; --chart-2: #11893a; --chart-3: #e5173f; --chart-area: #cfe1ff; --personal-color: #1d6bf3; --ruler-ask: #e5173f;
+}
+html body, html .tprev { font-weight: 700; }
+[data-theme="comic-book"] .bgfx .a { right: 0; top: 0; width: 70%; aspect-ratio: 1; background: repeating-conic-gradient(from 180deg at 100% 0%, rgba(17,17,17,.12) 0 1.1deg, transparent 1.1deg 6deg); -webkit-mask-image: radial-gradient(circle at 100% 0, #000, transparent 70%); mask-image: radial-gradient(circle at 100% 0, #000, transparent 70%); }
+[data-theme="comic-book"] .bgfx .b { left: -8%; bottom: -14%; width: 36%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(#e5173f 28%, transparent 30%) 0 0 / 10px 10px; -webkit-mask-image: radial-gradient(circle, #000 20%, transparent 70%); mask-image: radial-gradient(circle, #000 20%, transparent 70%); opacity: .6; }
+[data-theme="comic-book"] .nav { border-right-width: 4px; }
+[data-theme="comic-book"] .nav a { font-size: 17px; letter-spacing: .05em; padding: 5px 10px; } [data-theme="comic-book"] .nav a.active { box-shadow: 3px 3px 0 #111; transform: rotate(-1.5deg); }
+[data-theme="comic-book"] .brand { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 21px; letter-spacing: .04em; text-shadow: 2px 2px 0 #111; -webkit-text-stroke: 1px #111; }
+[data-theme="comic-book"] .brand-mark { fill: #ffd84a; stroke: #111; stroke-width: 2; } [data-theme="comic-book"] .brand svg { color: #111; }
+[data-theme="comic-book"] .topbar { border-bottom-width: 4px; }
+[data-theme="comic-book"] .page-head h1 { display: inline-block; background: #fff; border: 3px solid #111; padding: 2px 14px 0; box-shadow: 5px 5px 0 #111; transform: rotate(-1.2deg); }
+[data-theme="comic-book"] .page-head p { background: #fff; display: inline-block; border: 2px solid #111; padding: 2px 8px; margin-top: 10px; font-size: 13px; }
+/* captions: panel titles are yellow caption boxes pinned to the panel corner */
+[data-theme="comic-book"] .card > h2, [data-theme="comic-book"] .card-head h2 { display: inline-block; background: #ffd84a; border: 3px solid #111; padding: 1px 10px 0; box-shadow: 3px 3px 0 #111; transform: rotate(-1.5deg); margin: -26px 0 6px -8px; font-size: 20px; }
+[data-theme="comic-book"] .card-head { margin-bottom: 4px; }
+[data-theme="comic-book"] .card:nth-child(even) > h2, [data-theme="comic-book"] .card:nth-child(even) .card-head h2 { background: #7ed0ff; transform: rotate(1deg); }
+[data-theme="comic-book"] .card:nth-child(3n) > h2, [data-theme="comic-book"] .card:nth-child(3n) .card-head h2 { background: #ff9ab0; }
+[data-theme="comic-book"] .card { margin-top: 12px; }
+[data-theme="comic-book"] .figures { box-shadow: 6px 6px 0 #111; } [data-theme="comic-book"] .figure .v { font-size: 34px; letter-spacing: .03em; -webkit-text-stroke: .5px #111; }
+[data-theme="comic-book"] .figure:nth-child(odd) { background: #fff6cc; }
+[data-theme="comic-book"] .btn { font-size: 15px; padding: 5px 13px; background: #fff; } [data-theme="comic-book"] .btn:hover { background: #ffd84a; transform: translate(-1px, -1px); box-shadow: 4px 4px 0 #111; }
+[data-theme="comic-book"] .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 #111; } [data-theme="comic-book"] .btn.primary:hover { background: #ff3358; } [data-theme="comic-book"] .btn.good:hover { background: #20b24f; }
+[data-theme="comic-book"] .tag { border: 2px solid #111; background: #fff; color: #111; font-weight: 700; } [data-theme="comic-book"] .tag.good { background: #a8f0bb; color: #111; } [data-theme="comic-book"] .tag.warn { background: #ffe08a; color: #111; } [data-theme="comic-book"] .tag.bad { background: #ff9ab0; color: #111; } [data-theme="comic-book"] .tag.accent { background: #bcd7ff; color: #111; }
+/* starburst badges */
+[data-theme="comic-book"] .level { border-radius: 0; font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 14px; letter-spacing: .05em; padding: 7px 14px; color: #111; text-transform: uppercase;
+  clip-path: polygon(50% 0, 60% 14%, 76% 6%, 78% 22%, 94% 24%, 88% 38%, 100% 50%, 88% 62%, 94% 76%, 78% 78%, 76% 94%, 60% 86%, 50% 100%, 40% 86%, 24% 94%, 22% 78%, 6% 76%, 12% 62%, 0 50%, 12% 38%, 6% 24%, 22% 22%, 24% 6%, 40% 14%); }
+[data-theme="comic-book"] .level.GOOD_DEAL { background: #ff3358; color: #fff; } [data-theme="comic-book"] .level.INTERESTING { background: #7ed0ff; } [data-theme="comic-book"] .level.IGNORE { background: #ddd; }
+[data-theme="comic-book"] .score-chip { border: 2px solid #111; background: #fff; box-shadow: 2px 2px 0 #111; } [data-theme="comic-book"] .score-chip b { font-size: 20px; font-weight: 400; }
+[data-theme="comic-book"] .thumb { border: 3px solid #111; filter: contrast(1.15) saturate(1.3); }
+[data-theme="comic-book"] .scan-pill { border: 3px solid #111; box-shadow: 3px 3px 0 #111; background: #fff; font-weight: 700; }
+[data-theme="comic-book"] .icon-btn { border-width: 3px; box-shadow: 3px 3px 0 #111; }
+[data-theme="comic-book"] input, [data-theme="comic-book"] select, [data-theme="comic-book"] textarea { border: 3px solid #111; background: #fff; font-weight: 700; }
+[data-theme="comic-book"] table.data th { font-family: "Bangers", Impact, sans-serif; font-weight: 400; letter-spacing: .06em; font-size: 15px; color: #111; border-bottom: 3px solid #111; background: #ffee99; }
+[data-theme="comic-book"] table.data td { border-bottom: 2px dashed #111; }
+[data-theme="comic-book"] .deal-item { border-bottom: 2px dashed #111; } [data-theme="comic-book"] .price { font-family: "Bangers", Impact, sans-serif; font-weight: 400; font-size: 22px; letter-spacing: .03em; color: #c4102f; }
+[data-theme="comic-book"] .chart .bar { rx: 0; stroke: #111; stroke-width: 2; } [data-theme="comic-book"] .chart .s1, [data-theme="comic-book"] .chart .s2, [data-theme="comic-book"] .chart .s3 { stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+[data-theme="comic-book"] .chart .gridline { stroke: #111; stroke-width: 1; stroke-dasharray: 2 5; } [data-theme="comic-book"] .chart .dot { stroke: #111; stroke-width: 2; r: 4; }
+[data-theme="comic-book"] .ruler .range { border: 2px solid #111; background: #cfe1ff; } [data-theme="comic-book"] .ruler .ask { border: 3px solid #111; width: 16px; height: 16px; margin-left: -8px; top: 0; }
+/* speech-bubble toasts */
+[data-theme="comic-book"] .toast { border: 3px solid #111; border-left-width: 3px; border-radius: 18px; background: #fff; box-shadow: 4px 4px 0 #111; position: relative; margin-bottom: 14px; }
+[data-theme="comic-book"] .toast::after { content: ""; position: absolute; right: 28px; bottom: -17px; width: 18px; height: 18px; background: #fff; border-right: 3px solid #111; border-bottom: 3px solid #111; transform: skewY(40deg) rotate(8deg); clip-path: polygon(0 0, 100% 100%, 0 100%); }
+[data-theme="comic-book"] .toast.GOOD_DEAL { background: #b8f7c8; } [data-theme="comic-book"] .toast.GOOD_DEAL::after { background: #b8f7c8; }
+[data-theme="comic-book"] .modal-box, [data-theme="comic-book"] .drawer { border-width: 4px; box-shadow: 8px 8px 0 #111; }
+html[data-motion="smooth"] [data-theme="comic-book"] .btn { transition: transform 120ms, box-shadow 120ms; }
+html[data-motion="smooth"] [data-theme="comic-book"] .level.GOOD_DEAL { animation: pow 1.8s ease-in-out infinite; }
+html[data-motion="smooth"] [data-theme="comic-book"] .page-head h1 { animation: bam 420ms cubic-bezier(.3,1.8,.4,1) both; }
+html[data-motion="smooth"] [data-theme="comic-book"] .nav a:hover { transform: rotate(-2deg) scale(1.05); }
+@keyframes pow { 0%, 100% { transform: rotate(-3deg) scale(1); } 50% { transform: rotate(3deg) scale(1.1); } }
+@keyframes bam { from { transform: rotate(-1.2deg) scale(.4); opacity: 0; } to { transform: rotate(-1.2deg) scale(1); opacity: 1; } }
+
+/* dotted/dashed row rules drawn as a tiled gradient: real dotted borders on every table cell cost ~9x more raster time while scrolling */
+[data-theme="comic-book"] table.data td, [data-theme="comic-book"] .deal-item { border-bottom-style: solid; border-bottom-color: transparent; background-image: linear-gradient(90deg, #111 0 50%, transparent 0); background-size: 9px 2px; background-position: left bottom; background-repeat: repeat-x; }
+[data-theme="comic-book"] .deal-item:last-child { background-image: none; }

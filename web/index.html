@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-theme="blueprint" data-layout="side" data-motion="performance">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d4ed8">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SS Deals">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>SS Deal Finder</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231d4ed8'/%3E%3Cpath d='M6 22h20M10 22V12m6 10V8m6 14v-6' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/themes/particles.css">
+<link rel="stylesheet" href="css/themes/liquid-morph.css">
+<link rel="stylesheet" href="css/themes/holographic.css">
+<link rel="stylesheet" href="css/themes/neon-glow.css">
+<link rel="stylesheet" href="css/themes/wireframe-3d.css">
+<link rel="stylesheet" href="css/themes/glassmorphism.css">
+<link rel="stylesheet" href="css/themes/kinetic-typography.css">
+<link rel="stylesheet" href="css/themes/isometric.css">
+<link rel="stylesheet" href="css/themes/clay-3d.css">
+<link rel="stylesheet" href="css/themes/ascii-art.css">
+<link rel="stylesheet" href="css/themes/gradient-mesh.css">
+<link rel="stylesheet" href="css/themes/comic-book.css">
+<link rel="stylesheet" href="css/themes/split-flap.css">
+<link rel="stylesheet" href="css/themes/retro-vhs.css">
+<link rel="stylesheet" href="css/themes/halftone.css">
+<link rel="stylesheet" href="css/themes/bauhaus.css">
+<link rel="stylesheet" href="css/themes/blueprint.css">
+<link rel="stylesheet" href="css/themes/art-deco.css">
+<link rel="stylesheet" href="css/themes/neo-brutalism.css">
+<link rel="stylesheet" href="css/themes/liquid-glass.css">
+<link rel="stylesheet" href="css/themes/minimal.css">
+<link rel="stylesheet" href="css/themes/material-you.css">
+<link rel="stylesheet" href="css/themes/trading-desk.css">
+<link rel="stylesheet" href="css/themes/cyber-hud.css">
+<script>
+  // apply the saved theme before first paint (no flash)
+  try {
+    const t = localStorage.getItem('ssd-theme'); if (t) document.documentElement.dataset.theme = t;
+    const l = localStorage.getItem('ssd-layout'); if (l) document.documentElement.dataset.layout = l;
+    const m = localStorage.getItem('ssd-motion'); if (m) document.documentElement.dataset.motion = m;
+    const md = localStorage.getItem('ssd-mode'); document.documentElement.dataset.mode = md === 'advanced' ? 'advanced' : 'simple';
+    const z = localStorage.getItem('ssd-tsize'); if (z) document.documentElement.dataset.tsize = z;
+  } catch (e) {}
+</script>
+</head>
+<body>
+<canvas id="fx-canvas" aria-hidden="true"></canvas>
+<div class="bgfx" aria-hidden="true"><i class="a"></i><i class="b"></i><i class="c"></i><i class="d"></i><i class="e"></i><i class="f"></i></div>
+<div class="fxtop" aria-hidden="true"></div>
+<div class="app">
+  <nav class="nav" aria-label="Main">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><rect width="32" height="32" rx="7" class="brand-mark"/><path d="M6 22h20M10 22V12m6 10V8m6 14v-6" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/></svg>
+      <span class="brand-name">SS Deal Finder</span>
+    </div>
+    <div class="nav-links" id="nav-links"></div>
+    <div class="nav-foot" id="nav-foot"></div>
+  </nav>
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+      <form class="search" id="global-search" role="search">
+        <input type="search" name="q" placeholder="Search listings, e.g. rx 6700, d610, macbook m1" autocomplete="off" aria-label="Search listings">
+      </form>
+      <div class="seg" id="mode-toggle" role="group" aria-label="Interface mode"><button type="button" data-mode="simple" title="Only price, profit and ROI">Simple</button><button type="button" data-mode="advanced" title="Everything: market data, planner, calendar, logs">Advanced</button></div>
+      <div class="scan-pill adv-only" id="scan-pill" title="Scanner status">…</div>
+      <button class="icon-btn" id="bp-btn" aria-label="Big Picture mode" aria-pressed="false" title="Big Picture: full screen, large UI, controller and keyboard navigation (Alt+Enter)">⛶</button>
+      <button class="icon-btn quit-btn" id="quit-btn" aria-label="Quit SS Deal Finder" title="Quit (stops monitoring and closes the app)" hidden>⏻</button>
+      <a class="icon-btn bell" href="#/notifications" id="bell" aria-label="Notifications">🔔<span class="badge" id="bell-badge" hidden></span></a>
+    </header>
+    <div class="demo-banner" id="demo-banner" hidden>Demo mode — synthetic listings from a local mock of SS.lv. Start the app without “Demo” to monitor the real site.</div>
+    <main id="view" class="view" tabindex="-1"></main>
+  </div>
+</div>
+<nav class="mnav" id="mnav" aria-label="Quick navigation"></nav>
+<aside class="drawer" id="drawer" aria-hidden="true"><div class="drawer-inner" id="drawer-inner"></div></aside>
+<div class="scrim" id="scrim" hidden></div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true"><div class="modal-box" id="modal-box"></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

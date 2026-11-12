@@ -1,0 +1,48 @@
+/* HOLOGRAPHIC — iridescent foil. Rainbow edges, sweeping sheen, spectral type. Layout: side. */
+@property --holo { syntax: "<angle>"; inherits: false; initial-value: 120deg; }
+[data-theme="holographic"] {
+  --bg: #090913; --bg-image: repeating-linear-gradient(115deg, rgba(255,255,255,.028) 0 2px, transparent 2px 7px); --bg-size: auto;
+  --surface: rgba(17,17,31,.9); --surface-2: rgba(255,255,255,.06); --surface-3: rgba(255,255,255,.12);
+  --text: #f2f0ff; --muted: #a9a6c9; --line: rgba(196,181,253,.22); --line-soft: rgba(196,181,253,.1);
+  --accent: #a78bfa; --accent-ink: #120a2a; --accent-soft: rgba(167,139,250,.17); --accent-2: #5eead4; --accent-text: #c9b8ff;
+  --good: #5eead4; --good-soft: rgba(94,234,212,.14); --warn: #fde68a; --warn-soft: rgba(253,230,138,.14); --bad: #fda4af; --bad-soft: rgba(253,164,175,.14);
+  --nav-bg: rgba(10,10,20,.92); --nav-text: #e7e3ff; --topbar-bg: rgba(9,9,19,.86); --drawer-bg: #0f0f1d;
+  --font-body: "Dm Sans", "Segoe UI", sans-serif; --font-display: "Syne", "Segoe UI", sans-serif; --font-num: "Dm Sans", "Segoe UI", sans-serif;
+  --display-weight: 800; --h1-size: 34px; --h1-ls: -.01em; --h2-size: 16px; --h2-tt: uppercase; --h2-ls: .1em; --radius: 16px; --radius-sm: 10px; --radius-btn: 12px;
+  --card-bg: linear-gradient(var(--surface), var(--surface));
+  --card-shadow: 0 0 44px rgba(167,139,250,.10), 0 0 90px rgba(56,189,248,.06);
+  --chart-1: #67e8f9; --chart-2: #86efac; --chart-3: #f9a8d4; --chart-area: rgba(103,232,249,.10); --personal-color: #f0abfc; --deal-color: #5eead4;
+}
+[data-theme="holographic"] .bgfx .a { left: 50%; top: 50%; width: 170%; aspect-ratio: 1; margin: -85% 0 0 -85%; border-radius: 50%; opacity: .2;
+  background: conic-gradient(from 0deg, #a78bfa, #38bdf8, #5eead4, #fde68a, #f9a8d4, #a78bfa); }
+[data-theme="holographic"] .bgfx .b { inset: 0; background: radial-gradient(70% 60% at 50% 0%, rgba(9,9,19,0) 0%, #090913 75%); }
+[data-theme="holographic"] .card, [data-theme="holographic"] .figures {
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--surface), var(--surface)) padding-box, conic-gradient(from var(--holo), #a78bfa, #38bdf8, #5eead4, #fde68a, #f9a8d4, #a78bfa) border-box;
+}
+/* foil sheen across every panel */
+[data-theme="holographic"] .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(115deg, transparent 32%, rgba(255,255,255,.07) 42%, rgba(120,210,255,.14) 50%, rgba(255,150,255,.09) 58%, transparent 68%); background-size: 260% 100%; background-position: 20% 0; }
+[data-theme="holographic"] h1, [data-theme="holographic"] .figure .v, [data-theme="holographic"] .brand-name {
+  background: linear-gradient(100deg, #c4b5fd, #67e8f9 30%, #86efac 55%, #f9a8d4 80%, #c4b5fd); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; }
+[data-theme="holographic"] .card > h2, [data-theme="holographic"] .card-head h2 { color: #d9d3ff; }
+[data-theme="holographic"] .btn { background: rgba(255,255,255,.05); border-color: rgba(196,181,253,.35); }
+[data-theme="holographic"] .btn.primary, [data-theme="holographic"] .seg button.on { background: linear-gradient(110deg, #a78bfa, #38bdf8 40%, #5eead4 70%, #f9a8d4); background-size: 200% 100%; border: 0; color: #0b0720; }
+[data-theme="holographic"] .btn.good { background: linear-gradient(110deg, #5eead4, #86efac); }
+[data-theme="holographic"] .nav a.active { background: linear-gradient(90deg, rgba(167,139,250,.28), rgba(56,189,248,.12) 60%, transparent); color: #fff; border-color: transparent; box-shadow: inset 3px 0 0 #67e8f9; }
+[data-theme="holographic"] .tag { border: 1px solid transparent; background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(120deg, #a78bfa, #5eead4, #f9a8d4) border-box; }
+[data-theme="holographic"] .tag.good, [data-theme="holographic"] .tag.warn, [data-theme="holographic"] .tag.bad, [data-theme="holographic"] .tag.accent { background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(120deg, #a78bfa, #5eead4, #f9a8d4) border-box; border-color: transparent; }
+[data-theme="holographic"] .level.GOOD_DEAL { background: linear-gradient(110deg, #5eead4, #67e8f9, #a78bfa); color: #07101a; }
+[data-theme="holographic"] .score-chip { background: rgba(255,255,255,.05); }
+[data-theme="holographic"] .chart .s1, [data-theme="holographic"] .chart .s2 { stroke-width: 2.5; filter: drop-shadow(0 0 5px currentColor); }
+[data-theme="holographic"] .chart .bar.b1 { fill: #a78bfa; } [data-theme="holographic"] .chart .bar.b2 { fill: #5eead4; } [data-theme="holographic"] .chart .bar.b3 { fill: #f9a8d4; }
+[data-theme="holographic"] .ruler .range { background: linear-gradient(90deg, rgba(167,139,250,.5), rgba(94,234,212,.5), rgba(249,168,212,.5)); border-color: transparent; }
+[data-theme="holographic"] .thumb { border-color: rgba(196,181,253,.5); }
+html[data-motion="smooth"] [data-theme="holographic"] .card, html[data-motion="smooth"] [data-theme="holographic"] .figures { animation: holoSpin 9s linear infinite; }
+html[data-motion="smooth"] [data-theme="holographic"] .card::after { animation: sheen 6s ease-in-out infinite; }
+html[data-motion="smooth"] [data-theme="holographic"] .bgfx .a { animation: spinSlow 80s linear infinite; }
+html[data-motion="smooth"] [data-theme="holographic"] h1, html[data-motion="smooth"] [data-theme="holographic"] .figure .v { animation: foil 7s linear infinite; }
+@keyframes holoSpin { to { --holo: 480deg; } }
+@keyframes sheen { 0%, 100% { background-position: 110% 0; } 50% { background-position: -10% 0; } }
+@keyframes spinSlow { to { transform: rotate(360deg); } }
+@keyframes foil { to { background-position: 200% 0; } }

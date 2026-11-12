@@ -1,0 +1,56 @@
+/* GLASSMORPHISM — layered frosted panels over colour orbs. Blur, transparency, depth, specular highlights. Layout: side (floating panel). */
+[data-theme="glassmorphism"] {
+  --card-shadow-perf: 0 10px 24px rgba(5,5,40,.3), inset 0 1px 0 rgba(255,255,255,.4);
+  --bg: #0d1238; --bg-image: linear-gradient(145deg, #121a4d 0%, #1b1244 50%, #240f3d 100%); --bg-size: auto;
+  --surface: rgba(255,255,255,.11); --surface-2: rgba(255,255,255,.1); --surface-3: rgba(255,255,255,.2);
+  --text: #ffffff; --muted: rgba(255,255,255,.72); --line: rgba(255,255,255,.24); --line-soft: rgba(255,255,255,.11);
+  --accent: #ffffff; --accent-ink: #2b2a7a; --accent-soft: rgba(255,255,255,.2); --accent-2: #fde047; --accent-text: #fff;
+  --good: #86efac; --good-soft: rgba(134,239,172,.2); --warn: #fde047; --warn-soft: rgba(253,224,71,.2); --bad: #fda4af; --bad-soft: rgba(253,164,175,.22);
+  --nav-bg: rgba(255,255,255,.09); --nav-text: #fff; --nav-muted: rgba(255,255,255,.6); --nav-active-bg: rgba(255,255,255,.24); --nav-active-text: #fff; --nav-hover: rgba(255,255,255,.12);
+  --topbar-bg: transparent; --drawer-bg: rgba(34,36,100,.92); --toast-bg: rgba(40,42,110,.9); --input-bg: rgba(255,255,255,.12);
+  --font-body: "Poppins", "Segoe UI", sans-serif; --font-display: "Poppins", "Segoe UI", sans-serif; --font-num: "Poppins", "Segoe UI", sans-serif;
+  --display-weight: 600; --h1-size: 28px; --h2-size: 17px; --radius: 22px; --radius-sm: 12px; --radius-btn: 14px; --nav-r: 14px; --pad: 18px; --gap: 18px;
+  --card-border: rgba(255,255,255,.3);
+  --card-blur: blur(22px) saturate(160%); --card-shadow: 0 22px 50px rgba(5,5,40,.38), inset 0 1px 0 rgba(255,255,255,.45), inset 0 -1px 0 rgba(255,255,255,.06);
+  --btn-bg: rgba(255,255,255,.14); --btn-border: rgba(255,255,255,.34); --btn-shadow: inset 0 1px 0 rgba(255,255,255,.4);
+  --chart-1: #ffffff; --chart-2: #86efac; --chart-3: #fde047; --chart-area: rgba(255,255,255,.12); --personal-color: #fde047; --ruler-ask: #fde047;
+}
+[data-theme="glassmorphism"] .bgfx > i { position: absolute; border-radius: 50%; }
+[data-theme="glassmorphism"] .bgfx .a { left: -5%; top: -8%; width: 42%; aspect-ratio: 1; background: radial-gradient(circle at 35% 35%, #ff4fa8, rgba(255,79,168,0) 68%); }
+[data-theme="glassmorphism"] .bgfx .b { right: -6%; top: 2%; width: 40%; aspect-ratio: 1; background: radial-gradient(circle at 55% 40%, #22b8ff, rgba(34,184,255,0) 68%); }
+[data-theme="glassmorphism"] .bgfx .c { left: 30%; bottom: -16%; width: 46%; aspect-ratio: 1; background: radial-gradient(circle, #7c4dff, rgba(124,77,255,0) 68%); }
+[data-theme="glassmorphism"] .bgfx .d { right: 14%; bottom: 10%; width: 16%; aspect-ratio: 1; background: radial-gradient(circle at 35% 30%, #ffe56b, #ff9a3d 60%, rgba(255,154,61,0) 72%); opacity: .8; }
+/* loose glass slabs behind the content: they give the panels something to blur and refract */
+[data-theme="glassmorphism"] .bgfx .e { left: 12%; top: 30%; width: 22%; aspect-ratio: 1.5; border-radius: 28px; transform: rotate(-14deg); background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.2); opacity: .7; }
+[data-theme="glassmorphism"] .bgfx .f { right: 10%; top: 52%; width: 17%; aspect-ratio: 1; border-radius: 34px; transform: rotate(18deg); background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.03)); border: 1px solid rgba(255,255,255,.3); }
+html[data-motion="performance"] [data-theme="glassmorphism"] .card, html[data-motion="performance"] [data-theme="glassmorphism"] .figures { background: rgba(80,76,170,.58); }
+html[data-motion="performance"] [data-theme="glassmorphism"] .nav, html[data-motion="performance"] [data-theme="glassmorphism"] .topbar { background: rgba(60,60,150,.5); }
+[data-theme="glassmorphism"] .card, [data-theme="glassmorphism"] .figures { background: linear-gradient(135deg, rgba(255,255,255,.17), rgba(255,255,255,.06)); border-color: rgba(255,255,255,.4) rgba(255,255,255,.12) rgba(255,255,255,.1) rgba(255,255,255,.3); }
+/* specular reflection on every pane; nested panes sit one layer higher */
+[data-theme="glassmorphism"] .card::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(120% 70% at 0% 0%, rgba(255,255,255,.26), transparent 52%), linear-gradient(115deg, transparent 60%, rgba(255,255,255,.07) 61%, transparent 78%); }
+[data-theme="glassmorphism"] .card .card, [data-theme="glassmorphism"] .card .score-chip, [data-theme="glassmorphism"] .card .deal-item:hover { background: rgba(255,255,255,.1); box-shadow: 0 8px 20px rgba(5,5,40,.25), inset 0 1px 0 rgba(255,255,255,.3); }
+[data-theme="glassmorphism"] .deal-item { padding: 10px; margin: 0 -10px; border-radius: 14px; border-bottom-color: transparent; transition: transform 160ms, background 160ms; }
+[data-theme="glassmorphism"] .deal-item:hover { transform: translateY(-2px); }
+[data-theme="glassmorphism"] .nav { position: sticky; top: 14px; height: calc(100vh - 28px); margin: 14px 0 14px 14px; border-radius: 26px; border: 1px solid rgba(255,255,255,.3); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); box-shadow: 0 22px 50px rgba(5,5,40,.4), inset 0 1px 0 rgba(255,255,255,.4); background: linear-gradient(160deg, rgba(255,255,255,.18), rgba(255,255,255,.05)); }
+[data-theme="glassmorphism"] .nav a.active { box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 6px 16px rgba(5,5,40,.3); border-color: rgba(255,255,255,.35); }
+[data-theme="glassmorphism"] .topbar { margin: 14px 18px 0; border: 1px solid rgba(255,255,255,.26); border-radius: 18px; top: 14px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); background: rgba(255,255,255,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+[data-theme="glassmorphism"] .btn { backdrop-filter: blur(8px); }
+[data-theme="glassmorphism"] .btn.primary { background: rgba(255,255,255,.92); color: #2b2a7a; border-color: #fff; box-shadow: 0 8px 22px rgba(255,255,255,.28), inset 0 1px 0 #fff; }
+[data-theme="glassmorphism"] .btn.good { background: rgba(134,239,172,.9); }
+[data-theme="glassmorphism"] .tag, [data-theme="glassmorphism"] .score-chip { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.28); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); backdrop-filter: blur(6px); }
+[data-theme="glassmorphism"] .figure .v { text-shadow: 0 2px 14px rgba(255,255,255,.35); }
+[data-theme="glassmorphism"] .thumb { border-color: rgba(255,255,255,.4); border-radius: 12px; }
+[data-theme="glassmorphism"] .chart .s1, [data-theme="glassmorphism"] .chart .s2, [data-theme="glassmorphism"] .chart .s3 { stroke-width: 2.5; stroke-linecap: round; filter: drop-shadow(0 4px 6px rgba(0,0,40,.35)); }
+[data-theme="glassmorphism"] .chart .bar { rx: 6px; fill-opacity: .82; }
+[data-theme="glassmorphism"] .chart .gridline { stroke: rgba(255,255,255,.16); stroke-dasharray: 2 6; }
+[data-theme="glassmorphism"] .drawer, [data-theme="glassmorphism"] .modal-box { backdrop-filter: blur(26px); background: linear-gradient(160deg, rgba(60,62,150,.95), rgba(36,26,90,.95)); border-color: rgba(255,255,255,.3); }
+[data-theme="glassmorphism"] .modal-box { border-radius: 24px; }
+[data-theme="glassmorphism"] .ruler .range { background: rgba(255,255,255,.28); }
+html[data-motion="smooth"] [data-theme="glassmorphism"] .bgfx .a { animation: orbA 20s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="glassmorphism"] .bgfx .b { animation: orbB 24s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="glassmorphism"] .bgfx .c { animation: orbA 28s ease-in-out infinite alternate-reverse; }
+html[data-motion="smooth"] [data-theme="glassmorphism"] .bgfx .e { animation: slab 14s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="glassmorphism"] .bgfx .f { animation: slab 18s ease-in-out infinite alternate-reverse; }
+@keyframes orbA { to { transform: translate(10%, 12%) scale(1.1); } } @keyframes orbB { to { transform: translate(-10%, 8%) scale(.92); } }
+@keyframes slab { from { transform: rotate(-14deg) translateY(0); } to { transform: rotate(-6deg) translateY(-22px); } }
+html[data-motion="performance"] [data-theme="glassmorphism"] .card::before { content: none; }

@@ -1,0 +1,72 @@
+/* MATERIAL YOU — tonal surfaces in soft violet, a navigation rail with a pill indicator behind the icon, filled and tonal
+   buttons, rounded 16–28 px containers without outlines, state layers on hover. Layout: rail. */
+[data-theme="material-you"] {
+  --bg: #fef7ff; --surface: #f7f2fa; --surface-2: #ece6f0; --surface-3: #e6e0e9;
+  --text: #1d1b20; --muted: #625b71; --line: #e2dbe8; --line-soft: #ece6f0;
+  --accent: #6750a4; --accent-ink: #ffffff; --accent-soft: #e8def8; --accent-text: #4f378b; --accent-2: #7d5260;
+  --good: #146c2e; --good-soft: #c4eed0; --good-ink: #fff; --warn: #8a5100; --warn-soft: #ffdcbe; --bad: #b3261e; --bad-soft: #f9dedc;
+  --nav-bg: #f3edf7; --nav-text: #49454f; --nav-line: transparent; --nav-hover: transparent; --nav-active-bg: transparent; --nav-active-text: #1d1b20;
+  --topbar-bg: #fef7ff; --drawer-bg: #f7f2fa; --toast-bg: #322f35; --input-bg: #f3edf7; --input-border: #79747e;
+  --font-body: "Dm Sans", "Roboto", "Segoe UI", sans-serif; --font-display: "Dm Sans", "Roboto", sans-serif; --font-num: "Dm Sans", "Roboto", sans-serif;
+  --display-weight: 400; --h1-size: 32px; --h2-size: 18px; --display-tracking: 0;
+  --radius: 24px; --radius-sm: 12px; --radius-btn: 20px; --nav-r: 16px; --tag-r: 8px; --pad: 20px; --gap: 16px; --view-pad: 24px;
+  --card-border: transparent; --card-shadow: none; --border-w: 1px;
+  --btn-bg: #e8def8; --btn-border: transparent; --btn-text: #1d192b; --btn-hover: #ddd2f0; --btn-fw: 500;
+  --chart-1: #6750a4; --chart-2: #146c2e; --chart-3: #b58392; --chart-area: rgba(103,80,164,.12); --personal-color: #7d5260; --deal-color: #146c2e;
+  --ruler-ask: #7d5260; --ruler-range: #e8def8; --ruler-range-border: #b9a8e0; --ruler-typ: #6750a4; --row-hover: rgba(103,80,164,.06);
+}
+[data-theme="material-you"] .bgfx { display: none; }
+[data-theme="material-you"] { --nav-w: 96px; }
+/* rail: label under the icon; the active pill (56×32) sits only behind the icon */
+[data-theme="material-you"] .nav { padding: 18px 6px; gap: 10px; }
+[data-theme="material-you"] .brand { padding-bottom: 18px; }
+[data-theme="material-you"] .brand-mark { fill: #6750a4; }
+[data-theme="material-you"] .nav-links { gap: 10px; }
+[data-theme="material-you"] .nav a { gap: 4px; padding: 0; background: transparent !important; border: 0; font-size: 12px; font-weight: 500; }
+[data-theme="material-you"] .nav a .ic { width: 56px; height: 32px; display: grid; place-items: center; border-radius: 16px; font-size: 18px; margin: 0 auto; transition: background-color 200ms; }
+[data-theme="material-you"] .nav a:hover .ic { background: rgba(29,27,32,.08); }
+[data-theme="material-you"] .nav a.active .ic { background: #e8def8; color: #1d192b; }
+[data-theme="material-you"] .nav a.active .lbl { font-weight: 700; }
+[data-theme="material-you"] .topbar { border-bottom: 0; padding: 12px 24px; }
+[data-theme="material-you"] .topbar .search input { border-radius: 28px; background: #ece6f0; border: 0; padding: 12px 20px; }
+[data-theme="material-you"] .icon-btn { border: 0; border-radius: 50%; background: transparent; }
+[data-theme="material-you"] .icon-btn:hover { background: rgba(29,27,32,.08); }
+[data-theme="material-you"] .scan-pill { border: 1px solid #79747e; background: transparent; border-radius: 8px; }
+/* containers: filled tonal cards, figure tiles as separate cards */
+[data-theme="material-you"] .card { background: #f7f2fa; }
+[data-theme="material-you"] .card .card { background: #ece6f0; }
+[data-theme="material-you"] .figures { background: transparent; border: 0; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); overflow: visible; }
+[data-theme="material-you"] .figure { background: #f3edf7; border: 0; border-radius: 16px; }
+[data-theme="material-you"] .figure.good { background: #c4eed0; } [data-theme="material-you"] .figure.warn { background: #ffdcbe; }
+[data-theme="material-you"] .figure .v { font-size: 30px; font-weight: 400; }
+[data-theme="material-you"] .card > h2, [data-theme="material-you"] .card-head h2 { font-weight: 500; }
+[data-theme="material-you"] .deal-item { padding: 12px; margin: 0 -12px; border-radius: 16px; border-bottom: 0; }
+[data-theme="material-you"] .deal-item:hover { background: rgba(103,80,164,.08); }
+[data-theme="material-you"] .thumb { border: 0; border-radius: 12px; }
+/* buttons: filled (primary), tonal (default), text (ghost); 40 px tall, fully rounded */
+[data-theme="material-you"] .btn { min-height: 40px; padding: 0 22px; border: 0; }
+[data-theme="material-you"] .btn.sm { min-height: 32px; padding: 0 14px; }
+[data-theme="material-you"] .btn.primary { background: #6750a4; color: #fff; }
+[data-theme="material-you"] .btn.primary:hover { background: #5b4596; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+[data-theme="material-you"] .btn.ghost { background: transparent; color: #6750a4; }
+[data-theme="material-you"] .seg { border: 1px solid #79747e; border-radius: 20px; }
+[data-theme="material-you"] .seg button { padding: 8px 16px; }
+[data-theme="material-you"] .seg button.on { background: #e8def8; color: #1d192b; }
+[data-theme="material-you"] .tabs { border-bottom: 1px solid #e2dbe8; gap: 0; }
+[data-theme="material-you"] .tabs button { padding: 12px 18px; color: #49454f; border-bottom-width: 3px; border-radius: 3px 3px 0 0; }
+[data-theme="material-you"] .tabs button.on { color: #6750a4; border-bottom-color: #6750a4; }
+[data-theme="material-you"] input[type=text], [data-theme="material-you"] input[type=number], [data-theme="material-you"] input[type=search], [data-theme="material-you"] select, [data-theme="material-you"] textarea { border-radius: 4px 4px 0 0; border: 0; border-bottom: 1px solid #79747e; background: #f3edf7; padding: 10px 12px; }
+[data-theme="material-you"] .tag { background: transparent; border: 1px solid #79747e; color: #49454f; }
+[data-theme="material-you"] .tag.good, [data-theme="material-you"] .tag.warn, [data-theme="material-you"] .tag.bad, [data-theme="material-you"] .tag.accent { border: 0; }
+[data-theme="material-you"] .score-chip { border: 0; background: #e8def8; border-radius: 12px; }
+[data-theme="material-you"] table.data th { border-bottom-color: #e2dbe8; color: #49454f; font-weight: 500; }
+[data-theme="material-you"] .toast { color: #f5eff7; border: 0; border-radius: 4px; }
+[data-theme="material-you"] .toast b { color: #fff; }
+[data-theme="material-you"] .drawer { border-radius: 28px 0 0 28px; border: 0; }
+[data-theme="material-you"] .modal-box { border-radius: 28px; border: 0; background: #ece6f0; }
+[data-theme="material-you"] .chart .bar { rx: 4px; }
+[data-theme="material-you"] .chart .s1, [data-theme="material-you"] .chart .s2 { stroke-width: 2.5; stroke-linecap: round; }
+/* state layer ripple on press (Smooth) */
+html[data-motion="smooth"] [data-theme="material-you"] .btn:active, html[data-motion="smooth"] [data-theme="material-you"] .nav a:active .ic { box-shadow: inset 0 0 0 100px rgba(29,27,32,.12); }
+html[data-motion="smooth"] [data-theme="material-you"] .nav a.active .ic { animation: m3pill 300ms cubic-bezier(.2,0,0,1); }
+@keyframes m3pill { from { transform: scaleX(.35); opacity: .3; } to { transform: none; opacity: 1; } }

@@ -1,0 +1,76 @@
+/* TRADING DESK — dense market terminal. Small type, tight rows, zebra tables, panel title bars, tabular mono numbers,
+   amber accent on near-black. Shows the most items per screen of any theme. Layout: side (narrow). */
+[data-theme="trading-desk"] {
+  --bg: #0a0d12; --surface: #10151c; --surface-2: #161d27; --surface-3: #1e2733;
+  --text: #d5dde8; --muted: #7c8a9d; --line: #223041; --line-soft: #19222e;
+  --accent: #ffa31a; --accent-ink: #120a00; --accent-soft: rgba(255,163,26,.13); --accent-text: #ffb547; --accent-2: #4fb3ff;
+  --good: #22d17b; --good-soft: rgba(34,209,123,.13); --good-ink: #04140a; --warn: #f6c343; --warn-soft: rgba(246,195,67,.13); --bad: #ff4d5e; --bad-soft: rgba(255,77,94,.13);
+  --nav-bg: #0d1117; --nav-text: #aeb9c7; --nav-muted: #5d6b7d; --nav-line: #1c2633; --nav-hover: #151c26; --nav-active-bg: #1b2430; --nav-active-text: #ffb547; --nav-active-border: transparent;
+  --topbar-bg: #0d1117; --drawer-bg: #0d1117; --toast-bg: #121923; --input-bg: #0d1219; --input-border: #26354a;
+  --font-body: "Inter", "Segoe UI", sans-serif; --font-display: "Inter", "Segoe UI", sans-serif; --font-num: "Ibm Plex Mono", "Cascadia Mono", Consolas, monospace;
+  --display-weight: 700; --h1-size: 16px; --h1-tt: uppercase; --h1-ls: .08em; --h2-size: 11px; --h2-tt: uppercase; --h2-ls: .1em;
+  --radius: 2px; --radius-sm: 2px; --radius-btn: 2px; --nav-r: 2px; --tag-r: 2px; --pad: 10px; --gap: 8px; --view-pad: 12px; --nav-w: 176px;
+  --card-shadow: none; --btn-bg: #161d27; --btn-border: #2a3a50; --btn-hover: #1e2733; --btn-fw: 600; --btn-tt: uppercase; --btn-ls: .06em;
+  --chart-1: #ffa31a; --chart-2: #22d17b; --chart-3: #4fb3ff; --chart-area: rgba(255,163,26,.1); --personal-color: #4fb3ff; --deal-color: #22d17b;
+  --ruler-ask: #ffa31a; --ruler-range: rgba(79,179,255,.15); --ruler-range-border: #4fb3ff; --ruler-typ: #4fb3ff; --row-hover: #18212c;
+}
+[data-theme="trading-desk"] body, [data-theme="trading-desk"].tprev { font-size: 12.5px; line-height: 1.35; }
+[data-theme="trading-desk"] .bgfx { display: none; }
+[data-theme="trading-desk"] .nav { padding: 8px 6px; gap: 2px; }
+[data-theme="trading-desk"] .brand { font-size: 13px; padding: 2px 6px 8px; letter-spacing: .04em; text-transform: uppercase; }
+[data-theme="trading-desk"] .brand-mark { fill: #ffa31a; }
+[data-theme="trading-desk"] .nav-group { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; padding: 8px 8px 2px; }
+[data-theme="trading-desk"] .nav a { padding: 4px 8px; font-size: 12px; border-left: 2px solid transparent; border-radius: 0; }
+[data-theme="trading-desk"] .nav a.active { border-left-color: #ffa31a; }
+[data-theme="trading-desk"] .nav a .count { color: #ffa31a; }
+[data-theme="trading-desk"] .topbar { padding: 5px 12px; gap: 8px; }
+[data-theme="trading-desk"] .topbar .search input { padding: 4px 8px; font-family: "Ibm Plex Mono", monospace; font-size: 12px; }
+[data-theme="trading-desk"] .icon-btn { width: 28px; height: 28px; }
+[data-theme="trading-desk"] .scan-pill { font-family: "Ibm Plex Mono", monospace; font-size: 11px; padding: 3px 8px; border-radius: 2px; }
+[data-theme="trading-desk"] .page-head { margin-bottom: 8px; align-items: center; }
+[data-theme="trading-desk"] .page-head p { font-size: 11.5px; margin-top: 2px; }
+[data-theme="trading-desk"] .kicker { font-size: 10px; margin-bottom: 2px; }
+/* panels with a title bar */
+[data-theme="trading-desk"] .card > h2, [data-theme="trading-desk"] .card > .card-head { margin: calc(-1 * var(--pad)) calc(-1 * var(--pad)) 8px; padding: 6px var(--pad); background: #141b25; border-bottom: 1px solid #223041; color: #9fb0c4; }
+[data-theme="trading-desk"] .card-head h2 { color: #9fb0c4; }
+[data-theme="trading-desk"] .card-head a { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+[data-theme="trading-desk"] .figures { border-radius: 2px; }
+[data-theme="trading-desk"] .figure { padding: 8px 10px; }
+[data-theme="trading-desk"] .figure .v { font-size: 20px; font-weight: 600; }
+[data-theme="trading-desk"] .figure .l { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+/* dense rows: zebra, mono numbers */
+[data-theme="trading-desk"] table.data th { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; padding: 5px 8px; background: #121923; }
+[data-theme="trading-desk"] table.data td { padding: 4px 8px; }
+[data-theme="trading-desk"] table.data tbody tr:nth-child(even) td { background-color: #0d1219; }
+[data-theme="trading-desk"] .thumb { width: 36px; height: 28px; border-radius: 1px; }
+[data-theme="trading-desk"] .deal-item { grid-template-columns: 36px 1fr auto; gap: 8px; padding: 5px 0; }
+[data-theme="trading-desk"] .ltitle { font-weight: 600; -webkit-line-clamp: 1; }
+[data-theme="trading-desk"] .lsub { font-size: 11px; margin-top: 0; }
+[data-theme="trading-desk"] .moneybox { gap: 0; min-width: 140px; }
+[data-theme="trading-desk"] .moneybox .mrow { font-size: 12px; line-height: 1.25; }
+[data-theme="trading-desk"] .moneybox b, [data-theme="trading-desk"] .price, [data-theme="trading-desk"] .moneybox .mrow b { font-family: "Ibm Plex Mono", monospace; font-weight: 600; }
+[data-theme="trading-desk"] .moneybox .mconf { font-size: 10px; }
+[data-theme="trading-desk"] .price { font-size: 13px; }
+[data-theme="trading-desk"] .tag, [data-theme="trading-desk"] .level { font-size: 10px; padding: 0 5px; letter-spacing: .04em; text-transform: uppercase; }
+[data-theme="trading-desk"] .level.GOOD_DEAL { background: transparent; color: #22d17b; border: 1px solid #22d17b; }
+[data-theme="trading-desk"] .level.INTERESTING { background: transparent; color: #f6c343; border: 1px solid #f6c343; }
+[data-theme="trading-desk"] .btn { font-size: 11px; padding: 5px 10px; }
+[data-theme="trading-desk"] .btn.sm { padding: 2px 7px; font-size: 10px; }
+[data-theme="trading-desk"] input[type=text], [data-theme="trading-desk"] input[type=number], [data-theme="trading-desk"] input[type=search], [data-theme="trading-desk"] select { padding: 4px 7px; font-size: 12px; }
+[data-theme="trading-desk"] label.field { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+[data-theme="trading-desk"] .filters { gap: 6px; }
+[data-theme="trading-desk"] .tabs { margin-bottom: 8px; }
+[data-theme="trading-desk"] .tabs button { padding: 5px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+[data-theme="trading-desk"] .seg button { padding: 3px 9px; font-size: 11px; }
+[data-theme="trading-desk"] .lcards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+[data-theme="trading-desk"] .thumb.big { height: 110px; }
+[data-theme="trading-desk"] .chart .s1, [data-theme="trading-desk"] .chart .s2 { stroke-width: 1.5; }
+[data-theme="trading-desk"] .toast { border-radius: 2px; font-size: 12px; }
+[data-theme="trading-desk"] .modal-box, [data-theme="trading-desk"] .drawer { border-radius: 0; }
+/* a live dot next to the brand, the one bit of motion (Smooth only) */
+[data-theme="trading-desk"] .brand::after { content: "LIVE"; margin-left: auto; font: 600 9px/1 "Ibm Plex Mono", monospace; color: #22d17b; padding: 2px 4px; border: 1px solid #22d17b; }
+html[data-motion="smooth"] [data-theme="trading-desk"] .brand::after { animation: tdLive 1.6s steps(2, jump-none) infinite; }
+@keyframes tdLive { 50% { color: #0a0d12; background: #22d17b; } }
+/* the money block as a 2×2 grid: two lines per listing instead of four */
+[data-theme="trading-desk"] .moneybox { grid-template-columns: repeat(2, minmax(86px, 1fr)); column-gap: 14px; row-gap: 0; }
+[data-theme="trading-desk"] .moneybox .mconf, [data-theme="trading-desk"] .moneybox .mine { grid-column: 1 / -1; }

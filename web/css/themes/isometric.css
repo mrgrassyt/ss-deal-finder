@@ -1,0 +1,51 @@
+/* ISOMETRIC — blocks in 30° projection. Stacked extrusions, diamond markers, floating cubes. Layout: side. */
+[data-theme="isometric"] {
+  --bg: #e7edf7; --bg-size: 52px 30px;
+  --bg-image: linear-gradient(30deg, rgba(91,94,240,.09) 12%, transparent 12.5%, transparent 87%, rgba(91,94,240,.09) 87.5%), linear-gradient(150deg, rgba(91,94,240,.09) 12%, transparent 12.5%, transparent 87%, rgba(91,94,240,.09) 87.5%);
+  --surface: #ffffff; --surface-2: #f1f4fb; --surface-3: #e4e9f6;
+  --text: #1c2340; --muted: #5c6685; --line: #c6cfe6; --line-soft: #e1e6f3;
+  --accent: #5b5ef0; --accent-ink: #fff; --accent-soft: #e2e3ff; --accent-2: #f97316;
+  --good: #0a7d57; --good-soft: #d7f5ea; --good-ink: #fff; --warn: #b86a00; --warn-soft: #fff0d6; --bad: #d92d4c; --bad-soft: #ffe1e7;
+  --nav-bg: #1c2340; --nav-text: #e6e9f8; --nav-muted: #8d95b8; --nav-hover: rgba(255,255,255,.08); --nav-active-bg: #5b5ef0; --nav-active-text: #fff; --topbar-bg: rgba(231,237,247,.92); --drawer-bg: #f3f6fc;
+  --font-body: "Dm Sans", "Segoe UI", sans-serif; --font-display: "Poppins", "Segoe UI", sans-serif; --font-num: "Poppins", "Segoe UI", sans-serif; --display-weight: 700;
+  --h1-size: 28px; --h2-size: 17px; --radius: 4px; --radius-sm: 3px; --radius-btn: 4px; --nav-r: 4px; --tag-r: 3px; --pad: 18px; --gap: 22px;
+  --ex1: #b7c2de; --ex2: #a1aecf;
+  --card-shadow: 1px 1px 0 var(--ex1), 2px 2px 0 var(--ex1), 3px 3px 0 var(--ex1), 4px 4px 0 var(--ex1), 5px 5px 0 var(--ex1), 6px 6px 0 var(--ex2), 7px 7px 0 var(--ex2), 8px 8px 0 var(--ex2), 14px 16px 24px rgba(60,70,130,.2);
+  --btn-shadow: 1px 1px 0 #3a3cc0, 2px 2px 0 #3a3cc0, 3px 3px 0 #3a3cc0, 4px 4px 0 #3a3cc0;
+  --chart-1: #5b5ef0; --chart-2: #0f9f6e; --chart-3: #f97316; --chart-area: rgba(91,94,240,.1); --personal-color: #f97316; --ruler-ask: #f97316;
+}
+/* cubes: a hexagon with three shaded faces */
+[data-theme="isometric"] .bgfx > i { width: 6%; aspect-ratio: .866; clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: conic-gradient(from 0deg at 50% 50%, var(--ct) 0 63.4deg, var(--cr) 63.4deg 180deg, var(--cl) 180deg 296.6deg, var(--ct) 296.6deg 360deg); }
+[data-theme="isometric"] .bgfx .a { --ct: #8b8dff; --cr: #4d50d8; --cl: #6a6df0; right: 1.5%; top: 44%; }
+[data-theme="isometric"] .bgfx .b { --ct: #ffb27a; --cr: #e0641a; --cl: #f98a3d; right: 9%; bottom: 14%; width: 4.5%; }
+[data-theme="isometric"] .bgfx .c { --ct: #6fe0b3; --cr: #0c8a5e; --cl: #26b987; left: 18%; bottom: 6%; width: 3.6%; }
+[data-theme="isometric"] .bgfx .d { --ct: #ffe28a; --cr: #d9a416; --cl: #f2c53c; left: 55%; top: 3%; width: 3%; }
+[data-theme="isometric"] .bgfx .e { --ct: #9fd0ff; --cr: #3b86d6; --cl: #62a8ee; right: 30%; bottom: 3%; width: 5%; }
+[data-theme="isometric"] .bgfx .f { display: none; }
+[data-theme="isometric"] .nav { border-right: 0; box-shadow: 4px 0 0 #2b3560, 8px 0 0 rgba(28,35,64,.35); }
+[data-theme="isometric"] .nav a.active { box-shadow: 1px 1px 0 #3a3cc0, 2px 2px 0 #3a3cc0, 3px 3px 0 #3a3cc0, 4px 4px 0 #3a3cc0; transform: translate(-2px, -2px); }
+[data-theme="isometric"] .card > h2::before, [data-theme="isometric"] .card-head h2::before, [data-theme="isometric"] .page-head h1::before {
+  content: ""; display: inline-block; width: 13px; height: 13px; margin-right: 9px; vertical-align: -1px; background: linear-gradient(135deg, #8b8dff 50%, #4d50d8 50%); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+[data-theme="isometric"] .page-head h1::before { width: 20px; height: 20px; }
+[data-theme="isometric"] .figures { border: 1px solid var(--ex1); box-shadow: 1px 1px 0 var(--ex1), 2px 2px 0 var(--ex1), 3px 3px 0 var(--ex1), 4px 4px 0 var(--ex1), 5px 5px 0 var(--ex2), 6px 6px 0 var(--ex2), 10px 12px 18px rgba(60,70,130,.18); }
+[data-theme="isometric"] .figure { border-right-style: dashed; }
+[data-theme="isometric"] .btn { border-color: var(--ex2); background: #fff; transition: transform 120ms; }
+[data-theme="isometric"] .btn.primary { border-color: #3a3cc0; }
+[data-theme="isometric"] .btn.good { box-shadow: 1px 1px 0 #087050, 2px 2px 0 #087050, 3px 3px 0 #087050, 4px 4px 0 #087050; }
+[data-theme="isometric"] .btn:hover { transform: translate(-1px, -1px); } [data-theme="isometric"] .btn:active { transform: translate(4px, 4px); box-shadow: none; }
+[data-theme="isometric"] .btn.ghost { box-shadow: none; }
+[data-theme="isometric"] .tag, [data-theme="isometric"] .score-chip, [data-theme="isometric"] .level { box-shadow: 2px 2px 0 var(--ex1); }
+[data-theme="isometric"] .tag { border-color: var(--ex2); }
+[data-theme="isometric"] .thumb { box-shadow: 3px 3px 0 var(--ex1); }
+[data-theme="isometric"] input, [data-theme="isometric"] select, [data-theme="isometric"] textarea { border-color: var(--ex2); box-shadow: inset 2px 2px 0 #e1e6f3; }
+[data-theme="isometric"] .chart .bar { rx: 0; stroke: rgba(20,25,70,.35); stroke-width: 1; filter: drop-shadow(4px 3px 0 rgba(60,70,130,.28)); }
+[data-theme="isometric"] .chart .s1, [data-theme="isometric"] .chart .s2 { stroke-width: 3; filter: drop-shadow(3px 3px 0 rgba(60,70,130,.25)); }
+[data-theme="isometric"] .chart .gridline { stroke-dasharray: 5 4; }
+[data-theme="isometric"] .drawer { box-shadow: -8px 0 0 var(--ex1), -16px 0 30px rgba(60,70,130,.25); }
+[data-theme="isometric"] .modal-box { box-shadow: 8px 8px 0 var(--ex2), 12px 14px 36px rgba(0,0,0,.3); }
+html[data-motion="smooth"] [data-theme="isometric"] .bgfx > i { animation: isoFloat 6s ease-in-out infinite alternate; }
+html[data-motion="smooth"] [data-theme="isometric"] .bgfx .b { animation-duration: 7.5s; } html[data-motion="smooth"] [data-theme="isometric"] .bgfx .c { animation-duration: 5s; } html[data-motion="smooth"] [data-theme="isometric"] .bgfx .d { animation-duration: 8.5s; }
+html[data-motion="smooth"] [data-theme="isometric"] .card { transition: transform 180ms var(--ease), box-shadow 180ms var(--ease); }
+html[data-motion="smooth"] [data-theme="isometric"] .card:hover { transform: translate(-3px, -3px); }
+@keyframes isoFloat { to { transform: translateY(-16px); } }
