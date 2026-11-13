@@ -1,0 +1,31 @@
+# Run SS Deal Finder 24/7 on a rented server
+
+Your PC can be off. The server scans SS.lv all day, sends alerts to your phone (ntfy / Telegram / Discord), and you open the app from any phone or PC with a password.
+
+## What you need
+- A small Linux server (VPS): Ubuntu 22.04/24.04, 1 GB RAM is enough, roughly €4–6 per month at Hetzner, Contabo, DigitalOcean, etc. Give it your SSH key or root password when you create it. You get an **IP address**.
+- On your Windows PC: the OpenSSH Client (Windows 10/11: Settings → Apps → Optional features). It is usually already there.
+
+## Set up (once, about 5 minutes)
+1. Double-click **Put the app on my server.bat** in the app folder.
+2. Enter the server IP and login name (usually `root`). Answer **y** to copy your current data (deals, settings, tokens) to the server.
+3. When asked, choose a password for the app (8+ characters) or press Enter to get a random one. **Write it down.**
+4. It finishes by printing an address like `https://203-0-113-5.sslip.io`. Open it on your phone, log in, then install it: Android Chrome menu → **Install app**; iPhone Safari Share → **Add to Home Screen**.
+
+The first start can take a minute while the HTTPS certificate is made.
+
+## Update later
+Unzip the new version and run **Put the app on my server.bat** again; answer **n** to the data question. Your data lives in `/opt/ssdeal/data` on the server and is never overwritten.
+
+## Good to know
+- **Address:** by default a free name from sslip.io that points at your server's IP. If you have your own domain, point an A record at the server and edit `/opt/ssdeal/.env` (`DOMAIN=...`), then `docker compose up -d` in `/opt/ssdeal`. A free DuckDNS name works too.
+- **Password:** edit `SSDEAL_PASSWORD` in `/opt/ssdeal/.env`, then `docker compose up -d`. That also logs every device out.
+- **Alerts:** Windows pop-ups don't exist on a server. Set up ntfy, Telegram or Discord in Settings → Notifications. Their links open your server address.
+- **Android app:** point it at the server address; the server accepts the API token (tested on the server side, not with the app itself).
+- **Backups:** the app already makes daily database backups in `/opt/ssdeal/data/backups`. Copy that folder somewhere now and then (your hosting provider's snapshot option is the easy way).
+- **Logs:** `docker compose logs -f app` in `/opt/ssdeal`.
+- **Security:** only the web server is exposed, over HTTPS; the app itself isn't reachable directly. Five wrong passwords from one address lock it out for a while.
+- **Don't run the PC copy and the server copy at the same time** against SS.lv for long: you would double the requests. Use the PC app only to look, or switch scanning off there.
+
+## Not verified yet
+Not run against a real server or real Windows. SS.lv might treat a data-centre address differently from your home connection (slower, blocked or captchas). If the app shows scan errors or no new listings arrive on the server, send me the last lines of `docker compose logs app`.

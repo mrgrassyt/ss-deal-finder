@@ -1,0 +1,9 @@
+.venv
+.git
+**/__pycache__
+tests
+data
+*.zip
+*.tgz
+*.bat
+.env

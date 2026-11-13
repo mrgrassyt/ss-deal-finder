@@ -1,0 +1,5 @@
+# Automatic HTTPS certificate for $DOMAIN, then hand everything to the app.
+{$DOMAIN} {
+	encode gzip
+	reverse_proxy app:8765
+}

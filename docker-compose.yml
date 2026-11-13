@@ -1,0 +1,31 @@
+# SS Deal Finder on an always-on server. Set DOMAIN and SSDEAL_PASSWORD in .env (tools/server/setup.sh does it for you).
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      SSDEAL_SERVER: "1"
+      SSDEAL_PASSWORD: ${SSDEAL_PASSWORD:?set SSDEAL_PASSWORD in .env}
+      SSDEAL_PUBLIC_URL: https://${DOMAIN:?set DOMAIN in .env}
+      TZ: ${TZ:-Europe/Riga}
+    volumes:
+      - ./data:/data           # your database and settings live here; updates never touch it
+    expose:
+      - "8765"                  # only the web server below can reach it
+  web:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on: [app]
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data        # the HTTPS certificate
+      - caddy_config:/config
+volumes:
+  caddy_data:
+  caddy_config:
