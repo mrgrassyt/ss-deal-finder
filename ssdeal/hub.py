@@ -505,6 +505,13 @@ def ip_of(request: Request) -> str:
     return (fwd.split(",")[0].strip() if fwd else (request.client.host if request.client else "?")) or "?"
 
 
+async def read_form(request: Request) -> dict:
+    """The login/sign-up forms are plain URL-encoded posts; parsed here so no extra library (python-multipart) is needed."""
+    from urllib.parse import parse_qs
+    body = (await request.body())[:20000].decode("utf-8", "replace")
+    return {k: v[0] for k, v in parse_qs(body, keep_blank_values=True).items()}
+
+
 def safe_next(n: str) -> str:
     return n if n.startswith("/") and not n.startswith("//") and "\\" not in n else "/"
 
@@ -528,7 +535,7 @@ def create_app(hub: Hub) -> Starlette:
     async def login(request: Request):
         if request.method == "GET":
             return login_page(nxt=safe_next(request.query_params.get("next", "/")))
-        form = await request.form()
+        form = await read_form(request)
         name, pw, nxt = str(form.get("username", "")).strip().lower(), str(form.get("password", "")), safe_next(str(form.get("next", "/")))
         if not same_origin(request):
             return login_page("Please try again.", name, nxt)
@@ -549,7 +556,7 @@ def create_app(hub: Hub) -> Starlette:
     async def signup(request: Request):
         if request.method == "GET":
             return signup_page(code=request.query_params.get("code", ""))
-        form = await request.form()
+        form = await read_form(request)
         code, name, pw = str(form.get("code", "")).strip(), str(form.get("username", "")).strip().lower(), str(form.get("password", ""))
         if not same_origin(request):
             return signup_page("Please try again.", name, code)
@@ -602,7 +609,7 @@ def create_app(hub: Hub) -> Starlette:
         u = hub.store.users[name]
         if request.method == "GET":
             return account_page(name, u["admin"])
-        form = await request.form()
+        form = await read_form(request)
         if not same_origin(request):
             return account_page(name, u["admin"], "Please try again.")
         if hub.throttle.wait(f"user:{name}"):
@@ -760,7 +767,7 @@ def create_app(hub: Hub) -> Starlette:
         Route("/hub/user/reset", J(hub_reset), methods=["POST"]),
         Route("/api/auth", J(api_auth)),
         Route("/api/logout", J(api_logout), methods=["POST"]),
-        Route("/api/login", lambda r: JSONResponse({"detail": "Use the login page", "hub": True}, status_code=400), methods=["POST"]),
+        Route("/api/login", lambda r: JSONResponse({"detail": "This server now has accounts. Open /login (press Ctrl+F5 if this box comes back) and log in with your username.", "hub": True}, status_code=400), methods=["POST"]),
         Route("/api/server/import", J(server_import), methods=["POST"]),
         Route("/_broker/fetch", J(broker_fetch), methods=["POST"]),
         Route("/_broker/reset", J(broker_reset), methods=["POST"]),
