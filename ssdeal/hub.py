@@ -6,8 +6,9 @@ Run with `--hub` (or SSDEAL_HUB=1), normally inside Docker (see SERVER.md). What
   * every account is a completely separate copy of the app (its own folder, database, settings, alerts, Discord bot) run as
     its own small background process on this machine, so one person's settings or data can never touch another's;
   * the hub is the only thing reachable from outside. It checks the login cookie and passes the request to YOUR copy;
-  * all copies fetch SS.lv through ONE shared, polite fetcher (single request rate, robots.txt, cool-downs) with a short page
-    cache, so three people do not mean three times the traffic towards SS.lv.
+  * ONE shared scan: every copy gets its SS.lv pages from the hub, which fetches each page once (single polite request
+    rate, robots.txt, cool-downs) and hands the same copy to everybody while it is fresh. Each copy then rates the same
+    listings with its own settings, so a deal can be great for one person and uninteresting for another.
 """
 from __future__ import annotations
 
@@ -22,6 +23,7 @@ import os
 import re
 import secrets
 import shutil
+import sqlite3
 import subprocess
 import sys
 import time
@@ -134,12 +136,29 @@ class Throttle:
 
 # ------------------------------------------------------------------------------------------------- shared fetcher
 class Broker:
-    def __init__(self, settings: Settings):
+    """The ONE scanner connection to SS.lv for every account on this server.
+
+    Every page anyone's copy asks for is fetched once and kept in a small shared store (hub/pages.db). Until it is
+    stale, every other account gets the same copy instead of a new request: list pages stay fresh for LIST_TTL seconds
+    (shorter than the fastest scan interval), single ads for DETAIL_TTL. So SS.lv sees the same traffic whether one
+    person or six use the server; each account then rates the same listings with its own settings."""
+
+    LIST_TTL = float(os.environ.get("SSDEAL_SHARED_LIST_TTL", "110"))
+    DETAIL_TTL = float(os.environ.get("SSDEAL_SHARED_DETAIL_TTL", str(3 * 3600)))
+
+    def __init__(self, settings: Settings, path: Path | None = None):
         self.settings = settings
         self.fetcher = PoliteFetcher(settings)
-        self.cache: dict[str, tuple[float, dict]] = {}
         self.inflight: dict[str, asyncio.Future] = {}
         self.hits = self.misses = 0
+        self.db = sqlite3.connect(str(path) if path else ":memory:", check_same_thread=False)
+        if path:
+            self.db.execute("PRAGMA journal_mode=WAL")
+        self.db.execute("CREATE TABLE IF NOT EXISTS pages (url TEXT PRIMARY KEY, fetched_at REAL, payload TEXT)")
+        self._pruned = 0.0
+
+    def ttl(self, url: str) -> float:
+        return self.DETAIL_TTL if "/msg/" in url else self.LIST_TTL
 
     def _pack(self, r) -> dict:
         s = self.fetcher.status()
@@ -147,16 +166,22 @@ class Broker:
                 "blocked": r.blocked, "disallowed": r.disallowed, "robots": s["robots"],
                 "cooldown_seconds": s["cooldown_seconds"], "blocked_reason": s["blocked_reason"]}
 
+    def _stored(self, url: str) -> dict | None:
+        row = self.db.execute("SELECT fetched_at, payload FROM pages WHERE url=?", (url,)).fetchone()
+        if not row or time.time() - row[0] >= self.ttl(url):
+            return None
+        out = json.loads(row[1])
+        s = self.fetcher.status()
+        out.update(cooldown_seconds=s["cooldown_seconds"], blocked_reason=s["blocked_reason"], shared=True, age=round(time.time() - row[0]))
+        return out
+
     async def fetch(self, url: str) -> dict:
-        ttl = float(self.settings.get("scan.broker_cache_seconds", 90))
-        hit = self.cache.get(url)
-        if hit and time.time() - hit[0] < ttl:
+        hit = self._stored(url)
+        if hit:
             self.hits += 1
-            out = dict(hit[1])
-            s = self.fetcher.status()
-            out["cooldown_seconds"], out["blocked_reason"] = s["cooldown_seconds"], s["blocked_reason"]
-            return out
+            return hit
         if url in self.inflight:                                  # two people asked for the same page at once: one request
+            self.hits += 1
             return await asyncio.shield(self.inflight[url])
         self.misses += 1
         fut = asyncio.ensure_future(self._do(url))
@@ -168,12 +193,20 @@ class Broker:
 
     async def _do(self, url: str) -> dict:
         out = self._pack(await self.fetcher.get(url))
-        if out["status"] == 200 and not out["error"]:
-            self.cache[url] = (time.time(), out)
-            if len(self.cache) > 150:
-                for k in sorted(self.cache, key=lambda k: self.cache[k][0])[:50]:
-                    self.cache.pop(k, None)
+        if (out["status"] == 200 and not out["error"]) or out["status"] == 404:
+            self.db.execute("INSERT OR REPLACE INTO pages VALUES (?,?,?)", (url, time.time(), json.dumps(out)))
+            self.db.commit()
+        if time.time() - self._pruned > 3600:
+            self._pruned = time.time()
+            self.db.execute("DELETE FROM pages WHERE fetched_at < ?", (time.time() - 2 * 86400,))
+            self.db.commit()
         return out
+
+    def stats(self) -> dict:
+        n = self.db.execute("SELECT COUNT(*) FROM pages").fetchone()[0]
+        total = self.hits + self.misses
+        return {"requests": self.fetcher.state.requests, "cache_hits": self.hits, "pages_stored": n,
+                "shared_pct": round(100 * self.hits / total) if total else 0}
 
 
 # ------------------------------------------------------------------------------------------------- children
@@ -207,7 +240,7 @@ class Hub:
         for d in (self.hub_home, self.users_dir):
             d.mkdir(parents=True, exist_ok=True)
         self.store = Store(self.hub_home)
-        self.broker = Broker(Settings(self.hub_home))
+        self.broker = Broker(Settings(self.hub_home), self.hub_home / "pages.db")
         self.token = secrets.token_hex(24)                      # only the child copies know it
         self.children: dict[str, Child] = {}
         self.throttle = Throttle()
@@ -221,6 +254,24 @@ class Hub:
         self.client = httpx.AsyncClient(timeout=httpx.Timeout(300, connect=3), limits=httpx.Limits(max_connections=60))
         self._task: asyncio.Task | None = None
         self.bootstrap()
+        self.full_app_once()
+
+    def full_app_once(self) -> None:
+        """One time: switch existing accounts from the stripped-down Simple view to the full app (they can switch back)."""
+        flag = self.hub_home / "full-app-v1"
+        if flag.exists():
+            return
+        for name in self.store.users:
+            f = self.users_dir / name / "settings.json"
+            try:
+                d = json.loads(f.read_text(encoding="utf-8")) if f.exists() else {}
+                if (d.get("ui") or {}).get("mode") != "advanced":
+                    d.setdefault("ui", {})["mode"] = "advanced"
+                    f.parent.mkdir(parents=True, exist_ok=True)
+                    f.write_text(json.dumps(d, indent=2), encoding="utf-8")
+            except (OSError, ValueError):
+                pass
+        flag.write_text("1")
 
     # ---- first start / moving an existing single-user install into the admin account
     def bootstrap(self) -> None:
@@ -296,6 +347,9 @@ class Hub:
             return
         home = self.users_dir / name
         home.mkdir(parents=True, exist_ok=True)
+        if not (home / "settings.json").exists() and not (home / "import.zip").exists():
+            # a new account starts with the full app (Advanced), not the stripped-down Simple view
+            (home / "settings.json").write_text(json.dumps({"ui": {"mode": "advanced"}}), encoding="utf-8")
         server_mod.import_pending(home, lambda m: log.event("hub.import", f"{name}: {m}"))
         env = {k: v for k, v in os.environ.items() if not k.startswith("SSDEAL_") or k in ("SSDEAL_PUBLIC_URL",)}
         env.update(SSDEAL_MANAGED="1", SSDEAL_BIND="127.0.0.1", SSDEAL_FETCH_BROKER=f"http://127.0.0.1:{self.port}/_broker",
@@ -430,7 +484,7 @@ async function load(){
  const iv=$('#invites');iv.replaceChildren();
  for(const c of d.invites){const p=el('p');p.append(el('code',location.origin+'/signup?code='+c));iv.append(p)}
  $('#cap').textContent=d.users.length+' of '+d.max+' accounts used';
- $('#cache').textContent='Shared SS.lv fetcher: '+d.broker.requests+' requests made, '+d.broker.cache_hits+' pages answered from the short cache.'}
+ $('#cache').textContent='One shared scan for everyone: '+d.broker.requests+' requests to SS.lv, '+d.broker.cache_hits+' pages handed out from the shared copy ('+d.broker.shared_pct+'% of all page requests).'}
 $('#inv').onclick=async()=>{try{await api('/hub/invite',{});load()}catch(e){alert(e.message)}};
 load().catch(e=>alert(e.message));setInterval(()=>load().catch(()=>{}),15000);
 """
@@ -580,7 +634,7 @@ def create_app(hub: Hub) -> Starlette:
         users = [{"name": n, "admin": u["admin"], "running": hub.child(n).running, "mem_mb": hub.child(n).mem_mb()} for n, u in hub.store.users.items()]
         hub.store.prune_invites()
         return {"users": users, "invites": list(hub.store.data["invites"]), "max": hub.max_users,
-                "broker": {"requests": hub.broker.fetcher.state.requests, "cache_hits": hub.broker.hits}}
+                "broker": hub.broker.stats()}
 
     async def hub_invite(request: Request):
         me = admin_user(request)

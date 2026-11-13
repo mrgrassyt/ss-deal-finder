@@ -527,7 +527,8 @@ def identify(title: str, description: str = "", category: str = "other") -> Matc
         m = loose_match(head, category) or loose_match(full, category)
     if m and not m.brand:
         m.brand = find_brand(full)
-    return m
+    from .generations import refine
+    return refine(m, title, description or "")
 
 
 def pc_components(title: str, description: str = "") -> list[Match]:

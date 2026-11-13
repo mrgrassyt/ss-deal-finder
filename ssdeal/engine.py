@@ -105,7 +105,9 @@ class Engine:
         hits = []
         text = norm(f"{listing.get('title', '')} {listing.get('description') or ''} {listing.get('product_name') or ''}")
         for w in self._watchlist():
-            if w["product_key"] and w["product_key"] != listing.get("product_key"):
+            lk = listing.get("product_key") or ""
+            # a watch on "MacBook Air (Intel)" still covers the year-specific keys (…-intel-2012-17) made from it
+            if w["product_key"] and w["product_key"] != lk and not lk.startswith(w["product_key"] + "-"):
                 continue
             if w["category_key"] and w["category_key"] != listing.get("category_key"):
                 continue
@@ -153,7 +155,7 @@ class Engine:
                              category_from_path(listing.get("ss_id") or "", listing.get("category_key") or "other"))
             if match and listing.get("product_key") and match.key != listing["product_key"] and not reidentify:
                 match = Match(listing["product_key"], listing.get("product_name") or listing["product_key"],
-                              listing.get("category_key") or "other", listing.get("brand"), 0.7)
+                              listing.get("category_key") or "other", listing.get("brand"), 0.7, variant=dict(match.variant))
         # rows analysed by an older version (or from the title only) get the part / accessory check again
         new_kind = None
         if not set(listing["flags"]) & {"part", "accessory"}:

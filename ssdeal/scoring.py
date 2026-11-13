@@ -12,6 +12,7 @@ import time
 
 from .catalog import Match, pc_components
 from .feeds import CATEGORIES
+from .generations import age_notes
 from .market import Market
 from .textutil import norm
 
@@ -227,6 +228,16 @@ class Scorer:
                 score = max(score, 55)
                 add(15, "Lot / collection — may contain valuable individual items; review manually")
                 out_flags.append("review_collection")
+        # ---- model age / specs (an old or unknown-generation model is not a bargain just because it is cheap)
+        for pts, text, flag in age_notes(listing, match):
+            score += pts
+            add(pts, text)
+            if flag:
+                out_flags.append(flag)
+            if flag == "age_unknown" and value_for_discount and price < value_for_discount * 0.85 and score > 45:
+                cut = (score - 45) * 0.5
+                score -= cut
+                add(-cut, "Looks cheap only if it is a recent one — not counted as a bargain until the age is known")
         if repair:
             if repair["expected_profit"] > 0:
                 add(0, f"Repair opportunity: expected profit €{repair['expected_profit']:.0f} "
