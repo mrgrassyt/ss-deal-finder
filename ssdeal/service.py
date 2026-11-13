@@ -28,7 +28,7 @@ from .db import Database
 from .discord_bot import DealBot
 from .engine import Engine
 from .feeds import effective_feeds
-from .fetcher import PoliteFetcher
+from .fetcher import make_fetcher
 from .logs import get_logger, prune_logs, register_secret, setup_logging
 from .notify import Notifier
 from .scanner import Scanner
@@ -51,7 +51,7 @@ class Service:
         self.db = Database(home / "ssdeal.db")
         self.engine = Engine(self.db, self.settings)
         self.notifier = Notifier(self.db, self.settings, home)
-        self.fetcher = PoliteFetcher(self.settings)
+        self.fetcher = make_fetcher(self.settings)
         self.scanner = Scanner(self.db, self.settings, self.fetcher, self.engine, self.notifier)
         self.actions = Actions(self.db, self.engine)
         self.bot = DealBot(self.db, self.settings, self.actions, self.notifier)
@@ -309,6 +309,7 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--demo", action="store_true", help="offline demo against a local mock of SS.lv")
     ap.add_argument("--port", type=int, default=None)
     ap.add_argument("--server", action="store_true", help="always-on server mode: password login, listens for a reverse proxy (see SERVER.md)")
+    ap.add_argument("--hub", action="store_true", help="multi-user server: private accounts, one copy of the app per person (see SERVER.md)")
     ap.add_argument("--home", default=None, help="data folder (default: %%LOCALAPPDATA%%\\SSDealFinder)")
     args = ap.parse_args(argv)
     home = Path(args.home) if args.home else data_dir()
@@ -318,6 +319,11 @@ def main(argv: list[str] | None = None) -> None:
     home.mkdir(parents=True, exist_ok=True)
     for sub in ("logs", "backups", "exports"):
         (home / sub).mkdir(exist_ok=True)
+    from . import hub as hub_mod
+    if hub_mod.enabled(args.hub) and not args.demo:
+        os.environ["SSDEAL_SERVER"] = "1"
+        hub_mod.main(home, args.port or int(os.environ.get("SSDEAL_HUB_PORT", "8765")))
+        return
     from . import server as server_mod
     server = server_mod.enabled(args.server) and not args.demo
     if server:
@@ -328,7 +334,7 @@ def main(argv: list[str] | None = None) -> None:
         server_mod.import_pending(home, print)
     svc_settings = Settings(home)
     port = args.port or (int(svc_settings.get("api.port", 8765)) + (1 if args.demo else 0))
-    host = "0.0.0.0" if (server or svc_settings.get("api.allow_lan")) else "127.0.0.1"
+    host = os.environ.get("SSDEAL_BIND") or ("0.0.0.0" if (server or svc_settings.get("api.allow_lan")) else "127.0.0.1")
     if os.environ.get("SSDEAL_WAIT_PORT"):          # started by "restart service": wait for the old copy to let go
         for _ in range(80):
             if not port_in_use("127.0.0.1", port):
@@ -347,7 +353,7 @@ def main(argv: list[str] | None = None) -> None:
 
         svc_settings.replace_section("feeds", {k: {"enabled": f["path"] in CATALOG} for k, f in FEEDS.items()})
     svc = Service(home, demo=args.demo, server=server)
-    svc.notifier.local_url = (os.environ.get("SSDEAL_PUBLIC_URL", "").rstrip("/") if server else "") or f"http://127.0.0.1:{port}"
+    svc.notifier.local_url = (os.environ.get("SSDEAL_PUBLIC_URL", "").rstrip("/") if (server or os.environ.get("SSDEAL_MANAGED")) else "") or f"http://127.0.0.1:{port}"
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     if sys.platform != "win32":

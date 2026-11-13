@@ -1,6 +1,6 @@
 # Run SS Deal Finder 24/7 on a rented server
 
-Your PC can be off. The server scans SS.lv all day, sends alerts to your phone (ntfy / Telegram / Discord), and you open the app from any phone or PC with a password.
+Your PC can be off. The server scans SS.lv all day, sends alerts to your phone (ntfy / Telegram / Discord), and you open the app from any phone or PC with your own private login.
 
 ## What you need
 - A small Linux server (VPS): Ubuntu 22.04/24.04, 1 GB RAM is enough, roughly €4–6 per month at Hetzner, Contabo, DigitalOcean, etc. Give it your SSH key or root password when you create it. You get an **IP address**.
@@ -19,7 +19,9 @@ Unzip the new version and run **Put the app on my server.bat** again; answer **n
 
 ## Good to know
 - **Address:** by default a free name from sslip.io that points at your server's IP. If you have your own domain, point an A record at the server and edit `/opt/ssdeal/.env` (`DOMAIN=...`), then `docker compose up -d` in `/opt/ssdeal`. A free DuckDNS name works too.
-- **Password:** edit `SSDEAL_PASSWORD` in `/opt/ssdeal/.env`, then `docker compose up -d`. That also logs every device out.
+- **Accounts (several people):** the server has real accounts. The first account is the admin (name from `SSDEAL_ADMIN_USER`, default `admin`; password = `SSDEAL_PASSWORD` the first time, and anything already on the server moves into it). Log in at the address; the device stays logged in for 30 days. **Settings → Phone → Manage users** makes a one-time invite link; your friend opens it, picks a name and password, and gets an empty private copy of the app. Each person has their own database, settings, alerts and Discord bot; nobody can see or change anyone else's. Everyone changes their own password at `/account`. Limit: 6 accounts (`SSDEAL_MAX_USERS`). Each copy uses about 70 MB of memory when idle, so 3-4 people fit easily in 2 GB.
+- **One scan for everyone's traffic:** every copy fetches SS.lv through one shared fetcher on the server (one request rate, robots.txt and cool-downs respected once, pages cached for 90 seconds), so friends do not multiply the load on SS.lv.
+- **Forgot a password:** the admin can make a temporary one under Manage users. If the admin forgets: ask for help (do not delete the data folder).
 - **Alerts:** Windows pop-ups don't exist on a server. Set up ntfy, Telegram or Discord in Settings → Notifications. Their links open your server address.
 - **Android app:** point it at the server address; the server accepts the API token (tested on the server side, not with the app itself).
 - **Backups:** the app already makes daily database backups in `/opt/ssdeal/data/backups`. Copy that folder somewhere now and then (your hosting provider's snapshot option is the easy way).

@@ -1087,7 +1087,8 @@ def create_api(svc) -> FastAPI:
     @app.post("/api/system/restart")
     def restart():
         """Start a fresh copy of the service (it waits for this one to release the port), then stop this one."""
-        if server_mode:                  # Docker (restart: unless-stopped) starts it again
+        import os
+        if server_mode or os.environ.get("SSDEAL_MANAGED"):      # Docker / the hub's supervisor starts it again
             svc.request_shutdown()
             return {"ok": True}
         import os

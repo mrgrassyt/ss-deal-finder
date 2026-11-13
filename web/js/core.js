@@ -22,7 +22,7 @@ export async function api(path, opts = {}) {
   let data = null;
   try { data = await r.json(); } catch (e) { /* empty */ }
   if (!r.ok) {
-    if (r.status === 401 && data && data.login) showLogin();
+    if (r.status === 401 && data && data.login) { if (data.hub) location.href = '/login'; else showLogin(); }
     const msg = (data && (typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail))) || `Request failed (HTTP ${r.status})`;
     throw new Error(msg);
   }

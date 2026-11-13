@@ -313,25 +313,13 @@ async function remoteCard(box) {
   try {
     const a = await get('/auth');
     if (a.server) {          // running on an always-on server: no Tailscale steps, just the address and log-out
-      box.innerHTML = `<h2>Server mode</h2><p>This app runs 24/7 on your server, so your PC can be off. You open it at <b class="num">${esc(location.origin)}</b> and log in with the password you chose during setup.
-        On the phone: Android Chrome menu → <b>Install app</b>; iPhone Safari Share → <b>Add to Home Screen</b>. To change the password, edit <code>.env</code> on the server and restart (see SERVER.md).</p>
+      const who = a.hub ? `<p>You are logged in as <b>${esc(a.user)}</b>. Your deals, settings and alerts are private to this account; other people on this server cannot see or change them.
+          <a href="/account">Account &amp; password</a>${a.admin ? ' · <a href="/admin">Manage users / invite someone</a>' : ''}</p>` : '';
+      box.innerHTML = `<h2>${a.hub ? 'Your account' : 'Server mode'}</h2>${who}<p>This app runs 24/7 on a server, so your PC can be off. You open it at <b class="num">${esc(location.origin)}</b>${a.hub ? ' and log in once; this device stays logged in for 30 days.' : ' and log in with the password you chose during setup.'}
+        On the phone: Android Chrome menu → <b>Install app</b>; iPhone Safari Share → <b>Add to Home Screen</b>.${a.hub ? '' : ' To change the password, edit <code>.env</code> on the server and restart (see SERVER.md).'}</p>
         <div class="row" style="gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" id="srv-logout">Log out of this device</button>
-          <button class="btn" id="srv-import">Replace server data with my PC data…</button><input type="file" id="srv-file" accept=".zip" hidden></div>
-        <p class="hint" id="srv-msg">Make the file on your PC with <b>Pack my data.bat</b>. Your current server database is saved in backups first. The server restarts for a minute.</p>`;
-      const fi = box.querySelector('#srv-file'), sm = box.querySelector('#srv-msg');
-      box.querySelector('#srv-import').onclick = () => fi.click();
-      fi.onchange = async () => {
-        const f = fi.files[0]; if (!f) return;
-        if (!confirm('Replace everything on the server (deals, settings, notes) with the data in ' + f.name + '? The old database is kept in backups.')) { fi.value = ''; return; }
-        sm.textContent = 'Uploading…';
-        try {
-          const r = await fetch('/api/server/import', { method: 'POST', headers: { 'Content-Type': 'application/zip' }, body: f });
-          const j = await r.json().catch(() => ({}));
-          if (!r.ok) throw new Error(j.detail || 'Upload failed (HTTP ' + r.status + ')');
-          sm.textContent = 'Uploaded. The server is restarting; reloading in 20 seconds…';
-          setTimeout(() => location.reload(), 20000);
-        } catch (e) { sm.textContent = e.message; }
-      };
+          <button class="btn" id="srv-import">Replace ${a.hub ? 'my account' : 'server'} data with my PC data…</button><input type="file" id="srv-file" accept=".zip" hidden></div>
+        <p class="hint" id="srv-msg">Make the file on your PC with <b>Pack my data.bat</b>. ${a.hub ? 'Your' : 'The current server'} database is saved in backups first. ${a.hub ? 'Your copy' : 'The server'} restarts for a minute.</p>`;
       box.querySelector('#srv-logout').onclick = async () => { await post('/logout'); location.reload(); };
       return;
     }

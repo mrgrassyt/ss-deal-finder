@@ -244,3 +244,70 @@ class PoliteFetcher:
             "robots": s.robots_status,
             "avg_latency": round(sum(lat) / len(lat), 3) if lat else None,
         }
+
+
+class BrokerFetcher(PoliteFetcher):
+    """Used by each user's private copy when several people share one server: instead of calling SS.lv itself it asks the
+    hub's shared fetcher (ssdeal/hub.py), which caches pages for a short time and keeps ONE polite request rate for
+    everybody (pacing, robots.txt and cool-downs are applied there, once)."""
+
+    def __init__(self, settings, url: str, token: str):
+        super().__init__(settings)
+        self.broker = url.rstrip("/")
+        self.token = token
+        self._cool_until = 0.0
+
+    def cooling_down(self) -> float:
+        return max(0.0, self._cool_until - time.time())
+
+    def reset_cooldown(self) -> None:
+        self._cool_until = 0.0
+        self.state.blocked_reason = ""
+        try:
+            httpx.post(self.broker + "/reset", headers={"X-Broker-Token": self.token}, timeout=5)
+        except httpx.HTTPError:
+            pass
+
+    async def get(self, path_or_url: str, retries: int = 2) -> FetchResult:
+        url = self.absolute(path_or_url)
+        res = FetchResult(url=url)
+        if urlparse(url).netloc != urlparse(self.base_url).netloc:
+            res.error = "refusing to fetch outside the configured site"
+            return res
+        if self.cooling_down():
+            res.error = f"cooling down ({int(self.cooling_down())}s left): {self.state.blocked_reason}"
+            res.blocked = True
+            return res
+        try:
+            r = await self._client_get().post(self.broker + "/fetch", json={"url": url}, headers={"X-Broker-Token": self.token}, timeout=180)
+            d = r.json()
+            if r.status_code != 200:
+                raise ValueError(d.get("detail", f"HTTP {r.status_code}"))
+        except (httpx.HTTPError, ValueError) as e:
+            res.error = f"shared fetcher unavailable: {e}"
+            self._note_error(res.error)
+            return res
+        res.status = int(d.get("status", 0))
+        res.text = d.get("text", "")
+        res.final_url = d.get("final_url", "") or url
+        res.error = d.get("error")
+        res.elapsed = float(d.get("elapsed", 0.0))
+        res.blocked = bool(d.get("blocked"))
+        res.disallowed = bool(d.get("disallowed"))
+        self.state.requests += 1
+        self.state.robots_status = d.get("robots", self.state.robots_status)
+        self._cool_until = time.time() + float(d.get("cooldown_seconds", 0) or 0)
+        self.state.blocked_reason = d.get("blocked_reason", "") if self._cool_until > time.time() else ""
+        if res.ok:
+            self.state.last_ok = time.time()
+        elif res.error and res.status != 404:
+            self._note_error(res.error)
+        return res
+
+
+def make_fetcher(settings):
+    import os
+
+    url, token = os.environ.get("SSDEAL_FETCH_BROKER", ""), os.environ.get("SSDEAL_BROKER_TOKEN", "")
+    return BrokerFetcher(settings, url, token) if url and token else PoliteFetcher(settings)
+

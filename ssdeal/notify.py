@@ -90,7 +90,7 @@ class Notifier:
         n = self.settings.get("notify", {})
         good = level == "GOOD_DEAL" or high_roi
         out = []
-        if not os.environ.get("SSDEAL_SERVER") and (n.get("desktop_good") if good else n.get("desktop_interesting")):
+        if not (os.environ.get("SSDEAL_SERVER") or os.environ.get("SSDEAL_MANAGED")) and (n.get("desktop_good") if good else n.get("desktop_interesting")):
             out.append("desktop")
         if self.settings.get("ntfy.enabled") and (n.get("ntfy_good") if good else n.get("ntfy_interesting")):
             out.append("ntfy")
@@ -200,7 +200,7 @@ class Notifier:
         msg = {"nid": None, "listing_id": listing_id, "level": "REMINDER", "high_roi": False, "title": title, "body": body,
                "url": url, "app_url": f"{self.local_url}/#/listings?listing={listing_id}" if listing_id else None}
         self._ui_event(msg)
-        chans = ["desktop"] if (not os.environ.get("SSDEAL_SERVER") and self.settings.get("notify.desktop_good", True)) else []
+        chans = ["desktop"] if (not (os.environ.get("SSDEAL_SERVER") or os.environ.get("SSDEAL_MANAGED")) and self.settings.get("notify.desktop_good", True)) else []
         if self.settings.get("ntfy.enabled"):
             chans.append("ntfy")
         if self.settings.get("telegram.enabled"):

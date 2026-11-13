@@ -4,8 +4,10 @@ services:
     build: .
     restart: unless-stopped
     environment:
-      SSDEAL_SERVER: "1"
-      SSDEAL_PASSWORD: ${SSDEAL_PASSWORD:?set SSDEAL_PASSWORD in .env}
+      SSDEAL_HUB: "1"            # several private accounts on one server (see SERVER.md)
+      SSDEAL_ADMIN_USER: ${SSDEAL_ADMIN_USER:-admin}
+      SSDEAL_MAX_USERS: ${SSDEAL_MAX_USERS:-6}
+      SSDEAL_PASSWORD: ${SSDEAL_PASSWORD:?set SSDEAL_PASSWORD in .env}      # password of the first (admin) account; after that everyone changes their own under Account
       SSDEAL_PUBLIC_URL: https://${DOMAIN:?set DOMAIN in .env}
       TZ: ${TZ:-Europe/Riga}
     volumes:
