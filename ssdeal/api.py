@@ -296,6 +296,8 @@ def create_api(svc) -> FastAPI:
             params.append(f'%"{flag}"%')
         if sort == "drop":
             where.append("initial_price > price")
+        if flag not in ("service", "buying"):       # services and "wanted" ads are not items for sale: never listed
+            where.append("""COALESCE(is_buying,0)=0 AND COALESCE(flags,'') NOT LIKE '%"service"%' AND COALESCE(flags,'') NOT LIKE '%"buying"%'""")
         w = ("WHERE " + " AND ".join(where)) if where else ""
         page_size = max(1, min(page_size, 500))
         total = db.scalar(f"SELECT COUNT(*) FROM listings {w}", params, 0)

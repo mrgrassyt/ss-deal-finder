@@ -158,7 +158,10 @@ class Broker:
         self._pruned = 0.0
 
     def ttl(self, url: str) -> float:
-        return self.DETAIL_TTL if "/msg/" in url else self.LIST_TTL
+        if "/msg/" in url:
+            return self.DETAIL_TTL
+        m = re.search(r"/page(\d+)\.html", url)
+        return 6 * 3600 if m and int(m.group(1)) > 5 else self.LIST_TTL         # older pages barely change
 
     def _pack(self, r) -> dict:
         s = self.fetcher.status()

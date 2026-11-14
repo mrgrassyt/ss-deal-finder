@@ -54,6 +54,10 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "detail_fetch_min_score": 45,        # fetch full ad text for promising ones
         "detail_fetch_max_per_cycle": 15,
         "backfill_pages": 4,                 # warm-up crawl depth per feed
+        "history_pages": 40,                 # older listings: pages per feed crawled slowly in the background (0 = off)
+        "history_pages_per_step": 6,         # pages per history step in total (the feeds take turns)
+        "history_interval_min": 5,           # minutes between history steps
+        "history_cursor": {},                # where each feed's history crawl continues (managed by the app)
         "warmup_complete": False,
         "engine_rev": 0,            # last rule set applied to stored listings (see service.ENGINE_REV)
         "warmup_done_at": 0,        # ads first seen before this moment are the starting backlog, never "new"
@@ -65,7 +69,8 @@ DEFAULT_SETTINGS: dict[str, Any] = {
         "min_price": 0,
         "max_price": 0,             # 0 = no limit
         "ignore_buying_ads": True,  # "pērku" / "куплю" ads are wanted-ads, not offers
-        "ignore_services": True,    # repairs, rentals, photographer services
+        "ignore_services": True,
+        "hide_negative_profit": True,        # no "Interesting"/"Good deal" label when the flip estimate is a loss    # repairs, rentals, photographer services
         "ignore_parts": True,       # batteries, screens, cases… sold *for* a device are not the device
         "junk_value_floor": 8,      # € - low-value single accessories below this are junk
         "categories": {},           # category_key -> {"enabled": bool, "max_budget": n, "min_deal": n}
@@ -286,6 +291,9 @@ _NUMERIC_RULES = {
     ("scan", "detail_fetch_min_score"): (0, 100),
     ("scan", "detail_fetch_max_per_cycle"): (0, 200),
     ("scan", "backfill_pages"): (0, 30),
+    ("scan", "history_pages"): (0, 150),
+    ("scan", "history_pages_per_step"): (1, 30),
+    ("scan", "history_interval_min"): (2, 1440),
     ("notify", "good_deal_threshold"): (1, 100),
     ("notify", "interesting_threshold"): (1, 100),
     ("notify", "personal_good_threshold"): (1, 100),

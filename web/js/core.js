@@ -104,7 +104,7 @@ export function scores(l) {
   if (p == null) return '';
   return `<span class="scores"><span class="score-chip personal big ${p < 60 ? 'dim' : ''}" title="How well this fits something from your My items list (0–100)"><b>${Math.round(p)}</b><span>For you</span></span></span>`;
 }
-export const levelTag = (lv) => lv ? `<span class="level ${lv}">${LEVEL_LABEL[lv] || lv}</span>` : '';
+export const levelTag = (lv) => lv && lv !== 'IGNORE' ? `<span class="level ${lv}">${LEVEL_LABEL[lv] || lv}</span>` : '';
 export function condTag(c) {
   const cls = { new: 'good', broken: 'bad', parts: 'bad', untested: 'warn' }[c] || '';
   return `<span class="tag ${cls}">${COND_LABEL[c] || c || '?'}</span>`;

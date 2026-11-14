@@ -36,7 +36,7 @@ from .scanner import Scanner
 log = get_logger("service")
 
 
-ENGINE_REV = 8   # bump when identification / part / service rules change; triggers one full re-check on start
+ENGINE_REV = 9   # bump when identification / part / service rules change; triggers one full re-check on start
 
 
 class Service:
@@ -177,6 +177,9 @@ class Service:
                             price_idx += 1
                             await self.scanner.scan_pages(f["key"], range(2, 4), job="price")
                         last["price"] = now
+                    if now - last.get("history", 0) >= s.get("history_interval_min", 5) * 60:
+                        await self.scanner.history_step()
+                        last["history"] = now
                     if now - last["reconcile"] >= s.get("reconcile_interval_min", 240) * 60:
                         await self.scanner.reconcile()
                         pages = int(s.get("reconcile_pages", 5))

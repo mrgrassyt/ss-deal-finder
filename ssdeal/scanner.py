@@ -30,6 +30,7 @@ class RunStats:
     updated: int = 0
     removed: int = 0
     error: str | None = None
+    ended: bool = False          # the feed had no more pages
 
 
 class Scanner:
@@ -150,7 +151,9 @@ class Scanner:
             for page in pages:
                 rows = await self.fetch_feed_page(feed, page, st)
                 if not rows:
+                    st.ended = True
                     break
+                st.pages += 1
                 for row in rows:
                     lid, created, changed = self.upsert_row(row, feed)
                     if created:
@@ -381,6 +384,47 @@ class Scanner:
         for w in res["watch_hits"]:
             self.db.execute("INSERT OR IGNORE INTO watch_matches(watch_id, listing_id, matched_at, price) VALUES(?,?,?,?)",
                             (w["id"], row["id"], time.time(), row["price"]))
+
+    # ---------------------------------------------------------------- older listings
+    async def history_step(self) -> dict:
+        """Walk deeper into the enabled feeds, beyond the warm-up depth, so older ads that are still for sale show up in
+        Listings and the price model gets more comparables (higher confidence). A step fetches only a few pages in
+        total, taking turns between feeds, so it never delays the checks for new listings; the next step continues
+        where this one stopped. A feed that is done starts over after a day (prices and ads change). No alerts."""
+        depth = int(self.settings.get("scan.history_pages", 40))
+        budget = int(self.settings.get("scan.history_pages_per_step", 6))
+        start0 = int(self.settings.get("scan.backfill_pages", 4)) + 1
+        cur = dict(self.settings.get("scan.history_cursor", {}) or {})
+        out = {"pages": 0, "new": 0}
+        if depth < start0:
+            return out
+        feeds = [f["key"] for f in effective_feeds(self.settings) if f["enabled"]]
+        now = time.time()
+        for k in feeds:
+            c = cur.get(k) or {"page": start0, "done_at": 0}
+            if c["done_at"] and now - c["done_at"] >= 86400:
+                c = {"page": start0, "done_at": 0}
+            cur[k] = c
+        todo = [k for k in feeds if not cur[k]["done_at"]]
+        tries = 0
+        while todo and tries < budget and not self.paused and not self.fetcher.cooling_down():
+            tries += 1
+            k = min(todo, key=lambda x: cur[x]["page"])            # the feed that is furthest behind goes first
+            c = cur[k]
+            st = await self.scan_pages(k, range(c["page"], c["page"] + 1), job="history", notify=False)
+            if st.error:
+                todo.remove(k)
+                continue
+            out["pages"] += st.pages
+            out["new"] += st.new
+            c["page"] += 1
+            if st.ended or c["page"] > depth:
+                c["done_at"] = time.time()
+                todo.remove(k)
+        self.settings.set("scan.history_cursor", cur)
+        if out["new"]:
+            log.event("scanner.history", **out)
+        return out
 
     # ---------------------------------------------------------------- warm-up
     async def backfill(self, pages: int | None = None) -> dict:

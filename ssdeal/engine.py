@@ -11,6 +11,7 @@ import time
 from .catalog import Match, identify
 from .db import Database, jdumps, jloads
 from .feeds import CATEGORIES, category_from_path, is_service_path
+from .flip import compute_flip
 from .learning import PreferenceModel
 from .logs import get_logger
 from .market import Market
@@ -185,6 +186,12 @@ class Engine:
         hits = self.watch_hits(listing)
         personal = self.wants.score(listing)
         level, why = self.classify(listing, deal, personal, hits)
+        if level != "IGNORE" and not hits and not (personal.get("matched") and personal["score"] >= 66) \
+                and (self.settings.get("filters", {}) or {}).get("hide_negative_profit", True):
+            fl = compute_flip(listing.get("price"), listing.get("condition"), {"valuation": deal["valuation"], "deal": deal},
+                              self.settings.get("flip", {}) or {})
+            if fl and not fl.get("rough") and fl["profit"] < 0:
+                level, why = "IGNORE", f"would be a loss to resell (about −€{abs(fl['profit'])})"
         details = {
             "deal": {k: deal[k] for k in ("score", "confidence", "reasons", "headline", "repair", "flags_out")},
             "valuation": deal["valuation"],
