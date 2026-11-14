@@ -16,6 +16,18 @@ def compute_flip(price, condition, det: dict, cfg: dict) -> dict | None:
     sale = lambda x: x * (1 - disc)  # noqa: E731
     conf = ((det or {}).get("deal") or {}).get("confidence") or 0
     needs_work = condition in ("broken", "parts", "untested")
+    rep = ((det or {}).get("deal") or {}).get("repair")
+    if needs_work and rep:
+        fixed = max(0.0, rep["working_value"] - rep["repair_cost_est"])
+        ev = rep["expected_value"]
+        profit = sale(ev) - invest
+        return {"rough": False, "uncertain": False, "wide_range": True, "repair": True, "resale": round(sale(ev)),
+                "resale_low": round(sale(rep["parts_value"])), "resale_high": round(sale(fixed)), "profit": round(profit),
+                "roi": round(profit / invest * 100) if invest else None,
+                "profit_low": round(sale(rep["parts_value"]) - invest), "profit_high": round(sale(fixed) - invest),
+                "confidence": "low", "n": v.get("n"), "costs": extra, "fix_chance": rep["success_probability"],
+                "why": f"needs work: €{round(sale(rep['parts_value']))} in parts, about €{round(sale(fixed))} if fixed "
+                       f"({int(rep['success_probability'] * 100)}% chance)"}
     if not typical or needs_work:
         # no usable market value (or the item needs repair): rough guess = a typical small margin on the buying price
         margin = float(cfg.get("rough_margin_pct", 12)) / 100 * (0.5 if needs_work else 1)

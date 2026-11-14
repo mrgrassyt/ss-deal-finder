@@ -1,7 +1,7 @@
 // SS Deal Finder service worker: makes the app installable and lets it open without a connection.
 // Network first for everything (so an update of the app shows up immediately), the last good copy when offline.
 // The API is never cached: prices, listings and notifications are always live.
-const CACHE = 'ssd-shell-v5';
+const CACHE = 'ssd-shell-v6';
 const SHELL = ['./', 'index.html', 'css/base.css', 'css/fonts.css', 'js/app.js', 'js/core.js', 'js/theme.js', 'js/motion.js', 'js/bigpicture.js',
   'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png'];
 

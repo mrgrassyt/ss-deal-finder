@@ -126,6 +126,8 @@ export function flipHtml(l) {
   const f = l.flip;
   if (!f) return l.condition === 'broken' || l.condition === 'parts' || l.condition === 'untested'
     ? `<div class="flip muted small">Needs checking or repair, so no flip estimate. Open it for the repair outlook.</div>` : '';
+  if (f.repair) return `<div class="flip" title="${esc(f.why || '')}"><span>Worth ≈ <b>${eur(f.resale_low)}</b> in parts, <b>${eur(f.resale_high)}</b> if fixed</span>
+    <span class="${f.profit >= 0 ? 'pos' : 'neg'}">Expected ${f.profit >= 0 ? '+' : '−'}€${Math.abs(f.profit)}</span><span class="conf low">${Math.round((f.fix_chance || 0) * 100)}% fix chance</span></div>`;
   const pos = f.profit >= 0, sign = pos ? '+' : '−';
   const range = f.profit_low != null && f.profit_high != null ? ` <span class="muted">(${f.profit_low >= 0 ? '+' : '−'}€${Math.abs(f.profit_low)} to ${f.profit_high >= 0 ? '+' : '−'}€${Math.abs(f.profit_high)})</span>` : '';
   return `<div class="flip" title="Sells for about ${eur(f.resale)} (typical asking price minus a haircut), minus ${eur(l.price)} to buy and ${eur(f.costs)} costs. Based on ${f.n || '?'} comparable ads.">
@@ -140,7 +142,9 @@ export function moneyBox(l) {
   const row = (k, v, cls = '') => `<div class="mrow"><span>${k}</span><b class="${cls}">${v}</b></div>`;
   return `<div class="right moneybox" title="${esc(tip)}">
     ${row('Buy', l.price == null ? '—' : eur(l.price))}
-    ${f && f.uncertain ? row('Sell', f.resale_low && f.resale_high ? `~${eur(f.resale_low)}–${eur(f.resale_high)}` : '~' + eur(f.resale)) + row('Profit', '~' + sg(f.profit), f.profit >= 0 ? 'pos' : 'neg') + row('ROI', f.roi == null ? '—' : '~' + f.roi + '%', f.profit >= 0 ? 'pos' : 'neg')
+    ${f && f.repair ? row('Sell', `~${eur(f.resale_low)}–${eur(f.resale_high)}`) + row('Profit', '~' + sg(f.profit), f.profit >= 0 ? 'pos' : 'neg') + row('ROI', f.roi == null ? '—' : '~' + f.roi + '%', f.profit >= 0 ? 'pos' : 'neg')
+        + `<div class="mconf low" title="${esc(f.why || '')}">parts → fixed (${Math.round((f.fix_chance || 0) * 100)}% fix chance)</div>`
+      : f && f.uncertain ? row('Sell', f.resale_low && f.resale_high ? `~${eur(f.resale_low)}–${eur(f.resale_high)}` : '~' + eur(f.resale)) + row('Profit', '~' + sg(f.profit), f.profit >= 0 ? 'pos' : 'neg') + row('ROI', f.roi == null ? '—' : '~' + f.roi + '%', f.profit >= 0 ? 'pos' : 'neg')
         + `<div class="mconf low">model not exact, check it</div>`
       : f && f.rough ? row('Sell', '~' + eur(f.resale)) + row('Profit', '~' + sg(f.profit), f.profit >= 0 ? 'pos' : 'neg') + row('ROI', f.roi == null ? '—' : '~' + f.roi + '%', f.profit >= 0 ? 'pos' : 'neg')
         + `<div class="mconf low" title="${esc(f.why || '')}">rough guess</div>`

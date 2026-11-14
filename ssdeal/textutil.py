@@ -55,7 +55,7 @@ BROKEN_PATTERNS = (
     r"требует ремонт", r"артефакт",
 )
 PARTS_PATTERNS = (
-    r"uz detal", r"rezerves dal\w* (?:veida|nolukiem)?", r"detalam", r"for parts", r"parts only",
+    r"uz detal", r"rezerves dal\w*(?: (?:veida|nolukiem))?(?![a-z])", r"detalam", r"for parts", r"parts only",
     r"на запчасти", r"на детали", r"donor", r"donors",
 )
 UNTESTED_PATTERNS = (
@@ -70,8 +70,20 @@ LIKE_NEW_PATTERNS = (r"\bka jaun", r"like new", r"как новый", r"ideal\w*
                      r"lieliska stavokli", r"teicam\w* stavokl", r"отличн\w* состояни")
 
 
+# "selling it in parts / for parts": the whole device, not working or being parted out (Latvian locative "daļās/daļām"
+# is checked before accents are removed, because "rezerves daļas" alone also means "spare parts" = a part for sale)
+WHOLE_FOR_PARTS = re.compile(r"(?:rezerves|uz)\s+daļ(?:ās|ām)|uz\s+detaļām|по\s+запчастям|на\s+(?:запчасти|детали|донор)|"
+                             r"\bfor\s+parts\b|\bas\s+parts\b|\bparts\s+only\b|\bdonor\b|\bdonors\b", re.I)
+
+
+def sold_whole_for_parts(text: str) -> bool:
+    return bool(WHOLE_FOR_PARTS.search((text or "").lower()))
+
+
 def detect_condition(text: str, attrs: dict | None = None) -> tuple[str, list[str]]:
     """Returns (condition, evidence). condition ∈ new|used|broken|parts|untested."""
+    if sold_whole_for_parts(text):
+        return "parts", ["sold for parts"]
     t = norm(text)
     for neg in NEGATED_DAMAGE:
         t = _compiled(neg).sub(" ", t)
@@ -306,6 +318,9 @@ def detect_kind(title: str, description: str, category: str | None = None) -> tu
     if category and category not in KIND_CATEGORIES:
         return "device", ""
     parts_re, acc_re = _alt(PART_WORDS), _alt(ACCESSORY_WORDS)
+    # "Pārdodu HP ProBook 450 G9 - pārdodu rezerves daļās": the laptop itself, broken or parted out, not one part
+    if sold_whole_for_parts(f"{title}\n{description or ''}") and not re.search(rf"^(?:\S+\s+){{0,2}}(?:{parts_re}|{acc_re})", norm(title or "")):
+        return "device", "whole device sold for parts"
     candidates = [norm(title or "")[:140], _first_sentence(description or "")]
     for kind, rx in (("accessory", acc_re), ("part", parts_re)):
         for text in candidates:

@@ -269,8 +269,9 @@ class Engine:
         if "review_collection" in out_flags and price <= 250 and shift <= 0:
             return "INTERESTING", "lot / collection worth reviewing"
         rep = deal.get("repair")
-        if rep and rep.get("expected_profit", 0) > 15 and shift <= 0:
-            return "INTERESTING", "repair opportunity with positive expected profit"
+        if rep and shift <= 0 and (rep.get("expected_profit", 0) > 0 or (rep.get("worth_for_parts") and price <= rep.get("parts_value", 0))):
+            return "INTERESTING", ("repair opportunity: worth more fixed than it costs" if rep.get("expected_profit", 0) > 0
+                                   else "worth at least its price in parts")
         return "IGNORE", f"Deal {ds:.0f} / Personal {ps:.0f} below thresholds"
 
     def apply_scores(self, listing_id: int, result: dict) -> None:

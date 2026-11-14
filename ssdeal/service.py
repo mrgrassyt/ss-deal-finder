@@ -36,7 +36,7 @@ from .scanner import Scanner
 log = get_logger("service")
 
 
-ENGINE_REV = 10   # bump when identification / part / service rules change; triggers one full re-check on start
+ENGINE_REV = 11   # bump when identification / part / service rules change; triggers one full re-check on start
 
 
 class Service:

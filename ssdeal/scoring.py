@@ -12,7 +12,8 @@ import time
 
 from .catalog import Match, pc_components
 from .feeds import CATEGORIES
-from .generations import age_notes
+from .generations import RECENT_FLOOR, YEAR_NOW, age_notes
+from .generations import specs as gen_specs
 from .market import Market
 from .textutil import norm
 
@@ -179,8 +180,17 @@ class Scorer:
         repair = None
         out_flags: list[str] = []
         value_for_discount = val.get("typical")
-        if cond in ("broken", "parts", "untested") and val.get("typical"):
-            repair = self.repair_eval(listing, val["typical"], price)
+        working = val.get("typical")
+        rough_working = False
+        if cond in ("broken", "parts", "untested") and not working:
+            sp = gen_specs(listing.get("title") or "", listing.get("description") or "")
+            if cat in RECENT_FLOOR and sp.get("year") and YEAR_NOW - sp["year"] <= 5:
+                working, rough_working = RECENT_FLOOR[cat] * 2.5, True     # what a recent working one sells for, at least
+        if cond in ("broken", "parts", "untested") and working:
+            repair = self.repair_eval(listing, working, price)
+            if repair and rough_working:
+                repair["uncertainty"] = "high"
+                repair["working_basis"] = f"rough: a recent {cat} sells for at least ~€{working:.0f} working (no market data yet)"
             if repair:
                 value_for_discount = repair["expected_value"]
                 confidence *= 0.6
