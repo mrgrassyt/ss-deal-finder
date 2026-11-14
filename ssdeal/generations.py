@@ -68,6 +68,11 @@ _UNIT_AFTER = re.compile(r"\s*(mah|wh?\b|eur|€|euro|ls\b|rpm|mhz|ghz|hz\b|km\b
 _INTEL = re.compile(r"(?<![a-z0-9])(?:core\s*)?i[3579]\s*-?\s*(\d{4,5})[a-z]{0,3}\d?(?![0-9])")
 _A_NUM = re.compile(r"(?<![a-z0-9])(a[12-3]\d{3})(?![0-9])")
 _CHIP = re.compile(r"(?<![a-z0-9])(m[1-5])(?:\s*(?:pro|max|ultra))?(?![a-z0-9])")
+_HP_GEN = re.compile(r"(?:probook|elitebook|zbook)[\w\s-]{0,12}?\bg(\d{1,2})\b")
+_TP_GEN = re.compile(r"thinkpad[\w\s-]{0,20}?\bgen\.?\s*(\d{1,2})\b")
+# below these prices a RECENT working item is very unusual: a find, a typo or a scam, but always worth a look
+RECENT_FLOOR = {"laptop": 150, "pc": 150, "phone": 60, "tablet": 60, "gpu": 60, "console": 80, "monitor": 40, "tv": 60,
+                "wearable": 30, "cpu": 30, "camera": 80, "drone": 80}
 _RAM = re.compile(r"(?<![0-9])(\d{1,3})\s*gb\s*(?:ram|ddr\d?|lpddr\d?x?|operat\w*|atmin\w*|memor\w*|unified)|(?:ram|atmin\w*|operativ\w*)\W{0,3}(\d{1,3})\s*gb")
 _STORAGE = re.compile(r"(?<![0-9])(\d{2,4}|[1-8])\s*(gb|tb)\s*(ssd|hdd|nvme|m\.?2|flash|storage|ciet\w*|disk\w*|atmin\w*)|(ssd|hdd|nvme)\W{0,3}(\d{2,4}|[1-8])\s*(gb|tb)")
 
@@ -92,6 +97,14 @@ def specs(title: str, description: str = "") -> dict:
             break                                      # the title wins over the description
     if years:
         out["year"], out["year_from"] = min(years), "text"
+    if "year" not in out:
+        m = _HP_GEN.search(full)
+        if m and 1 <= int(m.group(1)) <= 12:
+            out["year"], out["year_from"] = 2013 + int(m.group(1)), f"HP generation G{m.group(1)}"
+    if "year" not in out:
+        m = _TP_GEN.search(full)
+        if m and 1 <= int(m.group(1)) <= 14:
+            out["year"], out["year_from"] = 2011 + int(m.group(1)), f"ThinkPad Gen {m.group(1)}"
     m = _A_NUM.search(full)
     if m and m.group(1) in APPLE_A:
         fam, y0, y1 = APPLE_A[m.group(1)]
@@ -191,6 +204,11 @@ def age_notes(listing: dict, match) -> list[tuple[float, str, str | None]]:
             out.append((-2.0, "Hard disk (HDD) instead of an SSD — slow", "outdated_specs"))
         elif sp.get("storage_gb") and sp["storage_gb"] <= 128:
             out.append((-1.5, f"Small storage ({sp['storage_gb']} GB)", None))
+    price = listing.get("price")
+    if (cat in RECENT_FLOOR and sp.get("year") and YEAR_NOW - sp["year"] <= 5 and price is not None and 0 < price < RECENT_FLOOR[cat]
+            and listing.get("condition") not in ("broken", "parts")):
+        out.append((0.0, f"A {sp['year']} model for €{price:.0f} is far below what recent {cat}s sell for — a real find, a typo "
+                         f"(€{price * 10:.0f}?) or a scam. Worth checking quickly: ask for photos and meet in person.", "recent_cheap"))
     if match is not None and (match.variant or {}).get("generation_unknown"):
         out.append((0.0, f"Model year / generation not given — {match.name} was sold for many years and older ones are worth "
                          f"much less. Ask the seller (model number on the bottom, or the year).", "age_unknown"))

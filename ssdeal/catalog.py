@@ -422,6 +422,8 @@ SIMPLE_PATTERNS: list[tuple[str, str, str, str | None, float]] = [
     (r"latitude\s*(\d{4})", "laptop:dell:latitude-{1}", "Dell Latitude{-1}", "Dell", 0.7),
     (r"elitebook\s*(\d{3,4})\s*(g\d{1,2})?", "laptop:hp:elitebook-{1}{-2}", "HP EliteBook{-1}{-2}", "HP", 0.7),
     (r"probook\s*(\d{3,4})\s*(g\d{1,2})?", "laptop:hp:probook-{1}{-2}", "HP ProBook{-1}{-2}", "HP", 0.65),
+    (r"elitebook\s*(g\d{1,2})\b", "laptop:hp:elitebook-{1}", "HP EliteBook{-1}", "HP", 0.5),
+    (r"probook\s*(g\d{1,2})\b", "laptop:hp:probook-{1}", "HP ProBook{-1}", "HP", 0.5),
     (r"(?:rog\s*)?zephyrus\s*(g14|g15|g16|m16)", "laptop:asus:zephyrus-{1}", "ASUS Zephyrus{-1}", "ASUS", 0.6),
 ]
 _SIMPLE = [(re.compile(rx), k, n, b, c) for rx, k, n, b, c in SIMPLE_PATTERNS]

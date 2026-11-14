@@ -234,6 +234,10 @@ class Scorer:
             add(pts, text)
             if flag:
                 out_flags.append(flag)
+            if flag == "recent_cheap" and score < 64:
+                add(64 - score, "Recent model at a give-away price")
+                score = 64.0
+                out_flags.append("cheap_for_category")
             if flag == "age_unknown" and value_for_discount and price < value_for_discount * 0.85 and score > 45:
                 cut = (score - 45) * 0.5
                 score -= cut
