@@ -248,5 +248,20 @@ def test_change_password(admin):
     assert fresh.post("/admin/api/login", json={"password": PW}).status_code == 401
     assert fresh.post("/admin/api/login", json={"password": "a new long password"}).status_code == 200
     assert ":" in main.db.kv("pw_hash") and "a new long password" not in main.db.kv("pw_hash")
-    admin.post("/admin/api/password", json={"current": "a new long password", "new": PW + " 2"}, headers=H)
+    main.db.set_kv("pw_hash", None)                                               # back to the starting password for the other tests
     main.auth.fails.clear()
+
+
+def test_content_drop_imports_once_and_respects_edits(admin, anon, tmp_path):
+    from app import importer
+    (tmp_path / "images").mkdir()
+    (tmp_path / "images" / "a.jpg").write_bytes(png())
+    (tmp_path / "drop.json").write_text('[{"key": "t-1", "type": "listing", "images": {"images": ["a.jpg"]}, "data": {"title": "Dropped item", '
+                                        '"platform": "Vinted", "url": "https://www.vinted.lv/items/1", "price": 9, "status": "Available"}},'
+                                        '{"key": "t-bad", "type": "listing", "data": {"title": "No link"}}]')
+    assert importer.run(main.db, main.MEDIA, tmp_path) == ["t-1"]                   # the invalid one is skipped, not half-imported
+    assert "Dropped item" in anon.get("/listings").text
+    assert importer.run(main.db, main.MEDIA, tmp_path) == []                        # second run changes nothing
+    item = next(i for i in admin.get("/admin/api/items?type=listing").json() if i["title"] == "Dropped item")
+    admin.delete(f"/admin/api/items/{item['id']}", headers=H)
+    assert importer.run(main.db, main.MEDIA, tmp_path) == [] and "Dropped item" not in anon.get("/listings").text   # deleted stays deleted

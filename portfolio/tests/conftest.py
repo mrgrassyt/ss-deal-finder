@@ -6,4 +6,5 @@ from pathlib import Path
 os.environ["SITE_DATA"] = tempfile.mkdtemp(prefix="mgsite-")
 os.environ["SITE_ADMIN_PASSWORD"] = "correct horse battery"
 os.environ.pop("SMTP_HOST", None)
+os.environ["SITE_CONTENT"] = tempfile.mkdtemp(prefix="mgcontent-")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))

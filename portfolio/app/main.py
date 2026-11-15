@@ -25,7 +25,7 @@ from starlette.responses import FileResponse, HTMLResponse, JSONResponse, PlainT
 from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
-from . import media, seed
+from . import importer, media, seed
 from .auth import COOKIE, SESSION_DAYS, Auth
 from .db import DB
 from .schema import ACCENTS, EXTRA_PAGES, PAGES, SETTINGS, STATS, TYPES, clean
@@ -38,6 +38,7 @@ SITE_URL = (os.environ.get("SITE_URL") or "").rstrip("/")
 db = DB(DATA / "site.db")
 auth = Auth(db)
 seed.run(db, MEDIA, ROOT / "seed")
+importer.run(db, MEDIA, Path(os.environ.get("SITE_CONTENT") or ROOT / "content"))
 md = MarkdownIt("commonmark", {"html": False, "typographer": False}).enable(["table", "strikethrough"])
 
 # ---- templates ----------------------------------------------------------------------------------------------------------
