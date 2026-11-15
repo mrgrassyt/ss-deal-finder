@@ -17,7 +17,7 @@ SALE_STATUS = ["Available", "Reserved", "Sold", "Archived"]
 CONDITIONS = ["New", "Like new", "Very good", "Good", "Fair", "For parts"]
 LAB_CATEGORIES = ["Electronics repair", "Soldering", "PC hardware", "GPU testing", "Computer upgrades",
                   "Hardware troubleshooting", "Component identification", "Technical experiment"]
-SHOP_CATEGORIES = ["PC components", "Electronics", "Gaming accessories", "Cameras and photography", "Games", "Miscellaneous"]
+SHOP_CATEGORIES = ["PC components", "Electronics", "Gaming accessories", "Cameras and photography", "Games", "Books and vinyl", "Miscellaneous"]
 GEAR_GROUPS = ["PC", "Camera", "Peripherals", "Electronics tools", "Other"]
 NOW_SECTIONS = ["Working on", "Learning", "Experimenting with", "Next few weeks", "Long-term"]
 ROADMAP_STATES = ["Planned", "In progress", "Completed"]

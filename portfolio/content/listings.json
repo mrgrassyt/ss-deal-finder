@@ -23,5 +23,28 @@
    "date": "2026-08-15",
    "description": "HyperX Pulsefire Haste 2, wired, glossy black.\n\n- Weight: 53 g\n- Sensor: HyperX 26K, up to 26,000 DPI\n- Polling rate: 8000 Hz\n- Cable: HyperFlex 2 paracord, very flexible\n- Switches: HyperX, rated for up to 100 million clicks\n\nMessage me if you have any questions."
   }
+ },
+ {
+  "key": "vinted-de-chirico-gimferrer",
+  "type": "listing",
+  "published": true,
+  "created": 1789473600.0,
+  "images": {
+   "images": [
+    "de-chirico-1.webp"
+   ]
+  },
+  "data": {
+   "title": "Giorgio de Chirico by Pere Gimferrer, 1989 Rizzoli first American edition, hardcover",
+   "platform": "Vinted",
+   "url": "https://www.vinted.lv/items/9725792925-giorgio-de-chirico-pere-gimferrer-1989-rizzoli-first-edition-hardcover",
+   "price": 13.5,
+   "currency": "EUR",
+   "status": "Available",
+   "condition": "Very good",
+   "category": "Books and vinyl",
+   "date": "2026-09-15",
+   "description": "\"De Chirico\" by Pere Gimferrer, published by Rizzoli in 1989. First American edition.\n\n- Format: hardcover with dust jacket\n- Language: English\n- ISBN: 0847810429\n- Condition: very good. Clean interior, only light shelf wear on the corners, consistent with age."
+  }
  }
 ]
