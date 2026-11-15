@@ -147,9 +147,9 @@ async def home(request: Request):
     ranked = sorted(public("photo"), key=lambda i: (bool(i.get("featured")), i["created"]), reverse=True)
     site = settings()
     shots = [{"href": f"/photos#p-{p['slug']}", "title": p.get("title") or "", "text": p.get("caption") or "", "img": p["image"],
-              "info": "|".join(x for x in (p.get("camera"), p.get("lens"), p.get("settings")) if x)} for p in ranked[:3]]
+              "info": "|".join(x for x in (p.get("camera"), p.get("lens"), p.get("settings")) if x)} for p in ranked[:5]]
     if site.get("portrait"):                      # a picture of you, uploaded in Settings, goes first
-        shots = [{"href": "/about", "title": site.get("name") or "mrgrass", "text": "", "img": site["portrait"], "info": ""}] + shots[:2]
+        shots = [{"href": "/about", "title": site.get("name") or "mrgrass", "text": "", "img": site["portrait"], "info": ""}] + shots[:4]
     camera = next((g.get("details") or g.get("name") for g in public("gear") if g.get("group") == "Camera"), "")
     numbers = {x["key"]: x for x in stats(site)}
     hero_stats = [numbers[k] for k in ("projects", "photos", "posts", "listings") if k in numbers][:3]

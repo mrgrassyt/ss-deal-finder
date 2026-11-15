@@ -197,6 +197,7 @@ LOOK_NAMES = [n for _, n, _, _ in LOOKS]
 SETTINGS = [
     f("headline", "text", "Home page headline", required=True),
     f("name", "text", "Your name on the home page", help="Shown under the big photo, for example: Gustavs, aka mrgrass."),
+    f("greeting", "text", "Big word over the home photo", help="For example: Hello. Leave empty for Hello."),
     f("intro", "textarea", "Home page introduction", rows=3),
     f("accent", "select", "Accent colour", options=ACCENTS, default="Ember", help="Used by the Aurora look on the home page."),
     f("look", "select", "Default look of the site", options=LOOK_NAMES, default="Aurora", help="What new visitors see first. Everyone can pick their own on the Themes page."),

@@ -19,15 +19,18 @@
     <div class="sp" id="sp" data-look="aurora" aria-label="Preview of the selected look">
       <div class="sp-bar"><div class="nav-in"><span class="brand"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="3" fill="var(--c-projects)"/><rect x="13" y="2" width="9" height="9" rx="4.5" fill="var(--c-photos)"/><rect x="2" y="13" width="9" height="9" rx="4.5" fill="var(--c-lab)"/><rect x="13" y="13" width="9" height="9" rx="3" fill="var(--c-devlog)"/></svg>mrgrass.me</span>
         <span class="nav-links"><a aria-current="page">Home</a><a>Projects</a><a>Photography</a><a>Devlog</a></span></div></div>
-      <div class="sp-hero">
-        <div class="sp-text">
-          <p class="hero-name">{{ site.name or 'mrgrass' }}</p>
-          <p class="display sp-h">Building things.<br>Learning by doing.</p>
-          <p class="lede">I game, take photos, flip gear and build software.</p>
-          <div class="row"><span class="btn">See the projects</span><span class="btn ghost">Get in touch</span></div>
-          <ul class="hero-stats"><li><b>3</b><span>Projects</span></li><li><b>5</b><span>Photographs</span></li><li><b>3</b><span>Articles</span></li></ul>
+      <div class="hero sp-hero">
+        <div class="stage-slides">{% if samples %}<span class="stage-slide on"><img src="{{ samples[0].image.src }}" alt=""></span>{% endif %}</div>
+        <div class="stage-scrim" aria-hidden="true"></div>
+        <div class="stage-top"><p class="stage-hello display">{{ site.greeting or 'Hello.' }}</p></div>
+        <div class="stage-bottom">
+          <div class="stage-info">
+            <p class="hero-name">{{ site.name or 'mrgrass' }}</p>
+            <p class="display sp-h">Building things.<br>Learning by doing.</p>
+            <div class="row"><span class="btn">See the projects</span><span class="btn ghost">Get in touch</span></div>
+          </div>
+          <div class="stage-thumbs" aria-hidden="true">{% for s in samples %}<span class="mini-card{% if loop.first %} on{% endif %}"><img src="{{ s.image.thumb }}" alt=""></span>{% endfor %}</div>
         </div>
-        <div class="cut">{% if samples %}<div class="cut-main"><img src="{{ samples[0].image.src }}" alt=""></div>{% endif %}</div>
       </div>
       <div class="sp-row">
         <div class="sp-card">{% if samples|length > 1 %}<img class="sp-photo" src="{{ samples[1].image.thumb }}" alt="">{% endif %}<div><span class="status s-in-development">In development</span><h3>SS.lv Deal Finder</h3><ul class="tags"><li class="tag">Python</li><li class="tag">Docker</li></ul></div></div>

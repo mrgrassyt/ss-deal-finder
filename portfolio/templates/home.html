@@ -1,31 +1,34 @@
 {% extends "base.html" %}{% import "_m.html" as m %}
 {% block main %}
-<section class="hero">
-  <div class="hero-bg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i></div>
-  <div class="wrap hero-grid">
-    <div class="hero-text">
+<section class="hero stage" data-stage>
+  {% if hero_photos %}
+  <div class="stage-slides" data-scene>
+    {% for p in hero_photos %}
+    <a class="stage-slide{% if loop.first %} on{% endif %}" href="{{ p.href }}" data-lb="hero" data-fly data-src="{{ p.img.src }}" data-title="{{ p.title }}" data-text="{{ p.text }}" data-info="{{ p.info }}" aria-label="Open the photo{% if p.title %}: {{ p.title }}{% endif %}"{% if not loop.first %} tabindex="-1" aria-hidden="true"{% endif %}>
+      <img {% if loop.first %}src="{{ p.img.src }}" fetchpriority="high"{% else %}data-lazy="{{ p.img.src }}"{% endif %} alt="{{ p.title or 'Photograph' }}" width="{{ p.img.w }}" height="{{ p.img.h }}" decoding="async">
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="stage-scrim" aria-hidden="true"></div>
+  <div class="wrap stage-top"><p class="stage-hello display">{{ site.greeting or "Hello." }}</p></div>
+  <div class="wrap stage-bottom">
+    <div class="stage-info">
       {% if site.name %}<p class="hero-name">{{ site.name }}</p>{% endif %}
       <h1 class="display">{% for part in site.headline.split(". ") %}<span>{{ part }}{{ "." if not loop.last }}</span>{% endfor %}</h1>
       <p class="lede">{{ site.intro }}</p>
       <div class="row"><a class="btn" href="/projects">See the projects</a><a class="btn ghost" href="/about#contact">Get in touch</a></div>
       {% if hero_stats %}<ul class="hero-stats">{% for s in hero_stats %}<li><b>{{ s.value }}</b><span>{{ s.label }}</span></li>{% endfor %}</ul>{% endif %}
     </div>
-  </div>
-  {% if hero_photos %}
-  {% set main = hero_photos[0] %}
-  <div class="cut" data-scene>
-    <a class="cut-main" href="{{ main.href }}" data-lb="hero" data-fly data-src="{{ main.img.src }}" data-title="{{ main.title }}" data-text="{{ main.text }}" data-info="{{ main.info }}" aria-label="Open the photo{% if main.title %}: {{ main.title }}{% endif %}">
-      <img src="{{ main.img.src }}" alt="{{ main.title or 'Photograph' }}" width="{{ main.img.w }}" height="{{ main.img.h }}" decoding="async" fetchpriority="high">
-    </a>
     {% if hero_photos|length > 1 %}
-    <div class="cut-more">
-      {% for p in hero_photos[1:] %}
-      <a class="mini-card" href="{{ p.href }}" data-lb="hero" data-fly data-src="{{ p.img.src }}" data-title="{{ p.title }}" data-text="{{ p.text }}" data-info="{{ p.info }}" aria-label="Open the photo{% if p.title %}: {{ p.title }}{% endif %}"><img src="{{ p.img.thumb }}" alt="{{ p.title or 'Photograph' }}" width="{{ p.img.w }}" height="{{ p.img.h }}" decoding="async"></a>
-      {% endfor %}
+    <div class="stage-pick">
+      <p class="stage-cap" aria-live="polite">{{ hero_photos[0].title }}</p>
+      <div class="stage-thumbs" role="group" aria-label="Choose the main photo">
+        {% for p in hero_photos %}<button class="mini-card{% if loop.first %} on{% endif %}" type="button" aria-pressed="{{ 'true' if loop.first else 'false' }}" aria-label="Show photo {{ loop.index }}{% if p.title %}: {{ p.title }}{% endif %}"><img src="{{ p.img.thumb }}" alt="" width="{{ p.img.w }}" height="{{ p.img.h }}" decoding="async"></button>{% endfor %}
+      </div>
     </div>
     {% endif %}
   </div>
-  {% endif %}
 </section>
 
 <section class="wrap who">

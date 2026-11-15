@@ -248,6 +248,23 @@
     });
   }
 
+  // ---- hero: choose the main photograph with the thumbnails at the bottom right ------------------------------------
+  {
+    const stage = $('[data-stage]');
+    if (stage) {
+      const slides = $$('.stage-slide', stage), thumbs = $$('.stage-thumbs .mini-card', stage), cap = $('.stage-cap', stage);
+      const loadAll = () => slides.forEach(s => { const im = $('img', s); if (im && im.dataset.lazy) { im.src = im.dataset.lazy; delete im.dataset.lazy; } });
+      const show = i => {
+        loadAll();
+        slides.forEach((s, j) => { const on = j === i; s.classList.toggle('on', on); s.tabIndex = on ? 0 : -1; s.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+        thumbs.forEach((t, j) => { t.classList.toggle('on', j === i); t.setAttribute('aria-pressed', j === i ? 'true' : 'false'); });
+        if (cap) cap.textContent = slides[i].dataset.title || '';
+      };
+      thumbs.forEach((t, i) => { t.addEventListener('click', () => show(i)); ['pointerenter', 'focus'].forEach(ev => t.addEventListener(ev, loadAll, { once: true })); });
+      addEventListener('load', () => setTimeout(loadAll, 900), { once: true });
+    }
+  }
+
   // ---- hero: the photo stack and the name tilt towards the pointer ---------------------------------------------
   if (!calm && matchMedia('(hover: hover)').matches) {
     const hero = $('.hero'), scenes = $$('[data-scene]');
