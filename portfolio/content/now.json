@@ -1,0 +1,123 @@
+[
+ {
+  "key": "now-0",
+  "type": "now",
+  "published": true,
+  "created": 1794744000.0,
+  "data": {
+   "text": "Photography with a Nikon D610",
+   "section": "Learning",
+   "note": "Composition, light and editing. I'm in my first month and learning in public."
+  }
+ },
+ {
+  "key": "now-1",
+  "type": "now",
+  "published": true,
+  "created": 1794744001.0,
+  "data": {
+   "text": "Edit and publish the rest of my photos",
+   "section": "Next few weeks",
+   "note": "I have more shots that are not edited yet."
+  }
+ },
+ {
+  "key": "now-2",
+  "type": "now",
+  "published": true,
+  "created": 1794744002.0,
+  "data": {
+   "text": "Find a lens in the €100 to €200 range",
+   "section": "Next few weeks",
+   "note": ""
+  }
+ },
+ {
+  "key": "now-3",
+  "type": "now",
+  "published": true,
+  "created": 1794744003.0,
+  "data": {
+   "text": "Save up for a Sony A7 IV",
+   "section": "Long-term",
+   "note": "Around €950."
+  }
+ },
+ {
+  "key": "road-0",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744020.0,
+  "data": {
+   "title": "Deal Finder: goals tab",
+   "state": "Planned",
+   "note": "Pick an item and a target price, then follow it on a chart."
+  }
+ },
+ {
+  "key": "road-1",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744021.0,
+  "data": {
+   "title": "Deal Finder: Telegram alerts",
+   "state": "Planned",
+   "note": "One alert bot shared by all accounts."
+  }
+ },
+ {
+  "key": "road-2",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744022.0,
+  "data": {
+   "title": "Deal Finder: sign in with Google or Discord",
+   "state": "Planned",
+   "note": ""
+  }
+ },
+ {
+  "key": "road-3",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744023.0,
+  "data": {
+   "title": "mrgrass.me: Theme Studio",
+   "state": "Planned",
+   "note": "A page to try several complete looks and pick one."
+  }
+ },
+ {
+  "key": "road-4",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744024.0,
+  "data": {
+   "title": "Sony A7 IV",
+   "state": "Planned",
+   "note": "Saving up."
+  }
+ },
+ {
+  "key": "road-5",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744025.0,
+  "data": {
+   "title": "Deal Finder: shared scan and accounts",
+   "state": "Completed",
+   "note": "One scan for everyone, private settings for each person."
+  }
+ },
+ {
+  "key": "road-6",
+  "type": "roadmap",
+  "published": true,
+  "created": 1794744026.0,
+  "data": {
+   "title": "mrgrass.me online with its own domain",
+   "state": "Completed",
+   "note": ""
+  }
+ }
+]

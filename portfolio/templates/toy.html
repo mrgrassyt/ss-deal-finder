@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block head %}{% if builtin %}<script src="{{ static('js/playground.js') }}" defer></script>{% if t.slug == 'grass' %}<script src="{{ static('js/grass.js') }}" defer></script>{% endif %}{% endif %}{% endblock %}
+{% block head %}{% if builtin %}<script src="{{ static('js/playground.js') }}" defer></script>{% endif %}{% endblock %}
 {% block main %}
 <div class="wrap">
   <header class="page-head" style="padding-bottom:28px"><a class="back" href="/playground">‹ Playground</a><h1 class="display" style="font-size:clamp(2.2rem,5vw,3.6rem)">{{ t.title }}</h1><p class="lede">{{ t.summary }}</p></header>
@@ -28,12 +28,22 @@
       <p class="mut" id="c-verdict" style="margin-top:18px" aria-live="polite"></p>
     </div>
   </div>
-  {% elif t.slug == 'grass' %}
-  <div class="grass-lab"><canvas class="grass" data-grass="mid" data-lab></canvas></div>
-  <div class="sliders">
-    <div class="field"><label for="g-wind">Wind</label><input id="g-wind" type="range" min="0" max="3" step="0.05" value="1"></div>
-    <div class="field"><label for="g-density">Density</label><input id="g-density" type="range" min="0.3" max="2.5" step="0.1" value="1"></div>
-    <div class="field"><label for="g-height">Height</label><input id="g-height" type="range" min="0.4" max="1.6" step="0.05" value="1"></div>
+  {% elif t.slug == 'exposure' %}
+  <div class="tool" id="expo">
+    <div>
+      <p class="mut" style="margin-bottom:14px">Your current settings</p>
+      <div class="two"><div class="field"><label for="e-a0">Aperture, f/</label><input id="e-a0" type="number" min="0.7" step="0.1" value="2.8" inputmode="decimal"></div>
+      <div class="field"><label for="e-s0">Shutter, 1/… s</label><input id="e-s0" type="number" min="1" step="1" value="250" inputmode="decimal"></div></div>
+      <div class="field"><label for="e-i0">ISO</label><input id="e-i0" type="number" min="25" step="25" value="200" inputmode="decimal"></div>
+      <p class="mut" style="margin:22px 0 14px">What you want to change them to</p>
+      <div class="two"><div class="field"><label for="e-a1">New aperture, f/</label><input id="e-a1" type="number" min="0.7" step="0.1" value="8" inputmode="decimal"></div>
+      <div class="field"><label for="e-i1">New ISO</label><input id="e-i1" type="number" min="25" step="25" value="100" inputmode="decimal"></div></div>
+    </div>
+    <div class="tool-out" aria-live="polite">
+      <span class="mut">Shutter speed for the same brightness</span><div class="big" id="e-out"></div>
+      <dl><dt>Aperture change lets in</dt><dd id="e-ap"></dd><dt>ISO change gives</dt><dd id="e-iso"></dd></dl>
+      <p class="mut" id="e-note" style="margin-top:16px"></p>
+    </div>
   </div>
   {% else %}
   <iframe class="frame" src="/playground/embed/{{ t.slug }}" sandbox="allow-scripts" title="{{ t.title }}" loading="lazy"></iframe>

@@ -1,0 +1,32 @@
+[
+ {
+  "key": "settings-about-2026-11",
+  "type": "settings",
+  "data": {
+   "intro": "I'm Gustavs, aka mrgrass. I game, take photos, flip gear and build software, and I'm learning all of it in public.",
+   "bio": "I'm Gustavs, better known online as mrgrass. I spend my time on three things: gaming (mostly CS2 and Forza, with Minecraft when I want something relaxed), photography, and buying, fixing and reselling things.\n\nI only picked up a camera recently, so the Photography page is a learning diary: everything I've shot so far, edited or not. On the software side I build tools I want for myself, like SS.lv Deal Finder, which spots underpriced electronics on Latvia's biggest classifieds site.",
+   "interests": [
+    "Gaming: CS2, Forza, Minecraft",
+    "Photography: cars, nature, city",
+    "Flipping and reselling",
+    "Programming",
+    "PC hardware",
+    "Electronics"
+   ],
+   "skills": [
+    "Photography: composition, light and editing",
+    "Programming: Python, JavaScript and Docker",
+    "Spotting underpriced electronics"
+   ],
+   "goals": [
+    "Buy a Sony A7 IV (around €950)",
+    "Find a lens in the €100 to €200 range",
+    "Edit the rest of my photos and publish them here",
+    "Add a goals tab and Telegram alerts to Deal Finder"
+   ],
+   "hidden_pages": [
+    "shop"
+   ]
+  }
+ }
+]

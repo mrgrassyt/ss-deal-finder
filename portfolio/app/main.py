@@ -28,7 +28,7 @@ from starlette.staticfiles import StaticFiles
 from . import importer, media, seed
 from .auth import COOKIE, SESSION_DAYS, Auth
 from .db import DB
-from .schema import ACCENTS, EXTRA_PAGES, PAGES, SETTINGS, STATS, TYPES, clean
+from .schema import ACCENTS, EXTRA_PAGES, PAGES, SETTINGS, STATS, TYPES, clean, clean_settings
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = Path(os.environ.get("SITE_DATA") or ROOT / "data")
@@ -117,7 +117,7 @@ def page(request: Request, template: str, status: int = 200, **ctx) -> HTMLRespo
     ctx.setdefault("title", "")
     ctx.setdefault("description", site["intro"])
     html = env.get_template(template).render(
-        request=request, site=site, path=request.url.path, nav=[p for p in PAGES if p[0] not in hidden],
+        request=request, site=site, path=request.url.path, sec=(request.url.path.strip("/").split("/")[0] or "home"), nav=[p for p in PAGES if p[0] not in hidden],
         extra_nav=[p for p in EXTRA_PAGES if p[0] not in hidden], accent=(site.get("accent") or "Ember").lower(),
         site_url=SITE_URL or str(request.base_url).rstrip("/"), year=date.today().year, **ctx)
     return HTMLResponse(html, status_code=status)
@@ -144,7 +144,8 @@ async def home(request: Request):
     feed.sort(key=lambda x: (x["when"], x["t"]), reverse=True)
     working = [n for n in public("now") if n.get("section") == "Working on"] or \
               [{"text": p["title"], "note": p.get("summary", "")} for p in projects if p.get("status") == "In Development"]
-    return page(request, "home.html", featured=[p for p in projects if p.get("featured")][:4], working=working[:4], feed=feed[:6],
+    shots = sorted(public("photo"), key=lambda i: (bool(i.get("featured")), i["created"]), reverse=True)[:3]
+    return page(request, "home.html", hero_photos=shots, featured=[p for p in projects if p.get("featured")][:4], working=working[:4], feed=feed[:6],
                 counts={t: len(public(t)) for t in ("project", "experiment", "photo", "product", "listing", "post")})
 
 
@@ -243,7 +244,7 @@ async def now(request: Request):
 BUILTIN_TOYS = [
     {"slug": "flip-calculator", "title": "Flip calculator", "summary": "Buy, fix, resell: what is left after fees, parts and shipping, and whether it is worth the time."},
     {"slug": "value-compare", "title": "Value comparison", "summary": "Price per gigabyte, per frame, per anything. Put parts side by side and see which gives the most for the money."},
-    {"slug": "grass", "title": "Grass", "summary": "The field from the home page, with the wind in your hands."},
+    {"slug": "exposure", "title": "Same exposure calculator", "summary": "Change the aperture or ISO and see which shutter speed keeps the picture the same brightness."},
 ]
 
 
@@ -504,14 +505,9 @@ async def admin_upload(request: Request):
 
 @admin_only
 async def admin_settings(request: Request):
-    data, bad = clean(SETTINGS, await request.json())
+    data, bad = clean_settings(await request.json())
     if bad:
         return JSONResponse({"errors": bad}, 422)
-    known = {k for k, _, _ in PAGES + EXTRA_PAGES} - {"home"}
-    data["hidden_pages"] = [p for p in (x.lower() for x in data["hidden_pages"]) if p in known]
-    data["hidden_stats"] = [s for s in (x.lower() for x in data["hidden_stats"]) if s in {k for k, _ in STATS} | {"all"}]
-    if data["accent"] not in ACCENTS:
-        data["accent"] = "Ember"
     db.set_kv("site", data)
     return JSONResponse(data)
 

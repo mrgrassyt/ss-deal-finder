@@ -21,12 +21,12 @@
 <script src="{{ static('js/site.js') }}" defer></script>
 {% block head %}{% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}" data-sec="{{ sec }}">
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav">
   <div class="nav-in">
     <a class="brand" href="/" aria-label="mrgrass.me, home">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 22C10.6 15 9 9.5 5 4c5 2.6 7.4 8 7.6 18zM13.4 22c-.2-6 1.2-11.800 6.600-16-2 5-3.400 10-4.200 16zM9 22c-.6-4-2.400-7-6-9.500 2 3 3.200 6 3.600 9.500z"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="3" fill="var(--c-projects)"/><rect x="13" y="2" width="9" height="9" rx="4.5" fill="var(--c-photos)"/><rect x="2" y="13" width="9" height="9" rx="4.5" fill="var(--c-lab)"/><rect x="13" y="13" width="9" height="9" rx="3" fill="var(--c-devlog)"/></svg>
       mrgrass.me</a>
     <nav class="nav-links" aria-label="Main">
       {% for key, label, url in nav %}<a href="{{ url }}"{% if path == url or (url != '/' and path.startswith(url + '/')) %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}

@@ -32,7 +32,7 @@ Open `https://mrgrass.me/admin` and sign in.
   so a new field is one line here plus one line in the template that should show it.
 - `app/main.py` — pages, search, contact form, dashboard API. `app/auth.py` — sign-in. `app/media.py` — uploads.
 - `app/seed.py` — the content the site starts with (only used on the very first start).
-- `templates/` — one file per page. `static/css/site.css` — design tokens at the top. `static/js/grass.js` — the grass.
+- `templates/` — one file per page. `static/css/site.css` — design tokens at the top. `static/js/site.js` — behaviour, including the hero tilt.
 - Data: `/opt/ssdeal/sitedata` on the server (`site.db` and `media/`). Back up that folder to back up the site.
 
 ## Running it locally

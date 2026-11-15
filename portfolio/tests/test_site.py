@@ -40,14 +40,14 @@ def add(admin, type_, data, published=True):
 # ---- public pages ----------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize("url", ["/", "/projects", "/projects/ss-lv-deal-finder", "/projects/pc-toolkit", "/lab", "/photos", "/shop", "/listings",
                                  "/devlog", "/about", "/now", "/playground", "/playground/flip-calculator", "/playground/value-compare",
-                                 "/playground/grass", "/search", "/search?q=deal", "/robots.txt", "/sitemap.xml", "/healthz", "/admin"])
+                                 "/playground/exposure", "/search", "/search?q=deal", "/robots.txt", "/sitemap.xml", "/healthz", "/admin"])
 def test_pages_load(anon, url):
     assert anon.get(url).status_code == 200
 
 
 def test_unknown_page_is_a_real_404(anon):
     r = anon.get("/projects/does-not-exist")
-    assert r.status_code == 404 and "Nothing grows here" in r.text
+    assert r.status_code == 404 and "This page does not exist" in r.text
     assert anon.get("/api/nope").json() == {"error": "Not found."}
 
 
@@ -216,11 +216,11 @@ def test_inquiry(admin, anon):
 # ---- settings ---------------------------------------------------------------------------------------------------------
 def test_settings(admin, anon):
     s = admin.get("/admin/api/me").json()["settings"]
-    r = admin.put("/admin/api/settings", json={**s, "headline": "New headline. Second line.", "hidden_pages": "shop, bogus", "accent": "Grass",
+    r = admin.put("/admin/api/settings", json={**s, "headline": "New headline. Second line.", "hidden_pages": "shop, bogus", "accent": "Rose",
                                                "socials": "GitHub | https://github.com/mrgrassyt", "hidden_stats": "all"}, headers=H)
     assert r.status_code == 200 and r.json()["hidden_pages"] == ["shop"] and r.json()["socials"] == [["GitHub", "https://github.com/mrgrassyt"]]
     home = anon.get("/").text
-    assert "New headline." in home and 'data-accent="grass"' in home and 'href="/shop"' not in home
+    assert "New headline." in home and 'data-accent="rose"' in home and 'href="/shop"' not in home
     assert "In numbers" not in anon.get("/about").text
     assert admin.put("/admin/api/settings", json={**s, "headline": ""}, headers=H).status_code == 422
     assert admin.put("/admin/api/settings", json={**s, "vinted_url": "ftp://x"}, headers=H).status_code == 422
@@ -265,3 +265,26 @@ def test_content_drop_imports_once_and_respects_edits(admin, anon, tmp_path):
     item = next(i for i in admin.get("/admin/api/items?type=listing").json() if i["title"] == "Dropped item")
     admin.delete(f"/admin/api/items/{item['id']}", headers=H)
     assert importer.run(main.db, main.MEDIA, tmp_path) == [] and "Dropped item" not in anon.get("/listings").text   # deleted stays deleted
+
+
+def test_content_drop_can_change_settings_and_existing_items(admin, anon, tmp_path):
+    from app import importer
+    add(admin, "project", {"title": "Updatable", "summary": "old summary"})
+    (tmp_path / "drop.json").write_text('[{"key": "s-1", "type": "settings", "data": {"intro": "A new intro line.", "accent": "Nope", "hidden_pages": ["shop", "bogus"]}},'
+                                        '{"key": "u-1", "type": "project", "update": "updatable", "data": {"summary": "new summary"}},'
+                                        '{"key": "u-missing", "type": "project", "update": "does-not-exist", "data": {"summary": "x"}}]')
+    assert importer.run(main.db, main.MEDIA, tmp_path) == ["s-1", "u-1"]            # a missing target is skipped, not invented
+    home = anon.get("/").text
+    assert "A new intro line." in home and 'data-accent="ember"' in home and 'href="/shop"' not in home
+    p = anon.get("/projects/updatable").text
+    assert "new summary" in p and "old summary" not in p and "Updatable" in p
+    assert importer.run(main.db, main.MEDIA, tmp_path) == []                        # applied once
+    main.db.set_kv("site", None)
+
+
+def test_home_has_no_grass_and_has_sections_in_colour(anon):
+    home = anon.get("/").text
+    assert "grass.js" not in home and 'class="grass' not in home and "<canvas" not in home
+    assert 'data-sec="home"' in home and 'data-sec="lab"' in anon.get("/lab").text and "mrgrass.me" in home
+    assert anon.get("/playground/grass").status_code == 404
+    assert "Same exposure calculator" in anon.get("/playground").text and 'id="expo"' in anon.get("/playground/exposure").text

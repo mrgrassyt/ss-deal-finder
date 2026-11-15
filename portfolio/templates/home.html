@@ -1,18 +1,26 @@
 {% extends "base.html" %}{% import "_m.html" as m %}
-{% block head %}<script src="{{ static('js/grass.js') }}" defer></script>{% endblock %}
 {% block main %}
 <section class="hero">
-  <div class="wrap hero-copy">
-    <h1 class="display">{% for part in site.headline.split(". ") %}<span>{{ part }}{{ "." if not loop.last }}</span>{% endfor %}</h1>
-    <div>
+  <div class="hero-bg" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i><i class="orb o4"></i></div>
+  <div class="wrap hero-copy{% if not hero_photos %} solo{% endif %}">
+    <div class="hero-text">
+      <h1 class="display">{% for part in site.headline.split(". ") %}<span>{{ part }}{{ "." if not loop.last }}</span>{% endfor %}</h1>
       <p class="lede">{{ site.intro }}</p>
       <div class="row"><a class="btn" href="/projects">See the projects</a><a class="btn ghost" href="/about">About me</a></div>
     </div>
+    {% if hero_photos %}
+    <div class="stack" data-scene aria-label="Recent photographs">
+      <div class="stack-in">
+        {% for p in hero_photos %}
+        <a class="pcd pc{{ loop.index }}" href="/photos#p-{{ p.slug }}"><img src="{{ p.image.thumb }}" alt="{{ p.title or 'Photograph' }}" width="{{ p.image.w }}" height="{{ p.image.h }}" decoding="async"{% if loop.first %} fetchpriority="high"{% endif %}><span>{{ p.title }}</span></a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
   </div>
-  <div class="wrap"><div class="wordmark" aria-hidden="true">mrgrass.me</div></div>
-  <canvas class="grass far" data-grass="far"></canvas>
-  <canvas class="grass mid" data-grass="mid"></canvas>
-  <canvas class="grass near" data-grass="near"></canvas>
+  <div class="wrap"><div class="wm" aria-hidden="true" data-scene><div class="wm-in">
+    <span class="wl w6">mrgrass.me</span><span class="wl w5">mrgrass.me</span><span class="wl w4">mrgrass.me</span><span class="wl w3">mrgrass.me</span><span class="wl w2">mrgrass.me</span><span class="wl w1">mrgrass.me</span><span class="wl wf">mrgrass.me</span>
+  </div></div></div>
 </section>
 
 {% if featured %}
@@ -57,7 +65,7 @@
      'about': ('Who I am and how to reach me.', none), 'now': ('What I am doing at the moment.', none), 'playground': ('Small tools you can use right here.', none)} %}
   <div class="explore">
     {% for key, label, url in nav[1:] + extra_nav %}{% if key in blurbs %}
-    <a href="{{ url }}"><b>{{ label }}{% if blurbs[key][1] %}<i>{{ blurbs[key][1] }}</i>{% endif %}</b><span>{{ blurbs[key][0] }}</span></a>
+    <a href="{{ url }}" style="--tc:var(--c-{{ key }})"><b>{{ label }}{% if blurbs[key][1] %}<i>{{ blurbs[key][1] }}</i>{% endif %}</b><span>{{ blurbs[key][0] }}</span></a>
     {% endif %}{% endfor %}
   </div>
 </section>

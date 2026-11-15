@@ -178,7 +178,7 @@ PAGES = [  # main navigation, in order; the key is what Settings -> hidden pages
 EXTRA_PAGES = [("now", "Now", "/now"), ("playground", "Playground", "/playground")]
 STATS = [("projects", "Projects"), ("current", "In development"), ("completed", "Completed projects"), ("photos", "Photographs"),
          ("posts", "Devlog articles"), ("listings", "Active listings"), ("sold", "Items sold"), ("sales", "Total sales")]
-ACCENTS = ["Ember", "Grass", "Ice", "Violet"]
+ACCENTS = ["Ember", "Rose", "Ice", "Violet"]
 
 SETTINGS = [
     f("headline", "text", "Home page headline", required=True),
@@ -275,3 +275,16 @@ def clean(fields: list[dict], data: dict) -> tuple[dict, dict]:
             bad[k] = "This is needed."
         out[k] = v
     return out, bad
+
+
+def clean_settings(raw: dict) -> tuple[dict, dict]:
+    """Validate the site settings (dashboard save and content drops share this)."""
+    data, bad = clean(SETTINGS, raw)
+    if bad:
+        return data, bad
+    known = {k for k, _, _ in PAGES + EXTRA_PAGES} - {"home"}
+    data["hidden_pages"] = [p for p in (x.lower() for x in data["hidden_pages"]) if p in known]
+    data["hidden_stats"] = [s for s in (x.lower() for x in data["hidden_stats"]) if s in {k for k, _ in STATS} | {"all"}]
+    if data["accent"] not in ACCENTS:
+        data["accent"] = "Ember"
+    return data, {}

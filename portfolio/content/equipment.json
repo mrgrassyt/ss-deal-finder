@@ -1,0 +1,68 @@
+[
+ {
+  "key": "gear-0",
+  "type": "gear",
+  "published": true,
+  "created": 1794744000.0,
+  "data": {
+   "name": "Processor",
+   "group": "PC",
+   "details": "AMD Ryzen 5 3600"
+  }
+ },
+ {
+  "key": "gear-1",
+  "type": "gear",
+  "published": true,
+  "created": 1794744001.0,
+  "data": {
+   "name": "Memory",
+   "group": "PC",
+   "details": "16 GB, 3600 MHz"
+  }
+ },
+ {
+  "key": "gear-2",
+  "type": "gear",
+  "published": true,
+  "created": 1794744002.0,
+  "data": {
+   "name": "Graphics card",
+   "group": "PC",
+   "details": "AMD RX 580, 8 GB"
+  }
+ },
+ {
+  "key": "gear-3",
+  "type": "gear",
+  "published": true,
+  "created": 1794744003.0,
+  "data": {
+   "name": "Fast storage",
+   "group": "PC",
+   "details": "250 GB SSD and 512 GB SSD"
+  }
+ },
+ {
+  "key": "gear-4",
+  "type": "gear",
+  "published": true,
+  "created": 1794744004.0,
+  "data": {
+   "name": "Bulk storage",
+   "group": "PC",
+   "details": "2 TB hard drive"
+  }
+ },
+ {
+  "key": "gear-5",
+  "type": "gear",
+  "published": true,
+  "created": 1794744005.0,
+  "data": {
+   "name": "Camera",
+   "group": "Camera",
+   "details": "Nikon D610, full-frame DSLR"
+  }
+ }
+]

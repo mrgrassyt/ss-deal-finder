@@ -1,0 +1,65 @@
+[
+ {
+  "key": "post-deal-finder-server",
+  "type": "post",
+  "published": true,
+  "created": 1794571200.0,
+  "data": {
+   "title": "Moving Deal Finder off my PC",
+   "date": "2026-11-13",
+   "category": "Project update",
+   "tags": [
+    "deal finder",
+    "docker",
+    "server"
+   ],
+   "excerpt": "Deal Finder started as a Windows app that only worked while my PC was on. Now it runs on a small server.",
+   "content": "SS.lv Deal Finder began as a Windows app I ran for myself. It worked, but it had one big flaw: it only watched SS.lv while my PC was switched on, and the good deals are gone in minutes.\n\n## What changed\n\nI moved it onto a small server and packaged it with Docker, so it keeps watching all day. That also made it possible to share it: a few friends can now sign in with their own accounts, each with their own settings and ratings.\n\n## One scan for everyone\n\nThe slow part is reading the listings, so the server does that once and every account looks at the same results. Nothing is scanned twice, and nobody has to leave a PC running.\n\n## Still on the list\n\nA goals tab (pick an item and a target price), a Telegram alert bot, and signing in with Google or Discord.",
+   "projects": [
+    "SS.lv Deal Finder"
+   ]
+  }
+ },
+ {
+  "key": "post-deal-finder-lookalikes",
+  "type": "post",
+  "published": true,
+  "created": 1794744000.0,
+  "data": {
+   "title": "When a PS5 SSD is not a PS5",
+   "date": "2026-11-15",
+   "category": "Project update",
+   "tags": [
+    "deal finder",
+    "gemini",
+    "pricing"
+   ],
+   "excerpt": "Deal Finder kept mixing up look-alike names, so I taught it the difference and added an AI second opinion.",
+   "content": "A deal finder is only useful if it knows what it is looking at. Mine kept getting fooled by names that look alike.\n\n## The mistakes\n\n- An SSD advertised \"for PS5\" was being compared with actual consoles, so it looked like an amazing deal.\n- GDDR5 (graphics memory) was treated as if it were DDR5 (the memory in a computer).\n\nBoth are easy for a person to spot and easy for a program to miss.\n\n## The fixes\n\nDeal Finder now recognises parts and accessories as parts, not as the thing they fit, and keeps look-alike memory types apart. I also added an optional second opinion from Google Gemini: before an alert goes out, the AI looks at the listing and says whether it really is what the title claims.\n\nFalse alarms were the most annoying part of using it, so this one matters.",
+   "projects": [
+    "SS.lv Deal Finder"
+   ]
+  }
+ },
+ {
+  "key": "post-site-online",
+  "type": "post",
+  "published": true,
+  "created": 1794744000.0,
+  "data": {
+   "title": "mrgrass.me is online",
+   "date": "2026-11-15",
+   "category": "Project update",
+   "tags": [
+    "website",
+    "dns",
+    "caddy"
+   ],
+   "excerpt": "I bought a domain, put two sites behind it, and lost a while to one extra DNS record.",
+   "content": "I bought mrgrass.me and gave it to two sites running on the same server: Deal Finder lives at deals.mrgrass.me and this site is at mrgrass.me. A web server called Caddy sends each visitor to the right one and sorts out HTTPS by itself.\n\n## The bug that was not a bug\n\nThe Deal Finder address worked straight away, but mrgrass.me timed out for some people. The cause was a leftover \"URL redirect\" setting at the domain registrar. It silently added a second address record that pointed somewhere else, so every other visit went to the wrong place.\n\nDeleting the redirect fixed it, once the old answers expired. Lesson learned: when a domain half works, look at *all* its records, not only the ones you made.",
+   "projects": [
+    "mrgrass.me"
+   ]
+  }
+ }
+]

@@ -54,6 +54,23 @@
     add(); add(); add(); calc();
   }
 
-  // ---- grass sliders -------------------------------------------------------------------------------------------
-  ['wind', 'density', 'height'].forEach(k => $('g-' + k)?.addEventListener('input', e => window.Grass?.set(k, +e.target.value)));
+  // ---- same exposure ---------------------------------------------------------------------------------------------
+  // Exposure depends on aperture (f-number), shutter time and ISO. Keeping the same brightness while changing aperture
+  // and ISO means the shutter time scales by (new f / old f)^2 x (old ISO / new ISO).
+  if ($('expo')) {
+    const val = id => parseFloat($(id).value);
+    const stops = r => (r >= 0 ? '+' : '−') + Math.abs(Math.log2(r)).toFixed(1) + ' stops';
+    const shutter = t => t >= 1 ? t.toFixed(t >= 10 ? 0 : 1) + ' s' : '1/' + Math.round(1 / t) + ' s';
+    const calc = () => {
+      const [a0, s0, i0, a1, i1] = [val('e-a0'), val('e-s0'), val('e-i0'), val('e-a1'), val('e-i1')];
+      if (![a0, s0, i0, a1, i1].every(v => isFinite(v) && v > 0)) { $('e-out').textContent = 'Fill in every box'; ['e-ap', 'e-iso', 'e-note'].forEach(k => { $(k).textContent = ''; }); return; }
+      const t0 = 1 / s0, t1 = t0 * (a1 / a0) ** 2 * (i0 / i1);
+      $('e-out').textContent = shutter(t1);
+      $('e-ap').textContent = stops((a0 / a1) ** 2);
+      $('e-iso').textContent = stops(i1 / i0);
+      $('e-note').textContent = t1 > 1 / 30 ? 'Slower than 1/30 s: use a tripod or the shot may blur.' : 'Fast enough to handheld.';
+    };
+    $('expo').addEventListener('input', calc);
+    calc();
+  }
 })();

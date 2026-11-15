@@ -225,6 +225,21 @@
     });
   }
 
+  // ---- hero: the photo stack and the name tilt towards the pointer ---------------------------------------------
+  if (!calm && matchMedia('(hover: hover)').matches) {
+    const hero = $('.hero'), scenes = $$('[data-scene]');
+    if (hero && scenes.length) {
+      let raf = 0, nx = 0, ny = 0;
+      const apply = () => { raf = 0; scenes.forEach(n => { n.style.setProperty('--px', nx.toFixed(3)); n.style.setProperty('--py', ny.toFixed(3)); }); };
+      hero.addEventListener('pointermove', e => {
+        const r = hero.getBoundingClientRect();
+        nx = ((e.clientX - r.left) / r.width - .5) * 2; ny = ((e.clientY - r.top) / r.height - .5) * 2;
+        raf = raf || requestAnimationFrame(apply);
+      });
+      hero.addEventListener('pointerleave', () => { nx = ny = 0; raf = raf || requestAnimationFrame(apply); });
+    }
+  }
+
   // ---- terminal ------------------------------------------------------------------------------------------------
   const term = $('#term');
   if (term) {
