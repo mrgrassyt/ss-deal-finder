@@ -1,12 +1,7 @@
-# Portfolio on SITE_DOMAIN (e.g. mrgrass.me), the deal finder on DOMAIN (e.g. deals.mrgrass.me). Automatic HTTPS for both.
+# The portfolio on SITE_DOMAIN (e.g. mrgrass.me), the deal finder on DOMAIN (e.g. deals.mrgrass.me). Automatic HTTPS for both.
 {$SITE_DOMAIN:site.localhost} {
-	encode gzip
-	root * /srv/site
-	file_server
-	header {
-		X-Content-Type-Options nosniff
-		Referrer-Policy strict-origin-when-cross-origin
-	}
+	encode zstd gzip
+	reverse_proxy site:8770
 }
 www.{$SITE_DOMAIN:site.localhost} {
 	redir https://{$SITE_DOMAIN:site.localhost}{uri} permanent

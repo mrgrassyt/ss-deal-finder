@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-accent="{{ accent }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% if title %}{{ title }} · mrgrass.me{% else %}mrgrass.me · {{ site.headline }}{% endif %}</title>
+<meta name="description" content="{{ description|striptags|truncate(160) }}">
+<meta property="og:site_name" content="mrgrass.me">
+<meta property="og:title" content="{{ title or 'mrgrass.me' }}">
+<meta property="og:description" content="{{ description|striptags|truncate(200) }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ site_url }}{{ path }}">
+<meta property="og:image" content="{{ site_url }}{{ og_image or '/static/img/og.jpg' }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#121315">
+<link rel="canonical" href="{{ site_url }}{{ path }}">
+<link rel="icon" href="/static/img/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/static/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{ static('css/site.css') }}">
+<script src="{{ static('js/theme.js') }}"></script>
+<script src="{{ static('js/site.js') }}" defer></script>
+{% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="/" aria-label="mrgrass.me, home">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 22C10.6 15 9 9.5 5 4c5 2.6 7.4 8 7.6 18zM13.4 22c-.2-6 1.2-11.800 6.600-16-2 5-3.400 10-4.200 16zM9 22c-.6-4-2.400-7-6-9.500 2 3 3.200 6 3.600 9.500z"/></svg>
+      mrgrass.me</a>
+    <nav class="nav-links" aria-label="Main">
+      {% for key, label, url in nav %}<a href="{{ url }}"{% if path == url or (url != '/' and path.startswith(url + '/')) %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+    </nav>
+    <div class="nav-tools">
+      <button class="icon-btn" data-open="search" aria-label="Search (press /)" title="Search (press /)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></button>
+      {% if site.terminal %}<button class="icon-btn" data-open="term" aria-label="Terminal" title="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 4 4-4 4M12 17h7"/></svg></button>{% endif %}
+      <button class="icon-btn" id="theme-btn" aria-label="Switch between dark and light" title="Dark or light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.500"/><path d="M12 3.500v17a8.500 8.500 0 0 0 0-17z" fill="currentColor"/></svg></button>
+      <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></button>
+    </div>
+  </div>
+</header>
+<div class="sheet" id="sheet">
+  {% for key, label, url in nav %}<a href="{{ url }}"{% if path == url or (url != '/' and path.startswith(url + '/')) %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+  <div class="sheet-extra">{% for key, label, url in extra_nav %}<a href="{{ url }}">{{ label }}</a>{% endfor %}</div>
+</div>
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+<footer class="foot">
+  <div class="wrap">
+    <span>© {{ year }} mrgrass</span>
+    <nav aria-label="More">
+      {% for key, label, url in extra_nav %}<a href="{{ url }}">{{ label }}</a>{% endfor %}
+      {% for name, url in site.socials %}<a href="{{ url }}" rel="noopener me">{{ name }}</a>{% endfor %}
+    </nav>
+  </div>
+</footer>
+
+<dialog class="overlay glass" id="search" aria-label="Search">
+  <form class="s-top" action="/search" role="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg>
+    <input name="q" type="search" placeholder="Search projects, posts, listings, photos" autocomplete="off" aria-label="Search the site">
+    <span class="kbd">esc</span>
+  </form>
+  <div class="s-results" id="s-results"><p class="s-hint">Type to search everything on the site.</p></div>
+</dialog>
+{% if site.terminal %}
+<dialog class="overlay glass term" id="term" aria-label="Terminal">
+  <div class="term-bar"><span>mrgrass.me terminal</span><span class="kbd">esc</span></div>
+  <div class="term-body" id="term-body"><div id="term-log"></div><div class="term-in"><input id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Command"></div></div>
+</dialog>
+{% endif %}
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div class="lb-stage" id="lb-stage">
+    <button class="lb-btn lb-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <button class="lb-btn lb-prev" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg></button>
+    <button class="lb-btn lb-next" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10 6 6 6-6 6"/></svg></button>
+  </div>
+  <div class="lb-bar" id="lb-bar"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block head %}{% if builtin %}<script src="{{ static('js/playground.js') }}" defer></script>{% if t.slug == 'grass' %}<script src="{{ static('js/grass.js') }}" defer></script>{% endif %}{% endif %}{% endblock %}
+{% block main %}
+<div class="wrap">
+  <header class="page-head" style="padding-bottom:28px"><a class="back" href="/playground">‹ Playground</a><h1 class="display" style="font-size:clamp(2.2rem,5vw,3.6rem)">{{ t.title }}</h1><p class="lede">{{ t.summary }}</p></header>
+  {% if t.slug == 'flip-calculator' %}
+  <div class="tool" id="flip">
+    <div>
+      <div class="two"><div class="field"><label for="f-buy">Buying price</label><input id="f-buy" type="number" min="0" step="0.01" value="60" inputmode="decimal"></div>
+      <div class="field"><label for="f-sell">Selling price</label><input id="f-sell" type="number" min="0" step="0.01" value="120" inputmode="decimal"></div></div>
+      <div class="two"><div class="field"><label for="f-parts">Parts and repair</label><input id="f-parts" type="number" min="0" step="0.01" value="10" inputmode="decimal"></div>
+      <div class="field"><label for="f-ship">Shipping you pay</label><input id="f-ship" type="number" min="0" step="0.01" value="0" inputmode="decimal"></div></div>
+      <div class="two"><div class="field"><label for="f-fee">Marketplace fee, %</label><input id="f-fee" type="number" min="0" max="100" step="0.1" value="0" inputmode="decimal"></div>
+      <div class="field"><label for="f-hours">Hours of your time</label><input id="f-hours" type="number" min="0" step="0.25" value="2" inputmode="decimal"></div></div>
+    </div>
+    <div class="tool-out" aria-live="polite">
+      <span class="mut">Profit</span><div class="big" id="f-profit"></div>
+      <dl><dt>Return on what you spent</dt><dd id="f-roi"></dd><dt>Margin on the sale</dt><dd id="f-margin"></dd><dt>Marketplace fee</dt><dd id="f-feeamt"></dd>
+      <dt>Per hour of work</dt><dd id="f-hour"></dd><dt>Break-even selling price</dt><dd id="f-even"></dd></dl>
+    </div>
+  </div>
+  {% elif t.slug == 'value-compare' %}
+  <div class="tool" id="cmp" style="grid-template-columns:1fr">
+    <div>
+      <div class="field" style="max-width:340px"><label for="c-unit">What are you comparing by?</label><input id="c-unit" value="GB" placeholder="GB, fps, benchmark points"></div>
+      <table class="cmp"><thead><tr><th>Item</th><th>Price</th><th id="c-unit-h">GB</th><th style="text-align:right">Price per unit</th><th></th></tr></thead><tbody id="c-rows"></tbody></table>
+      <button class="btn ghost small" id="c-add" style="margin-top:12px">Add another</button>
+      <p class="mut" id="c-verdict" style="margin-top:18px" aria-live="polite"></p>
+    </div>
+  </div>
+  {% elif t.slug == 'grass' %}
+  <div class="grass-lab"><canvas class="grass" data-grass="mid" data-lab></canvas></div>
+  <div class="sliders">
+    <div class="field"><label for="g-wind">Wind</label><input id="g-wind" type="range" min="0" max="3" step="0.05" value="1"></div>
+    <div class="field"><label for="g-density">Density</label><input id="g-density" type="range" min="0.3" max="2.5" step="0.1" value="1"></div>
+    <div class="field"><label for="g-height">Height</label><input id="g-height" type="range" min="0.4" max="1.6" step="0.05" value="1"></div>
+  </div>
+  {% else %}
+  <iframe class="frame" src="/playground/embed/{{ t.slug }}" sandbox="allow-scripts" title="{{ t.title }}" loading="lazy"></iframe>
+  {% endif %}
+</div>
+{% endblock %}

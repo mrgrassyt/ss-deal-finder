@@ -14,10 +14,27 @@ services:
       - ./data:/data           # your database and settings live here; updates never touch it
     expose:
       - "8765"                  # only the web server below can reach it
+  site:                          # the portfolio at SITE_DOMAIN (mrgrass.me); see portfolio/README.md
+    build: ./portfolio
+    restart: unless-stopped
+    environment:
+      # Password for the site's dashboard (/admin) until you change it there. Falls back to the deal finder's first password.
+      SITE_ADMIN_PASSWORD: ${SITE_ADMIN_PASSWORD:-${SSDEAL_PASSWORD}}
+      SITE_URL: https://${SITE_DOMAIN:-site.localhost}
+      SMTP_HOST: ${SMTP_HOST:-}                # optional: forward contact-form messages by email
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SITE_MAIL_TO: ${SITE_MAIL_TO:-}
+      TZ: ${TZ:-Europe/Riga}
+    volumes:
+      - ./sitedata:/data         # the site's content and uploaded pictures; updates never touch it
+    expose:
+      - "8770"
   web:
     image: caddy:2
     restart: unless-stopped
-    depends_on: [app]
+    depends_on: [app, site]
     environment:
       DOMAIN: ${DOMAIN}
       SITE_DOMAIN: ${SITE_DOMAIN:-site.localhost}
@@ -27,7 +44,6 @@ services:
       - "443:443/udp"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./site:/srv/site:ro      # the portfolio page
       - caddy_data:/data        # the HTTPS certificate
       - caddy_config:/config
 volumes:

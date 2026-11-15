@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap">
+  <header class="page-head"><h1 class="display">Shop</h1><p class="lede">Things I am selling directly. There is no checkout here: each item links to where you can buy it, or you can send me a message about it.</p></header>
+  {% if items %}
+  <div class="toolbar" data-filter="#grid">
+    <input class="input" type="search" placeholder="Search the shop" aria-label="Search products" data-q>
+    <div class="chips" role="group" aria-label="Category">
+      <button class="chip" aria-pressed="true" data-f="">All</button>
+      {% for c in categories %}<button class="chip" aria-pressed="false" data-f="{{ c }}">{{ c }}</button>{% endfor %}
+    </div>
+    <span class="spacer"></span>
+    <select class="input" aria-label="Sort" data-sort>
+      <option value="featured">Featured first</option><option value="new">Newest</option><option value="low">Price, low to high</option><option value="high">Price, high to low</option>
+    </select>
+  </div>
+  <div class="grid" id="grid">
+    {% for p in items %}
+    <a class="pcard{% if p.status == 'Sold' %} is-sold{% endif %}" href="{{ url_of(p) }}" data-item data-k="{{ p.category }}" data-price="{{ p.price or 0 }}" data-new="{{ p.created }}" data-featured="{{ 1 if p.featured else 0 }}"
+       data-text="{{ (p.name ~ ' ' ~ p.short ~ ' ' ~ p.category)|lower }}">
+      <div style="position:relative">{% if p.status != 'Available' %}<span class="flag">{{ p.status }}</span>{% elif p.featured %}<span class="flag">Featured</span>{% endif %}{{ m.shot((p.images or [none])[0], p.name, p.name) }}</div>
+      <div class="line"><h3>{{ p.name }}</h3><span class="price">{{ p|money }}</span></div>
+      <div class="line"><span class="meta">{{ p.condition }}</span><span class="meta">{{ p.category }}</span></div>
+    </a>
+    {% endfor %}
+  </div>
+  <p class="none" data-none>Nothing in the shop matches that.</p>
+  {% else %}
+  <div class="empty"><h3>Nothing for sale here right now</h3><p>When I put something up it will appear on this page.{% if 'listings' not in site.hidden_pages %} What I am selling on marketplaces is under My Listings.{% endif %}</p>
+    <div class="row">{% if 'listings' not in site.hidden_pages %}<a class="btn ghost small" href="/listings">My Listings</a>{% endif %}</div></div>
+  {% endif %}
+</div>
+{% endblock %}

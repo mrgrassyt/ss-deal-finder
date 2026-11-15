@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap about">
+  <aside class="about-side">
+    {% if site.portrait %}<div class="portrait"><img src="{{ site.portrait.src }}" alt="mrgrass"></div>{% endif %}
+    <h1 class="display" style="font-size:clamp(2.6rem,5vw,3.6rem)">About</h1>
+    <nav class="socials" aria-label="Elsewhere">
+      {% for name, url in site.socials %}<a href="{{ url }}" rel="noopener me" target="_blank">{{ name }}</a>{% endfor %}
+      {% if site.contact_email %}<a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>{% endif %}
+    </nav>
+  </aside>
+  <div class="about-main">
+    <section class="block prose" style="font-size:1.2rem">{{ site.bio|md }}</section>
+    {% if site.interests %}<section class="block"><h2>Into right now</h2><ul class="plain-list">{% for i in site.interests %}<li>{{ i }}</li>{% endfor %}</ul></section>{% endif %}
+    {% if site.skills %}<section class="block"><h2>Getting better at</h2><ul class="checks">{% for i in site.skills %}<li>{{ i }}</li>{% endfor %}</ul></section>{% endif %}
+    {% if site.goals %}<section class="block"><h2>Current goals</h2><ul class="checks todo">{% for i in site.goals %}<li>{{ i }}</li>{% endfor %}</ul></section>{% endif %}
+    {% if stats %}<section class="block"><h2>In numbers</h2><div class="numbers">{% for s in stats %}<div><b>{{ s.value }}</b><span>{{ s.label }}</span></div>{% endfor %}</div></section>{% endif %}
+    {% if gear %}<section class="block"><h2>What I work with</h2><div class="gear">{% for g, rows in gear %}<div><h3>{{ g }}</h3><ul>{% for x in rows %}<li>{{ x.name }}<span>{{ x.details }}</span></li>{% endfor %}</ul></div>{% endfor %}</div></section>{% endif %}
+    <section class="block" id="contact"><h2>Get in touch</h2><p class="mut" style="margin-bottom:18px">Questions, ideas, something you want to buy or fix: write here and it reaches me directly.</p>{{ m.contact_form() }}</section>
+  </div>
+</div>
+{% endblock %}

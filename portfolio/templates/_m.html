@@ -1,0 +1,19 @@
+{# Small pieces used on several pages. #}
+{% macro shot(img, alt, title='', cls='shot', big=false) %}
+{% if img %}<div class="{{ cls }}"><img src="{{ img.src if big else img.thumb }}" alt="{{ alt }}" loading="lazy" decoding="async"{% if img.w %} width="{{ img.w }}" height="{{ img.h }}"{% endif %}></div>
+{% else %}<div class="ph {{ cls if cls != 'shot' }}" aria-hidden="true"><span>{{ title or alt }}</span></div>{% endif %}
+{% endmacro %}
+{% macro status(s) %}{% if s %}<span class="status s-{{ s|slug }}">{{ s }}</span>{% endif %}{% endmacro %}
+{% macro tags(list) %}{% if list %}<ul class="tags">{% for t in list %}<li class="tag">{{ t }}</li>{% endfor %}</ul>{% endif %}{% endmacro %}
+{% macro contact_form(about='', button='Send message') %}
+<form class="contact-form" data-inquiry novalidate>
+  <input type="hidden" name="about" value="{{ about }}">
+  <div class="field"><label for="cf-name">Your name</label><input id="cf-name" name="name" autocomplete="name" required maxlength="100"><span class="err" data-err="name"></span></div>
+  <div class="field"><label for="cf-email">Your email, so I can answer</label><input id="cf-email" name="email" type="email" autocomplete="email" required><span class="err" data-err="email"></span></div>
+  <div class="field"><label for="cf-msg">Message</label><textarea id="cf-msg" name="message" rows="4" required maxlength="4000"></textarea><span class="err" data-err="message"></span></div>
+  <label class="hp" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+  <button class="btn" type="submit">{{ button }}</button>
+  <p class="done" hidden role="status">Message sent. I will answer by email.</p>
+  <p class="err" data-err="form" role="alert"></p>
+</form>
+{% endmacro %}

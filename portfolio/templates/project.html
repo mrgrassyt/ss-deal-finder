@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<article class="wrap">
+  <header class="detail-head">
+    <div>
+      <a class="back" href="/projects">‹ All projects</a>
+      <h1 class="display">{{ p.title }}</h1>
+    </div>
+    <div>
+      <p class="lede">{{ p.summary }}</p>
+      <div class="row">
+        {% if p.demo %}<a class="btn" href="{{ p.demo }}" rel="noopener">Open it</a>{% endif %}
+        {% if p.github %}<a class="btn ghost" href="{{ p.github }}" rel="noopener">Source on GitHub</a>{% endif %}
+      </div>
+    </div>
+  </header>
+  {% if p.hero %}<button class="shot detail-hero" data-lb="shots" data-src="{{ p.hero.src }}" data-title="{{ p.title }}" style="padding:0;width:100%;cursor:zoom-in"><img src="{{ p.hero.src }}" alt="{{ p.title }}" width="{{ p.hero.w }}" height="{{ p.hero.h }}"></button>{% endif %}
+  <div class="cols">
+    <div>
+      {% if p.description %}<section class="block prose">{{ p.description|md }}</section>{% endif %}
+      {% if p.purpose %}<section class="block"><h2>Why it exists</h2><p class="prose">{{ p.purpose }}</p></section>{% endif %}
+      {% if p.features %}<section class="block"><h2>What it does</h2><ul class="checks">{% for f in p.features %}<li>{{ f }}</li>{% endfor %}</ul></section>{% endif %}
+      {% if p.planned %}<section class="block"><h2>Planned</h2><ul class="checks todo">{% for f in p.planned %}<li>{{ f }}</li>{% endfor %}</ul></section>{% endif %}
+      {% if p.screenshots %}<section class="block"><h2>Screenshots</h2><div class="gallery">{% for s in p.screenshots %}<button data-lb="shots" data-src="{{ s.src }}" data-title="{{ p.title }}"><img src="{{ s.thumb }}" alt="{{ p.title }}, screenshot {{ loop.index }}" loading="lazy"></button>{% endfor %}</div></section>{% endif %}
+      {% if p.timeline %}<section class="block"><h2>Timeline</h2><ul class="rows">{% for a, b in p.timeline %}<li><span>{{ a|date }}</span><span>{{ b }}</span></li>{% endfor %}</ul></section>{% endif %}
+      {% if p.learned %}<section class="block"><h2>What I learned</h2><div class="prose">{{ p.learned|md }}</div></section>{% endif %}
+      {% if p.future %}<section class="block"><h2>What comes next</h2><div class="prose">{{ p.future|md }}</div></section>{% endif %}
+      {% if p.changelog %}<section class="block"><h2>Changelog</h2><ul class="rows">{% for a, b in p.changelog %}<li><span>{{ a|date }}</span><span>{{ b }}</span></li>{% endfor %}</ul></section>{% endif %}
+      {% if posts %}<section class="block"><h2>From the devlog</h2><ul class="rows">{% for x in posts %}<li><span>{{ x.date|date }}</span><a class="link" href="{{ url_of(x) }}">{{ x.title }}</a></li>{% endfor %}</ul></section>{% endif %}
+      {% if not (p.description or p.features or p.purpose) %}<p class="mut">This one is still an idea. Details will follow when there is something to show.</p>{% endif %}
+    </div>
+    <aside class="side">
+      <div><h4>Status</h4>{{ m.status(p.status) }}</div>
+      {% if p.technologies %}<div><h4>Built with</h4>{{ m.tags(p.technologies) }}</div>{% endif %}
+      <div><h4>Last updated</h4><span>{{ p.updated|date }}</span></div>
+    </aside>
+  </div>
+</article>
+{% endblock %}

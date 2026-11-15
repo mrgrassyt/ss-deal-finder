@@ -1,0 +1,23 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap narrow" style="max-width:calc(940px + 2*var(--pad))">
+  <header class="page-head"><h1 class="display">Devlog</h1><p class="lede">Notes on what I build, break and learn.</p></header>
+  {% if items %}
+  {% if categories|length > 1 %}
+  <div class="toolbar" data-filter="#entries"><div class="chips" role="group" aria-label="Category">
+    <button class="chip" aria-pressed="true" data-f="">All</button>{% for c in categories %}<button class="chip" aria-pressed="false" data-f="{{ c }}">{{ c }}</button>{% endfor %}
+  </div></div>
+  {% endif %}
+  <div class="entries" id="entries">
+    {% for p in items %}
+    <a class="entry" href="{{ url_of(p) }}" data-item data-k="{{ p.category }}">
+      <time datetime="{{ p.date }}">{{ p.date|date }}</time>
+      <div><h3>{{ p.title }}</h3>{% if p.excerpt %}<p>{{ p.excerpt }}</p>{% endif %}<span class="meta">{{ [p.category, p.minutes ~ ' min read']|select|join(', ') }}</span></div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty"><h3>Nothing published yet</h3><p>The first entry is on its way.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

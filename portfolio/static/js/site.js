@@ -1,0 +1,285 @@
+// mrgrass.me — behaviour shared by every public page. No dependencies.
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const el = (tag, props = {}, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- theme, menu ---------------------------------------------------------------------------------------------
+  $('#theme-btn')?.addEventListener('click', () => {
+    const light = document.documentElement.dataset.theme !== 'light';
+    if (light) document.documentElement.dataset.theme = 'light'; else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (e) {}
+    document.dispatchEvent(new Event('themechange'));
+  });
+  const menuBtn = $('#menu-btn');
+  menuBtn?.addEventListener('click', () => {
+    const open = document.body.classList.toggle('menu-open');
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+
+  // ---- dialogs -------------------------------------------------------------------------------------------------
+  const open = id => { const d = document.getElementById(id); if (d && !d.open) { document.body.classList.remove('menu-open'); d.showModal(); d.dispatchEvent(new Event('opened')); } };
+  document.addEventListener('click', e => {
+    const opener = e.target.closest('[data-open]');
+    if (opener) { e.preventDefault(); open(opener.dataset.open); return; }
+    if (e.target instanceof HTMLDialogElement) e.target.close();            // click on the backdrop
+    const copy = e.target.closest('[data-copy]');
+    if (copy) {
+      navigator.clipboard?.writeText(copy.dataset.copy).then(() => {
+        const was = copy.textContent; copy.textContent = 'Link copied';
+        setTimeout(() => { copy.textContent = was; }, 1800);
+      });
+    }
+  });
+  document.addEventListener('keydown', e => {
+    const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
+    if ((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey))) { e.preventDefault(); open('search'); }
+    if (e.key === '`' && !typing) { e.preventDefault(); open('term'); }
+  });
+
+  // ---- search overlay ------------------------------------------------------------------------------------------
+  const sd = $('#search');
+  if (sd) {
+    const input = $('input', sd), box = $('#s-results');
+    let timer, sel = -1, seq = 0;
+    const hint = text => box.replaceChildren(el('p', { className: 's-hint', textContent: text }));
+    const mark = () => $$('a', box).forEach((a, i) => a.classList.toggle('sel', i === sel));
+    sd.addEventListener('opened', () => { input.select(); });
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      const q = input.value.trim();
+      if (!q) return hint('Type to search everything on the site.');
+      hint('Searching…');
+      timer = setTimeout(async () => {
+        const mine = ++seq;
+        try {
+          const rows = await (await fetch('/api/search?q=' + encodeURIComponent(q))).json();
+          if (mine !== seq) return;
+          sel = -1;
+          if (!rows.length) return hint(`Nothing matches “${q}”. Try a shorter or different word.`);
+          box.replaceChildren(...rows.map(r => el('a', { href: r.url },
+            r.thumb ? el('img', { className: 'thumb', src: r.thumb, alt: '' }) : el('span', { className: 'thumb' }),
+            el('span', {}, el('b', { textContent: r.title }), el('small', { textContent: r.text })),
+            el('span', { className: 'meta', textContent: r.kind }))));
+        } catch (e) { hint('Search is not answering. Check your connection and try again.'); }
+      }, 160);
+    });
+    input.addEventListener('keydown', e => {
+      const links = $$('a', box);
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        sel = Math.max(-1, Math.min(links.length - 1, sel + (e.key === 'ArrowDown' ? 1 : -1)));
+        mark(); links[sel]?.scrollIntoView({ block: 'nearest' });
+      } else if (e.key === 'Enter' && sel >= 0) { e.preventDefault(); location.href = links[sel].href; }
+    });
+  }
+
+  // ---- list filters (projects, lab, shop, listings, photos, devlog) --------------------------------------------
+  $$('[data-filter]').forEach(bar => {
+    const target = $(bar.dataset.filter);
+    if (!target) return;
+    const items = $$('[data-item]', target), none = target.parentElement.querySelector('[data-none]');
+    const q = $('[data-q]', bar), sort = $('[data-sort]', bar), showHidden = $('[data-show-hidden]', bar), chips = $$('.chip[data-f]', bar);
+    let key = '';
+    const apply = () => {
+      const words = (q?.value || '').toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      items.forEach(it => {
+        const ok = (!key || it.dataset.k === key) && words.every(w => (it.dataset.text || '').includes(w)) &&
+          !(bar.dataset.hide && it.dataset.state === bar.dataset.hide && !showHidden?.checked);
+        it.hidden = !ok;
+        if (ok) { shown++; delete it.dataset.off; } else it.dataset.off = '1';
+      });
+      if (none) none.style.display = shown ? 'none' : 'block';
+    };
+    chips.forEach(c => c.addEventListener('click', () => {
+      key = c.dataset.f;
+      chips.forEach(x => x.setAttribute('aria-pressed', x === c));
+      apply();
+    }));
+    q?.addEventListener('input', apply);
+    showHidden?.addEventListener('change', apply);
+    sort?.addEventListener('change', () => {
+      const by = { featured: a => [-a.dataset.featured, -a.dataset.new], new: a => [-a.dataset.new], low: a => [+a.dataset.price], high: a => [-a.dataset.price] }[sort.value];
+      items.sort((a, b) => { const x = by(a), y = by(b); return x[0] - y[0] || (x[1] || 0) - (y[1] || 0); }).forEach(it => target.append(it));
+    });
+    target.parentElement.querySelector('[data-reset]')?.addEventListener('click', () => { if (q) q.value = ''; chips[0]?.click(); apply(); });
+    if (sort) sort.dispatchEvent(new Event('change'));
+    apply();
+  });
+
+  // ---- lightbox: fullscreen viewer with zoom and an optional before/after slider -------------------------------
+  const lb = $('#lb');
+  if (lb) {
+    const stage = $('#lb-stage'), bar = $('#lb-bar');
+    let group = [], at = 0, lastFocus = null;
+    const show = i => {
+      at = (i + group.length) % group.length;
+      const d = group[at].dataset;
+      $$('img, .lb-cut', stage).forEach(n => n.remove());
+      stage.classList.remove('zoom');
+      const img = el('img', { src: d.src, alt: d.title || '' });
+      stage.append(img);
+      if (d.before) {
+        const before = el('img', { src: d.before, alt: 'Before editing', className: 'before' });
+        const cut = el('input', { type: 'range', min: 0, max: 100, value: 50, className: 'lb-cut', ariaLabel: 'Before and after' });
+        cut.addEventListener('input', () => stage.style.setProperty('--cut', cut.value + '%'));
+        stage.style.setProperty('--cut', '50%');
+        stage.append(before, cut);
+      }
+      bar.replaceChildren();
+      if (d.title) bar.append(el('b', { textContent: d.title }));
+      if (d.text) bar.append(el('span', { textContent: d.text }));
+      (d.info || '').split('|').filter(Boolean).forEach(t => bar.append(el('span', { textContent: t })));
+      if (d.before) bar.append(el('span', { textContent: 'Drag the slider to compare with the unedited photo' }));
+      if (group.length > 1) bar.append(el('span', { textContent: `${at + 1} of ${group.length}`, style: 'margin-left:auto' }));
+      bar.style.display = bar.childNodes.length ? '' : 'none';
+      $('.lb-prev', lb).hidden = $('.lb-next', lb).hidden = group.length < 2;
+    };
+    const openLb = (name, index) => {
+      group = $$(`[data-lb="${name}"]`).filter(n => !n.dataset.off && !n.closest('[data-off]'));
+      if (!group.length) return;
+      lastFocus = document.activeElement;
+      lb.classList.add('open'); document.body.style.overflow = 'hidden';
+      show(index); $('.lb-close', lb).focus();
+    };
+    const closeLb = () => { lb.classList.remove('open'); document.body.style.overflow = ''; lastFocus?.focus?.(); };
+    document.addEventListener('click', e => {
+      const go = e.target.closest('[data-lb-go]');
+      if (go) return openLb(go.dataset.lbGo, +(go.dataset.index || 0));
+      const t = e.target.closest('[data-lb]');
+      if (t && !lb.contains(t)) {
+        const all = $$(`[data-lb="${t.dataset.lb}"]`).filter(n => !n.dataset.off);
+        openLb(t.dataset.lb, all.indexOf(t));
+      }
+      const thumb = e.target.closest('[data-thumb]');
+      if (thumb) {
+        const main = $('#buy-main'), src = $$('[data-lb="item"]')[+thumb.dataset.thumb]?.dataset.src;
+        if (main && src) { $('img', main).src = src; main.dataset.index = thumb.dataset.thumb; }
+        $$('[data-thumb]').forEach(b => b.setAttribute('aria-current', b === thumb));
+      }
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && document.activeElement?.matches?.('figure[data-lb]')) document.activeElement.click();
+      if (!lb.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLb();
+      if (e.key === 'ArrowRight') show(at + 1);
+      if (e.key === 'ArrowLeft') show(at - 1);
+    });
+    $('.lb-close', lb).addEventListener('click', closeLb);
+    $('.lb-prev', lb).addEventListener('click', () => show(at - 1));
+    $('.lb-next', lb).addEventListener('click', () => show(at + 1));
+    // zoom: click toggles, then the picture follows the pointer (or your finger)
+    let downX = null;
+    const pan = e => {
+      const r = stage.getBoundingClientRect();
+      $$('img', stage).forEach(i => { i.style.transformOrigin = `${(e.clientX - r.left) / r.width * 100}% ${(e.clientY - r.top) / r.height * 100}%`; });
+    };
+    stage.addEventListener('pointerdown', e => { downX = e.clientX; });
+    stage.addEventListener('pointermove', e => { if (stage.classList.contains('zoom')) pan(e); });
+    stage.addEventListener('pointerup', e => {
+      if (e.target.closest('button, input')) return;
+      const dx = e.clientX - (downX ?? e.clientX);
+      if (!stage.classList.contains('zoom') && Math.abs(dx) > 60 && group.length > 1) return show(at + (dx < 0 ? 1 : -1));
+      if (e.target.tagName !== 'IMG') return closeLb();
+      if (Math.abs(dx) > 8) return;
+      const zoom = stage.classList.toggle('zoom');
+      pan(e);
+      $$('img', stage).forEach(i => { i.style.transform = zoom ? 'scale(2.4)' : ''; });
+    });
+  }
+
+  // ---- contact / inquiry forms ---------------------------------------------------------------------------------
+  $$('form[data-inquiry]').forEach(form => {
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = $('button[type=submit]', form), err = k => $(`[data-err="${k}"]`, form);
+      $$('[data-err]', form).forEach(n => { n.textContent = ''; });
+      btn.classList.add('loading'); btn.disabled = true;
+      try {
+        const res = await fetch('/api/inquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+        const d = await res.json();
+        if (d.ok) {
+          $$('.field, button[type=submit]', form).forEach(n => { n.hidden = true; });
+          $('.done', form).hidden = false;
+        } else if (d.errors) {
+          Object.entries(d.errors).forEach(([k, v]) => { if (err(k)) err(k).textContent = v; });
+          $(`[name="${Object.keys(d.errors)[0]}"]`, form)?.focus();
+        } else err('form').textContent = d.error || 'The message could not be sent. Try again in a moment.';
+      } catch (x) { err('form').textContent = 'The message could not be sent. Check your connection and try again.'; }
+      btn.classList.remove('loading'); btn.disabled = false;
+    });
+  });
+
+  // ---- project cards lean towards the pointer ------------------------------------------------------------------
+  if (!calm && matchMedia('(hover: hover)').matches) {
+    $$('[data-tilt]').forEach(card => {
+      const pic = $('.shot, .ph', card);
+      if (!pic) return;
+      card.addEventListener('pointermove', e => {
+        const r = pic.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        pic.style.transform = `perspective(1100px) rotateY(${x * 5}deg) rotateX(${-y * 5}deg) scale(1.012)`;
+      });
+      card.addEventListener('pointerleave', () => { pic.style.transform = ''; });
+    });
+  }
+
+  // ---- terminal ------------------------------------------------------------------------------------------------
+  const term = $('#term');
+  if (term) {
+    const log = $('#term-log'), input = $('#term-input'), body = $('#term-body');
+    let data = null, history = [], hi = 0;
+    const out = (...parts) => { const p = el('p', { className: 'out' }); p.append(...parts); log.append(p); };
+    const link = (text, href) => el('a', { href, textContent: text });
+    const load = async () => data || (data = await (await fetch('/api/site')).json());
+    const page = key => data.pages.find(p => p[0] === key);
+    const go = key => { const p = page(key); if (p) { out('Opening ', link(p[2], p[2]), ' …'); setTimeout(() => { location.href = p[2]; }, 500); } else out('That page is not available.'); };
+    const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+    const commands = {
+      help: () => { out('Commands:'); [['about', 'who runs this place'], ['projects', 'what is being built'], ['lab', 'hardware experiments'], ['photography', 'open the gallery'],
+        ['shop', 'things for sale here'], ['listings', 'Vinted and eBay listings'], ['devlog', 'latest articles'], ['now', 'what is happening at the moment'],
+        ['contact', 'how to reach me'], ['search <words>', 'search the site'], ['theme', 'switch dark and light'], ['clear', 'empty the screen'], ['exit', 'close the terminal']]
+        .forEach(([c, d]) => out(`  ${c.padEnd(16)}${d}`)); },
+      about: () => { out(data.intro); out('More: ', link('/about', '/about')); },
+      projects: () => { if (!data.projects.length) return out('No projects yet.'); data.projects.forEach(p => out('  ', link(p.title, p.url), `  [${p.status}]`)); },
+      lab: () => { out(count(data.counts.experiment, 'experiment', 'experiments') + ' written up. '); go('lab'); },
+      photography: () => { out(count(data.counts.photo, 'photograph', 'photographs') + ' in the gallery.'); go('photos'); },
+      photos: () => commands.photography(),
+      shop: () => { out(count(data.counts.product, 'item', 'items') + ' in the shop.'); go('shop'); },
+      listings: () => { out(count(data.counts.listing, 'listing', 'listings') + ' from Vinted and eBay.'); go('listings'); },
+      devlog: () => { if (!data.posts.length) return out('Nothing published yet.'); data.posts.forEach(p => out('  ', link(p.title, p.url))); },
+      now: () => go('now'),
+      contact: () => { data.socials.forEach(([n, u]) => out(`  ${n.padEnd(10)}`, link(u, u))); if (data.email) out(`  ${'Email'.padEnd(10)}`, link(data.email, 'mailto:' + data.email)); out('  Or use the form: ', link('/about#contact', '/about#contact')); },
+      search: args => { if (!args) return out('Usage: search <words>'); location.href = '/search?q=' + encodeURIComponent(args); },
+      theme: () => { $('#theme-btn').click(); out('Switched.'); },
+      ls: () => out(data.pages.map(p => p[2] === '/' ? '/' : p[2].slice(1) + '/').join('   ')),
+      cd: args => { const key = (args || '').replace(/\//g, ''); const p = data.pages.find(x => x[2].slice(1) === key || x[0] === key); p ? go(p[0]) : out(`cd: no such page: ${args || ''}`); },
+      open: args => commands.cd(args),
+      whoami: () => out('visitor'),
+      date: () => out(new Date().toString()),
+      echo: args => out(args || ''),
+      sudo: () => out('Nice try.'),
+      clear: () => log.replaceChildren(),
+      exit: () => term.close(),
+    };
+    const run = async line => {
+      log.append(el('p', { className: 'cmd', textContent: line }));
+      const [name, ...rest] = line.trim().split(/\s+/);
+      if (!name) return;
+      try {
+        await load();
+        const fn = commands[name.toLowerCase()];
+        fn ? fn(rest.join(' ')) : out(`${name}: command not found. Type help to see what works.`);
+      } catch (e) { out('The site did not answer. Try again in a moment.'); }
+      body.scrollTop = body.scrollHeight;
+    };
+    term.addEventListener('opened', () => { if (!log.childNodes.length) out('Welcome. Type help and press Enter.'); input.focus(); });
+    body.addEventListener('click', e => { if (!e.target.closest('a') && !getSelection().toString()) input.focus(); });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { const v = input.value; input.value = ''; if (v.trim()) { history.push(v); hi = history.length; } run(v); }
+      else if (e.key === 'ArrowUp' && history.length) { e.preventDefault(); hi = Math.max(0, hi - 1); input.value = history[hi]; }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); hi = Math.min(history.length, hi + 1); input.value = history[hi] || ''; }
+    });
+  }
+})();

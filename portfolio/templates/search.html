@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap narrow">
+  <header class="page-head" style="padding-bottom:24px"><h1 class="display" style="font-size:clamp(2.2rem,5vw,3.4rem)">Search</h1></header>
+  <form action="/search" class="toolbar" role="search">
+    <input class="input" style="max-width:none;flex:1" type="search" name="q" value="{{ q }}" placeholder="Search projects, posts, listings, photos" aria-label="Search" autofocus>
+    {% if only %}<input type="hidden" name="in" value="{{ only }}">{% endif %}
+    <button class="btn">Search</button>
+  </form>
+  {% if q %}
+  <div class="chips" style="margin-bottom:22px"><a class="chip{% if not only %} on{% endif %}" href="/search?q={{ q|urlencode }}">Everything</a>
+    {% for k, label in kinds %}<a class="chip{% if only == k %} on{% endif %}" href="/search?q={{ q|urlencode }}&in={{ k }}">{{ label }}</a>{% endfor %}</div>
+  {% if results %}
+  <p class="meta" style="margin-bottom:6px">{{ results|length }} result{{ '' if results|length == 1 else 's' }}</p>
+  <div class="results">{% for r in results %}<a href="{{ r.url }}"><span class="meta">{{ r.kind }}</span><div><b>{{ r.title }}</b><p>{{ r.text }}</p></div></a>{% endfor %}</div>
+  {% else %}<p class="mut">Nothing on the site matches “{{ q }}”. Try a shorter or different word.</p>{% endif %}
+  {% endif %}
+</div>
+{% endblock %}

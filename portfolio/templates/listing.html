@@ -1,0 +1,4 @@
+{% extends "base.html" %}
+{% block main %}
+{% with name=p.title, back_url='/listings', back_label='My Listings', buy_url=p.url, buy_label='Open on ' ~ p.platform %}{% include "_sale.html" %}{% endwith %}
+{% endblock %}

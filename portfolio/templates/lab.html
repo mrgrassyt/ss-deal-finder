@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block body_class %}lab{% endblock %}
+{% block main %}
+<header class="lab-head"><div class="wrap"><div class="page-head"><h1>tech_lab/</h1><p class="lede">Repairs, upgrades and hardware experiments, written down as they happened: what I tried, what went wrong and what I would do differently.</p></div></div></header>
+<div class="wrap">
+  <section class="section" style="padding-bottom:0">
+    {% if items %}
+    <div class="toolbar" data-filter="#log">
+      <input class="input" type="search" placeholder="Search the lab" aria-label="Search experiments" data-q>
+      <div class="chips" role="group" aria-label="Category">
+        <button class="chip" aria-pressed="true" data-f="">All</button>
+        {% for c in categories %}<button class="chip" aria-pressed="false" data-f="{{ c }}">{{ c }}</button>{% endfor %}
+      </div>
+    </div>
+    <div class="log" id="log">
+      {% for e in items %}
+      <a href="{{ url_of(e) }}" data-item data-k="{{ e.category }}" data-text="{{ (e.title ~ ' ' ~ e.category ~ ' ' ~ (e.tools or [])|join(' '))|lower }}">
+        <span class="mut">{{ (e.date or e.created|iso) }}</span>
+        <b>{{ e.title }}</b>
+        <span class="mut">{{ e.category }}</span>
+        <span class="meter" title="Difficulty {{ e.difficulty }} of 10">{% for i in range(1, 11) %}<i{% if i <= (e.difficulty or 0) %} class="on"{% endif %}></i>{% endfor %}<span>{{ e.difficulty }}</span></span>
+        {{ m.status(e.outcome) }}
+      </a>
+      {% endfor %}
+    </div>
+    <p class="none" data-none>Nothing in the lab matches that.</p>
+    {% else %}
+    <div class="empty"><h3>The notebook is empty</h3><p style="font-family:var(--sans)">No experiments have been written up yet. The first repair or upgrade I document will show up here, with photos, the steps and how it turned out.</p></div>
+    {% endif %}
+  </section>
+  <section class="section" id="equipment">
+    <div class="section-head"><h2>equipment</h2></div>
+    {% if gear %}
+    <div class="gear">{% for g, rows in gear %}<div><h3>{{ g }}</h3><ul>{% for x in rows %}<li>{{ x.name }}<span>{{ x.details }}</span></li>{% endfor %}</ul></div>{% endfor %}</div>
+    {% else %}<p class="mut" style="font-family:var(--sans)">The list of what I work with (PC, camera, tools) is not filled in yet.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

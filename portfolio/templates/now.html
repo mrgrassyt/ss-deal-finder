@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap">
+  <header class="page-head"><h1 class="display">Now</h1><p class="lede">What I am doing at the moment.{% if updated %} Last changed {{ updated|date }}.{% endif %}</p></header>
+  {% if sections %}
+  <div class="now-grid">
+    {% for name, rows in sections %}
+    <section class="now-row"><h2>{{ name }}</h2><ul>{% for r in rows %}<li><b>{{ r.text }}</b>{% if r.note %}<p>{{ r.note }}</p>{% endif %}</li>{% endfor %}</ul></section>
+    {% endfor %}
+  </div>
+  {% else %}<div class="empty"><h3>Nothing written down yet</h3><p>This page will list what I am working on and learning.</p></div>{% endif %}
+  {% if has_road %}
+  <section class="section" id="roadmap">
+    <div class="section-head"><h2>Roadmap</h2></div>
+    <div class="lanes">
+      {% for name, rows in lanes %}
+      <div class="lane l-{{ name|slug }}"><h3>{{ name }}<span>{{ rows|length }}</span></h3><ul>{% for r in rows %}<li>{{ r.title }}{% if r.note %}<p>{{ r.note }}</p>{% endif %}</li>{% endfor %}</ul></div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap">
+  <header class="page-head"><h1 class="display">Projects</h1><p class="lede">Things I am building. Some work, some are half-finished, and each page says honestly which.</p></header>
+  {% if items %}
+  <div class="toolbar" data-filter="#plist">
+    <input class="input" type="search" placeholder="Search projects" aria-label="Search projects" data-q>
+    <div class="chips" role="group" aria-label="Status">
+      <button class="chip" aria-pressed="true" data-f="">All</button>
+      {% for s in statuses %}<button class="chip" aria-pressed="false" data-f="{{ s }}">{{ s }}</button>{% endfor %}
+    </div>
+  </div>
+  <div class="plist" id="plist">
+    {% for p in items %}
+    <a class="prow" href="{{ url_of(p) }}" data-item data-k="{{ p.status }}" data-text="{{ (p.title ~ ' ' ~ p.summary ~ ' ' ~ (p.technologies or [])|join(' '))|lower }}">
+      {{ m.shot(p.hero, p.title, p.title) }}
+      <div><h3>{{ p.title }}</h3><p>{{ p.summary }}</p>{{ m.tags(p.technologies[:7]) }}</div>
+      {{ m.status(p.status) }}
+    </a>
+    {% endfor %}
+  </div>
+  <p class="none" data-none>No projects match that. <button class="link chip" data-reset>Clear the filters</button></p>
+  {% else %}
+  <div class="empty"><h3>No projects here yet</h3><p>They will appear as soon as the first one is written up.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

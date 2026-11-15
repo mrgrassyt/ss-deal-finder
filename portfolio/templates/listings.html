@@ -1,0 +1,39 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap">
+  <header class="page-head">
+    <h1 class="display">My Listings</h1>
+    <p class="lede">What I currently have for sale on Vinted and eBay, in one list. Buying happens on the marketplace; every item links to its original listing.</p>
+    <div class="profiles">
+      {% if site.vinted_url %}<a class="btn ghost small" href="{{ site.vinted_url }}" rel="noopener" target="_blank">My Vinted profile</a>{% endif %}
+      {% if site.ebay_url %}<a class="btn ghost small" href="{{ site.ebay_url }}" rel="noopener" target="_blank">My eBay profile</a>{% endif %}
+    </div>
+  </header>
+  {% if items %}
+  <div class="toolbar" data-filter="#catalogue" data-hide="Sold">
+    <input class="input" type="search" placeholder="Search listings" aria-label="Search listings" data-q>
+    <div class="chips" role="group" aria-label="Marketplace">
+      <button class="chip" aria-pressed="true" data-f="">All</button>
+      <button class="chip" aria-pressed="false" data-f="Vinted">Vinted</button>
+      <button class="chip" aria-pressed="false" data-f="eBay">eBay</button>
+    </div>
+    <span class="spacer"></span>
+    <label class="meta" style="display:flex;gap:8px;align-items:center;cursor:pointer"><input type="checkbox" data-show-hidden> Show sold items</label>
+  </div>
+  <div class="catalogue" id="catalogue">
+    {% for p in items %}
+    <a class="lrow{% if p.status == 'Sold' %} is-sold{% endif %}" href="{{ url_of(p) }}" data-item data-k="{{ p.platform }}" data-state="{{ p.status }}" data-text="{{ (p.title ~ ' ' ~ p.category ~ ' ' ~ p.platform)|lower }}">
+      {{ m.shot((p.images or [none])[0], p.title, p.title[:2]) }}
+      <div><span class="platform {{ p.platform|lower }}">{{ p.platform }}</span> {% if p.status != 'Available' %}{{ m.status(p.status) }}{% endif %}<h3>{{ p.title }}</h3><span class="meta">{{ p.category }}</span></div>
+      <span class="meta c-cond">{{ p.condition }}</span>
+      <span class="meta c-date">{{ (p.date or p.created)|date }}</span>
+      <span class="price">{{ p|money }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  <p class="none" data-none>No listings match that.</p>
+  {% else %}
+  <div class="empty"><h3>No listings added yet</h3><p>Items will be listed here as I add them. Until then, my marketplace profiles show everything that is up right now.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

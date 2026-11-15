@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block main %}
+<article class="wrap narrow">
+  <header class="article-head">
+    <a class="back" href="/devlog">‹ Devlog</a>
+    <p class="meta"><time datetime="{{ p.date }}">{{ p.date|date }}</time>{% if p.category %}, {{ p.category }}{% endif %}, {{ minutes }} min read</p>
+    <h1 class="display">{{ p.title }}</h1>
+    {% if p.excerpt %}<p class="lede">{{ p.excerpt }}</p>{% endif %}
+  </header>
+  {% if p.cover %}<div class="cover"><img src="{{ p.cover.src }}" alt="" width="{{ p.cover.w }}" height="{{ p.cover.h }}"></div>{% endif %}
+  <div class="prose">{{ p.content|md }}</div>
+  <footer class="article-foot">
+    {{ m.tags(p.tags) }}
+    {% if related %}<div><h3 style="margin-bottom:10px">Related projects</h3><ul class="rows">{% for x in related %}<li>{{ m.status(x.status) }}<a class="link" href="{{ url_of(x) }}">{{ x.title }}</a></li>{% endfor %}</ul></div>{% endif %}
+    {% if others %}<div><h3 style="margin-bottom:10px">More from the devlog</h3><ul class="rows">{% for x in others %}<li><span>{{ x.date|date }}</span><a class="link" href="{{ url_of(x) }}">{{ x.title }}</a></li>{% endfor %}</ul></div>{% endif %}
+  </footer>
+</article>
+{% endblock %}

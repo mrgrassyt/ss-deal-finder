@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block body_class %}photo-page{% endblock %}
+{% block main %}
+<div class="wrap" style="max-width:1560px">
+  <header class="page-head">
+    <h1>Photography</h1>
+    {% if albums %}
+    <div class="chips" role="group" aria-label="Album" data-filter="#masonry">
+      <button class="chip" aria-pressed="true" data-f="">All</button>
+      {% for a in albums %}<button class="chip" aria-pressed="false" data-f="{{ a }}">{{ a }}</button>{% endfor %}
+    </div>
+    {% endif %}
+  </header>
+  {% if items %}
+  <div class="masonry" id="masonry">
+    {% for p in items %}
+    <figure id="p-{{ p.slug }}" tabindex="0" role="button" data-item data-k="{{ p.album }}" data-lb="photos" data-src="{{ p.image.src }}" data-title="{{ p.title }}" data-text="{{ p.caption }}"
+      data-info="{{ [p.camera, p.lens, p.settings, p.taken|date]|select|join('|') }}"{% if p.before %} data-before="{{ p.before.src }}"{% endif %}>
+      <img src="{{ p.image.thumb }}" alt="{{ p.title or p.caption or 'Photograph' }}" loading="lazy" decoding="async" width="{{ p.image.w }}" height="{{ p.image.h }}">
+      {% if p.title or p.camera %}<figcaption>{{ p.title }}<span>{{ [p.camera, p.settings]|select|join(', ') }}</span></figcaption>{% endif %}
+    </figure>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty" style="margin-bottom:80px"><h3>No photographs yet</h3><p>The gallery opens with the first upload. Each photo will show the camera, lens and settings it was taken with.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

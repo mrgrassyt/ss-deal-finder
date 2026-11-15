@@ -1,0 +1,28 @@
+{% extends "base.html" %}{% import "_m.html" as m %}
+{% block body_class %}lab{% endblock %}
+{% block main %}
+<article>
+  <header class="lab-head"><div class="wrap"><div class="page-head">
+    <a class="back" href="/lab">‹ tech_lab/</a>
+    <h1>{{ e.title }}</h1>
+    <p style="display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:18px;align-items:center">
+      <span class="mut">{{ e.date or e.created|iso }}</span><span class="mut">{{ e.category }}</span>
+      <span class="meter" title="Difficulty {{ e.difficulty }} of 10">{% for i in range(1, 11) %}<i{% if i <= (e.difficulty or 0) %} class="on"{% endif %}></i>{% endfor %}<span>difficulty {{ e.difficulty }}/10</span></span>
+      {{ m.status(e.outcome) }}
+    </p>
+  </div></div></header>
+  <div class="wrap cols">
+    <div>
+      {% if e.description %}<section class="block prose" style="font-family:var(--sans)">{{ e.description|md }}</section>{% endif %}
+      {% if e.photos %}<section class="block"><div class="gallery">{% for s in e.photos %}<button data-lb="lab" data-src="{{ s.src }}" data-title="{{ e.title }}"><img src="{{ s.thumb }}" alt="{{ e.title }}, photo {{ loop.index }}" loading="lazy"></button>{% endfor %}</div></section>{% endif %}
+      {% if e.steps %}<section class="block"><h2>steps</h2><ol class="steps" style="margin-top:16px">{% for s in e.steps %}<li>{{ s }}</li>{% endfor %}</ol></section>{% endif %}
+      {% for key, label in [('results', 'results'), ('problems', 'problems'), ('lessons', 'lessons learned')] %}
+      {% if e[key] %}<section class="block"><h2>{{ label }}</h2><div class="prose" style="font-family:var(--sans);margin-top:14px">{{ e[key]|md }}</div></section>{% endif %}
+      {% endfor %}
+    </div>
+    <aside class="side">
+      {% if e.tools %}<div><h4>tools</h4><ul style="font-family:var(--sans);font-size:.98rem">{% for t in e.tools %}<li>{{ t }}</li>{% endfor %}</ul></div>{% endif %}
+    </aside>
+  </div>
+</article>
+{% endblock %}

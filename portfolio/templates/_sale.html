@@ -1,0 +1,40 @@
+{# Shared detail page for a shop product or a marketplace listing. Expects: p, name, back_url, back_label, buy_url, buy_label #}
+{% import "_m.html" as m %}
+<article class="wrap">
+  <a class="back" href="{{ back_url }}" style="margin-top:clamp(20px,4vw,44px)">‹ {{ back_label }}</a>
+  <div class="buy">
+    <div class="buy-gallery">
+      {% if p.images %}
+      <button class="shot buy-main" id="buy-main" data-lb-go="item" aria-label="View the photos larger"><img src="{{ p.images[0].src }}" alt="{{ name }}"></button>
+      {% if p.images|length > 1 %}<div class="thumbs">{% for i in p.images %}<button data-thumb="{{ loop.index0 }}" aria-label="Photo {{ loop.index }}" aria-current="{{ 'true' if loop.first else 'false' }}"><img src="{{ i.thumb }}" alt="" loading="lazy"></button>{% endfor %}</div>{% endif %}
+      {% for i in p.images %}<span hidden data-lb="item" data-src="{{ i.src }}" data-title="{{ name }}"></span>{% endfor %}
+      {% else %}{{ m.shot(none, name, name) }}{% endif %}
+    </div>
+    <div>
+      {% if p.platform %}<span class="platform {{ p.platform|lower }}">{{ p.platform }}</span>{% endif %}
+      <h1 class="display" style="margin-top:10px">{{ name }}</h1>
+      <p class="price">{{ p|money }}</p>
+      {{ m.status(p.status) }}
+      <dl class="facts">
+        <dt>Condition</dt><dd>{{ p.condition }}</dd>
+        <dt>Category</dt><dd>{{ p.category }}</dd>
+        {% if p.platform %}<dt>Sold through</dt><dd>{{ p.platform }}</dd><dt>Added</dt><dd>{{ (p.date or p.created)|date }}</dd>{% endif %}
+        {% for a, b in p.specs or [] %}<dt>{{ a }}</dt><dd>{{ b }}</dd>{% endfor %}
+      </dl>
+      {% if p.status == 'Sold' %}<p class="mut">This one has been sold.</p>
+      {% else %}
+      <div class="actions">
+        {% if buy_url %}<a class="btn" href="{{ buy_url }}" rel="noopener" target="_blank">{{ buy_label }}</a>{% endif %}
+        <button class="btn{% if buy_url %} ghost{% endif %}" data-open="ask">Ask about this</button>
+        {% if buy_url %}<button class="btn ghost" data-copy="{{ buy_url }}">Copy the link</button>{% endif %}
+      </div>
+      {% endif %}
+      {% if p.short %}<p class="lede" style="margin-bottom:18px">{{ p.short }}</p>{% endif %}
+      {% if p.description %}<div class="prose">{{ p.description|md }}</div>{% endif %}
+    </div>
+  </div>
+</article>
+<dialog class="overlay glass form-dialog" id="ask" aria-labelledby="ask-h">
+  <h2 id="ask-h">Ask about this</h2><p class="mut">{{ name }}</p>
+  {{ m.contact_form(about=name, button='Send question') }}
+</dialog>
