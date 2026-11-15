@@ -70,5 +70,29 @@
    "date": "2026-09-15",
    "description": "Simon & Garfunkel, \"Simon and Garfunkel's Greatest Hits\".\n\n- Format: vinyl record\n- Publication year: 1972\n- Condition: good. The sleeve shows its age, see the photos."
   }
+ },
+ {
+  "key": "vinted-boston-dont-look-back",
+  "type": "listing",
+  "published": true,
+  "created": 1789473720.0,
+  "images": {
+   "images": [
+    "boston-1.webp",
+    "boston-2.webp"
+   ]
+  },
+  "data": {
+   "title": "Boston, Don't Look Back (vinyl, 1978)",
+   "platform": "Vinted",
+   "url": "https://www.vinted.lv/items/9781011286-boston-dont-look-back-vinyl",
+   "price": 22.5,
+   "currency": "EUR",
+   "status": "Available",
+   "condition": "Good",
+   "category": "Books and vinyl",
+   "date": "2026-09-15",
+   "description": "Boston, \"Don't Look Back\".\n\n- Format: vinyl record\n- Publication year: 1978\n- Condition: good. The sleeve shows wear, see the photos."
+  }
  }
 ]
