@@ -20,12 +20,14 @@ services:
     depends_on: [app]
     environment:
       DOMAIN: ${DOMAIN}
+      SITE_DOMAIN: ${SITE_DOMAIN:-site.localhost}
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./site:/srv/site:ro      # the portfolio page
       - caddy_data:/data        # the HTTPS certificate
       - caddy_config:/config
 volumes:

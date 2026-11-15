@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>mrgrass</title>
+<meta name="description" content="mrgrass — projects and links.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316a34a'/%3E%3Cpath d='M9 23c1-8 5-12 14-14-1 9-5 13-14 14z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#f7f8f6;--fg:#14181a;--mut:#5d676b;--card:#fff;--line:#e3e7e4;--acc:#15803d;--glow:rgba(21,128,61,.14)}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1110;--fg:#eaf0ec;--mut:#8f9b95;--card:#141a18;--line:#222b28;--acc:#4ade80;--glow:rgba(74,222,128,.12)}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:radial-gradient(900px 420px at 50% -120px,var(--glow),transparent),var(--bg);color:var(--fg);
+font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
+main{width:100%;max-width:720px;margin:0 auto;padding:12vh 20px 40px;flex:1}
+h1{font-size:clamp(2.4rem,9vw,3.6rem);letter-spacing:-.03em;margin:0 0 .3em;line-height:1.05}
+h1 span{color:var(--acc)}
+.sub{color:var(--mut);margin:0 0 3rem;font-size:1.08rem}
+h2{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 .8rem;font-weight:600}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;
+transition:transform .18s,border-color .18s,box-shadow .18s}
+.card:hover,.card:focus-visible{transform:translateY(-2px);border-color:var(--acc);box-shadow:0 10px 30px var(--glow);outline:none}
+.card b{display:flex;justify-content:space-between;align-items:center;font-size:1.15rem}
+.card b i{font-style:normal;color:var(--acc);transition:transform .18s}
+.card:hover b i{transform:translateX(4px)}
+.card p{margin:.4rem 0 0;color:var(--mut)}
+.tag{display:inline-block;margin-top:.8rem;font-size:.75rem;padding:2px 9px;border:1px solid var(--line);border-radius:99px;color:var(--mut)}
+footer{max-width:720px;width:100%;margin:0 auto;padding:20px;color:var(--mut);font-size:.85rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>mr<span>grass</span></h1>
+  <p class="sub">Things I build.</p>
+  <h2>Projects</h2>
+  <a class="card" href="https://deals.mrgrass.me">
+    <b>SS.lv Deal Finder <i>→</i></b>
+    <p>Watches SS.lv and flags underpriced listings, with model-age checks and alerts. Invite only.</p>
+    <span class="tag">web app · private</span>
+  </a>
+</main>
+<footer>© <span id="y"></span> mrgrass</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+</body>
+</html>
