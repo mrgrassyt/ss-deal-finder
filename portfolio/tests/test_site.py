@@ -284,7 +284,7 @@ def test_content_drop_can_change_settings_and_existing_items(admin, anon, tmp_pa
 
 def test_home_has_no_grass_and_has_sections_in_colour(anon):
     home = anon.get("/").text
-    assert "grass.js" not in home and 'class="grass' not in home and "<canvas" not in home
+    assert "grass.js" not in home and 'class="wm"' not in home and 'class="grass' not in home and "<canvas" not in home
     assert 'data-sec="home"' in home and 'data-sec="lab"' in anon.get("/lab").text and "mrgrass.me" in home
     assert anon.get("/playground/grass").status_code == 404
     assert "Same exposure calculator" in anon.get("/playground").text and 'id="expo"' in anon.get("/playground/exposure").text

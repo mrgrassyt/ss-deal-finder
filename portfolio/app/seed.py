@@ -10,6 +10,7 @@ from . import media
 
 SETTINGS = {
     "headline": "Building things. Learning by doing.",
+    "name": "mrgrass",
     "intro": "I'm mrgrass. I'm into programming, PC hardware, electronics and photography, and I learn by building things I actually use.",
     "accent": "Ember",
     "portrait": None,

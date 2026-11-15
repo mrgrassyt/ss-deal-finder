@@ -182,6 +182,7 @@ ACCENTS = ["Ember", "Rose", "Ice", "Violet"]
 
 SETTINGS = [
     f("headline", "text", "Home page headline", required=True),
+    f("name", "text", "Your name on the home page", help="Shown under the big photo, for example: Gustavs, aka mrgrass."),
     f("intro", "textarea", "Home page introduction", rows=3),
     f("accent", "select", "Accent colour", options=ACCENTS, default="Ember"),
     f("portrait", "image", "Photo or avatar for the About page"),

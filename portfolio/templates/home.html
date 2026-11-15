@@ -12,15 +12,30 @@
     <div class="stack" data-scene aria-label="Recent photographs">
       <div class="stack-in">
         {% for p in hero_photos %}
-        <a class="pcd pc{{ loop.index }}" href="/photos#p-{{ p.slug }}"><img src="{{ p.image.thumb }}" alt="{{ p.title or 'Photograph' }}" width="{{ p.image.w }}" height="{{ p.image.h }}" decoding="async"{% if loop.first %} fetchpriority="high"{% endif %}><span>{{ p.title }}</span></a>
+        <a class="pcd pc{{ loop.index }}" href="/photos#p-{{ p.slug }}" data-lb="hero" data-fly data-src="{{ p.image.src }}" data-title="{{ p.title }}" data-text="{{ p.caption }}" data-info="{{ [p.camera, p.lens, p.settings, p.taken|date]|select|join('|') }}"><img src="{{ p.image.thumb }}" alt="{{ p.title or 'Photograph' }}" width="{{ p.image.w }}" height="{{ p.image.h }}" decoding="async"{% if loop.first %} fetchpriority="high"{% endif %}><span>{{ p.title }}</span></a>
         {% endfor %}
       </div>
     </div>
     {% endif %}
   </div>
-  <div class="wrap"><div class="wm" aria-hidden="true" data-scene><div class="wm-in">
-    <span class="wl w6">mrgrass.me</span><span class="wl w5">mrgrass.me</span><span class="wl w4">mrgrass.me</span><span class="wl w3">mrgrass.me</span><span class="wl w2">mrgrass.me</span><span class="wl w1">mrgrass.me</span><span class="wl wf">mrgrass.me</span>
-  </div></div></div>
+  {% if band %}
+  <div class="slices" data-scene role="img" aria-label="{{ band.alt }}">
+    {% for i in range(8) %}<i style="--i:{{ i }}"><img src="{{ band.img.src }}" alt="" decoding="async"></i>{% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<section class="wrap who">
+  <div class="who-name">
+    <h2>{{ site.name or 'mrgrass' }}</h2>
+    <div class="row"><a class="btn small" href="/about">About me</a><a class="btn small ghost" href="/about#contact">Get in touch</a></div>
+  </div>
+  <dl class="who-facts">
+    {% if site.interests %}<div><dt>Into</dt><dd><ul>{% for i in site.interests[:4] %}<li>{{ i }}</li>{% endfor %}</ul></dd></div>{% endif %}
+    {% if camera %}<div><dt>Shooting with</dt><dd>{{ camera }}</dd></div>{% endif %}
+    {% if site.goals %}<div><dt>Saving up for</dt><dd>{{ site.goals[0] }}</dd></div>{% endif %}
+  </dl>
+  <nav class="who-links" aria-label="Elsewhere">{% for name, url in site.socials %}<a href="{{ url }}" rel="noopener me" target="_blank">{{ name }}</a>{% endfor %}</nav>
 </section>
 
 {% if featured %}

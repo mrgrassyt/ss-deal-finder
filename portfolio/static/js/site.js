@@ -137,21 +137,44 @@
       bar.style.display = bar.childNodes.length ? '' : 'none';
       $('.lb-prev', lb).hidden = $('.lb-next', lb).hidden = group.length < 2;
     };
-    const openLb = (name, index) => {
+    // A picture with data-fly flies between its place on the page and the full-screen viewer.
+    const fly = (img, from, reverse) => {
+      const to = img.getBoundingClientRect(), f = from.getBoundingClientRect();
+      if (!to.width || !f.width) return null;
+      const s = f.width / to.width, dx = f.left + f.width / 2 - (to.left + to.width / 2), dy = f.top + f.height / 2 - (to.top + to.height / 2);
+      const frames = [{ transform: `translate(${dx}px, ${dy}px) scale(${s}) rotate(-3deg)`, opacity: .9 }, { transform: 'none', opacity: 1 }];
+      return img.animate(reverse ? frames.reverse() : frames, { duration: reverse ? 320 : 560, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'both' });
+    };
+    const openLb = (name, index, origin) => {
       group = $$(`[data-lb="${name}"]`).filter(n => !n.dataset.off && !n.closest('[data-off]'));
       if (!group.length) return;
       lastFocus = document.activeElement;
       lb.classList.add('open'); document.body.style.overflow = 'hidden';
       show(index); $('.lb-close', lb).focus();
+      if (!calm && origin?.hasAttribute('data-fly')) {
+        lb.animate([{ background: 'rgba(6,6,7,0)' }, { background: 'rgba(6,6,7,.94)' }], { duration: 420, easing: 'ease-out' });
+        const img = $('img:not(.before)', stage), thumb = $('img', origin);
+        if (img && thumb) { img.style.opacity = 0; const go = () => { img.style.opacity = ''; const an = fly(img, thumb); if (an) an.onfinish = () => an.cancel(); }; img.complete ? go() : (img.onload = go, setTimeout(go, 1200)); }
+      }
     };
-    const closeLb = () => { lb.classList.remove('open'); document.body.style.overflow = ''; lastFocus?.focus?.(); };
+    const closeLb = () => {
+      const origin = group[at], img = $('img:not(.before)', stage), thumb = origin && $('img', origin);
+      const done = () => { lb.classList.remove('open'); document.body.style.overflow = ''; lastFocus?.focus?.(); };
+      if (!calm && origin?.hasAttribute('data-fly') && img && thumb && thumb.getBoundingClientRect().bottom > 0 && !stage.classList.contains('zoom')) {
+        lb.animate([{ background: 'rgba(6,6,7,.94)' }, { background: 'rgba(6,6,7,0)' }], { duration: 320, fill: 'both' });
+        const a = fly(img, thumb, true);
+        if (a) { a.onfinish = done; return; }
+      }
+      done();
+    };
     document.addEventListener('click', e => {
       const go = e.target.closest('[data-lb-go]');
       if (go) return openLb(go.dataset.lbGo, +(go.dataset.index || 0));
       const t = e.target.closest('[data-lb]');
       if (t && !lb.contains(t)) {
+        if (t.matches('a')) e.preventDefault();               // cards on the home page: the viewer instead of the page
         const all = $$(`[data-lb="${t.dataset.lb}"]`).filter(n => !n.dataset.off);
-        openLb(t.dataset.lb, all.indexOf(t));
+        openLb(t.dataset.lb, all.indexOf(t), t);
       }
       const thumb = e.target.closest('[data-thumb]');
       if (thumb) {

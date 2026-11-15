@@ -144,8 +144,18 @@ async def home(request: Request):
     feed.sort(key=lambda x: (x["when"], x["t"]), reverse=True)
     working = [n for n in public("now") if n.get("section") == "Working on"] or \
               [{"text": p["title"], "note": p.get("summary", "")} for p in projects if p.get("status") == "In Development"]
-    shots = sorted(public("photo"), key=lambda i: (bool(i.get("featured")), i["created"]), reverse=True)[:3]
-    return page(request, "home.html", hero_photos=shots, featured=[p for p in projects if p.get("featured")][:4], working=working[:4], feed=feed[:6],
+    ranked = sorted(public("photo"), key=lambda i: (bool(i.get("featured")), i["created"]), reverse=True)
+    shots = ranked[:3]
+    site = settings()
+    if site.get("portrait"):                      # a picture of you, uploaded in Settings, wins; otherwise one of the photos not already in the stack
+        band = {"img": site["portrait"], "alt": site.get("name") or "mrgrass"}
+    elif ranked:
+        pick = (ranked[3:] or ranked)[0]
+        band = {"img": pick["image"], "alt": pick.get("title") or "Photograph"}
+    else:
+        band = None
+    camera = next((g.get("details") or g.get("name") for g in public("gear") if g.get("group") == "Camera"), "")
+    return page(request, "home.html", hero_photos=shots, band=band, camera=camera, featured=[p for p in projects if p.get("featured")][:4], working=working[:4], feed=feed[:6],
                 counts={t: len(public(t)) for t in ("project", "experiment", "photo", "product", "listing", "post")})
 
 
