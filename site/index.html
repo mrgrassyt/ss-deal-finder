@@ -4,45 +4,105 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>mrgrass</title>
-<meta name="description" content="mrgrass — projects and links.">
+<meta name="description" content="mrgrass — things I build.">
 <meta name="color-scheme" content="light dark">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2316a34a'/%3E%3Cpath d='M9 23c1-8 5-12 14-14-1 9-5 13-14 14z' fill='%23fff'/%3E%3C/svg%3E">
 <style>
-:root{--bg:#f7f8f6;--fg:#14181a;--mut:#5d676b;--card:#fff;--line:#e3e7e4;--acc:#15803d;--glow:rgba(21,128,61,.14)}
-@media (prefers-color-scheme:dark){:root{--bg:#0d1110;--fg:#eaf0ec;--mut:#8f9b95;--card:#141a18;--line:#222b28;--acc:#4ade80;--glow:rgba(74,222,128,.12)}}
+:root{--bg:#eef2ef;--fg:#101614;--mut:#566159;--glass:rgba(255,255,255,.62);--edge:rgba(255,255,255,.9);--line:rgba(16,22,20,.1);--acc:#0f9d58;--acc2:#00a3a3;--sh:0 30px 60px -20px rgba(16,40,28,.35);--o1:rgba(15,157,88,.35);--o2:rgba(0,163,163,.30);--o3:rgba(120,200,120,.35)}
+:root[data-theme=dark]{--bg:#070b0a;--fg:#e8f1ec;--mut:#8a9a92;--glass:rgba(24,34,30,.55);--edge:rgba(255,255,255,.12);--line:rgba(255,255,255,.08);--acc:#4ade80;--acc2:#22d3ee;--sh:0 30px 70px -20px rgba(0,0,0,.8);--o1:rgba(74,222,128,.30);--o2:rgba(34,211,238,.22);--o3:rgba(74,222,128,.18)}
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;min-height:100vh;background:radial-gradient(900px 420px at 50% -120px,var(--glow),transparent),var(--bg);color:var(--fg);
-font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
-main{width:100%;max-width:720px;margin:0 auto;padding:12vh 20px 40px;flex:1}
-h1{font-size:clamp(2.4rem,9vw,3.6rem);letter-spacing:-.03em;margin:0 0 .3em;line-height:1.05}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow-x:hidden;transition:background .4s,color .4s}
+/* depth: blurred orbs at different distances, moved by the mouse at different speeds */
+.orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;will-change:transform;transition:transform .25s ease-out}
+.o1{width:56vmax;height:56vmax;left:-14vmax;top:-18vmax;background:radial-gradient(circle,var(--o1),transparent 65%);filter:blur(40px)}
+.o2{width:44vmax;height:44vmax;right:-12vmax;top:18vh;background:radial-gradient(circle,var(--o2),transparent 65%);filter:blur(60px)}
+.o3{width:26vmax;height:26vmax;left:30vw;bottom:-10vmax;background:radial-gradient(circle,var(--o3),transparent 65%);filter:blur(24px)}
+.top{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:flex-end;gap:8px;padding:14px 18px}
+.pill{border:1px solid var(--edge);background:var(--glass);color:var(--fg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:99px;padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer;transition:transform .15s,border-color .15s}
+.pill:hover{transform:translateY(-1px);border-color:var(--acc)}
+main{max-width:860px;margin:0 auto;padding:16vh 20px 60px}
+.hero{perspective:900px;margin-bottom:12vh}
+h1{font-size:clamp(3rem,13vw,6.5rem);letter-spacing:-.05em;line-height:.95;margin:0;font-weight:800;transform-style:preserve-3d;will-change:transform;transition:transform .2s ease-out;
+text-shadow:0 1px 0 var(--acc),0 2px 0 color-mix(in srgb,var(--acc) 80%,#000),0 3px 0 color-mix(in srgb,var(--acc) 60%,#000),0 12px 28px rgba(0,0,0,.25)}
 h1 span{color:var(--acc)}
-.sub{color:var(--mut);margin:0 0 3rem;font-size:1.08rem}
-h2{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 .8rem;font-weight:600}
-.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px;
-transition:transform .18s,border-color .18s,box-shadow .18s}
-.card:hover,.card:focus-visible{transform:translateY(-2px);border-color:var(--acc);box-shadow:0 10px 30px var(--glow);outline:none}
-.card b{display:flex;justify-content:space-between;align-items:center;font-size:1.15rem}
-.card b i{font-style:normal;color:var(--acc);transition:transform .18s}
-.card:hover b i{transform:translateX(4px)}
-.card p{margin:.4rem 0 0;color:var(--mut)}
-.tag{display:inline-block;margin-top:.8rem;font-size:.75rem;padding:2px 9px;border:1px solid var(--line);border-radius:99px;color:var(--mut)}
-footer{max-width:720px;width:100%;margin:0 auto;padding:20px;color:var(--mut);font-size:.85rem}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.tag{margin:1.2rem 0 0;font-size:clamp(1.05rem,3.2vw,1.35rem);color:var(--mut);max-width:34em}
+section{margin-bottom:10vh}
+h2{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin:0 0 1rem;font-weight:700}
+.glass{border:1px solid var(--edge);background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:20px;box-shadow:var(--sh)}
+.about{padding:24px 26px;font-size:1.1rem}
+.tilt{display:block;text-decoration:none;color:inherit;padding:24px 26px;transform-style:preserve-3d;will-change:transform;transition:transform .15s ease-out,border-color .2s}
+.tilt:hover{border-color:var(--acc)}
+.tilt b{display:flex;justify-content:space-between;align-items:center;font-size:1.25rem;transform:translateZ(30px)}
+.tilt b i{font-style:normal;color:var(--acc)}
+.tilt p{margin:.5rem 0 0;color:var(--mut);transform:translateZ(18px)}
+.chip{display:inline-block;margin-top:.9rem;font-size:.75rem;padding:2px 10px;border:1px solid var(--line);border-radius:99px;color:var(--mut);transform:translateZ(24px)}
+.links{display:flex;flex-wrap:wrap;gap:10px}
+.links a{text-decoration:none;color:var(--fg);padding:10px 18px;border-radius:14px;transition:transform .15s,border-color .15s}
+.links a:hover{transform:translateY(-3px);border-color:var(--acc)}
+.cta{display:inline-block;margin-top:1.2rem;padding:12px 24px;border-radius:14px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#04110a;font-weight:700;text-decoration:none;box-shadow:0 12px 30px -10px var(--acc);transition:transform .15s}
+.cta:hover{transform:translateY(-3px)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+footer{max-width:860px;margin:0 auto;padding:20px;color:var(--mut);font-size:.85rem}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
+<div class="orbs" aria-hidden="true"><div class="orb o1" data-d="14"></div><div class="orb o2" data-d="30"></div><div class="orb o3" data-d="55"></div></div>
+<div class="top"><button class="pill" id="lang" aria-label="Language">LV</button><button class="pill" id="theme" aria-label="Light or dark">◐</button></div>
 <main>
-  <h1>mr<span>grass</span></h1>
-  <p class="sub">Things I build.</p>
-  <h2>Projects</h2>
-  <a class="card" href="https://deals.mrgrass.me">
-    <b>SS.lv Deal Finder <i>→</i></b>
-    <p>Watches SS.lv and flags underpriced listings, with model-age checks and alerts. Invite only.</p>
-    <span class="tag">web app · private</span>
-  </a>
+  <div class="hero" id="hero">
+    <h1 id="h1">mr<span>grass</span></h1>
+    <p class="tag" data-t="tag"></p>
+  </div>
+  <section class="reveal"><h2 data-t="about_h"></h2><div class="glass about" data-t="about"></div></section>
+  <section class="reveal"><h2 data-t="proj_h"></h2>
+    <a class="glass tilt" href="https://deals.mrgrass.me">
+      <b>SS.lv Deal Finder <i>→</i></b><p data-t="deal"></p><span class="chip" data-t="deal_tag"></span>
+    </a>
+  </section>
+  <section class="reveal" id="links-sec" hidden><h2 data-t="links_h"></h2><div class="links" id="links"></div></section>
+  <section class="reveal" id="contact-sec" hidden><h2 data-t="contact_h"></h2><a class="cta" id="contact" data-t="contact"></a></section>
 </main>
 <footer>© <span id="y"></span> mrgrass</footer>
-<script>document.getElementById('y').textContent=new Date().getFullYear()</script>
+<script>
+/* ===== EDIT HERE ===== */
+const LINKS = [            /* shown as buttons; add yours, e.g. {name:"GitHub", url:"https://github.com/mrgrassyt"} */
+  {name:"GitHub", url:"https://github.com/mrgrassyt"}
+];
+const CONTACT = "";        /* e.g. "mailto:you@example.com" or a Discord link; empty = button hidden */
+const TEXT = {
+ en:{tag:"I build web apps and tools.",about_h:"About",about:"Hi, I'm mrgrass. I build things that solve my own problems, then share them.",proj_h:"Projects",
+     deal:"Watches SS.lv and flags underpriced listings, with model-age checks and alerts. Invite only.",deal_tag:"web app · private",links_h:"Links",contact_h:"Contact",contact:"Get in touch"},
+ lv:{tag:"Veidoju tīmekļa lietotnes un rīkus.",about_h:"Par mani",about:"Sveiki, esmu mrgrass. Daru lietas, kas atrisina manas problēmas, un dalos ar tām.",proj_h:"Projekti",
+     deal:"Seko SS.lv un atrod izdevīgus sludinājumus, pārbauda modeļa vecumu un sūta paziņojumus. Tikai ar ielūgumu.",deal_tag:"tīmekļa lietotne · privāta",links_h:"Saites",contact_h:"Kontakti",contact:"Sazināties"}
+};
+/* ===================== */
+const $=s=>document.querySelector(s), store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let lang=store.get('lang')||((navigator.language||'').startsWith('lv')?'lv':'en');
+function setLang(l){lang=l;store.set('lang',l);document.documentElement.lang=l;$('#lang').textContent=l==='en'?'LV':'EN';
+ document.querySelectorAll('[data-t]').forEach(e=>e.textContent=TEXT[l][e.dataset.t])}
+$('#lang').onclick=()=>setLang(lang==='en'?'lv':'en');
+const root=document.documentElement;
+function setTheme(t){root.dataset.theme=t;store.set('theme',t)}
+setTheme(store.get('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#theme').onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
+if(LINKS.length){$('#links-sec').hidden=false;$('#links').innerHTML='';LINKS.forEach(l=>{const a=document.createElement('a');a.className='glass';a.href=l.url;a.rel='noopener';a.textContent=l.name;$('#links').append(a)})}
+if(CONTACT){$('#contact-sec').hidden=false;$('#contact').href=CONTACT}
+setLang(lang);$('#y').textContent=new Date().getFullYear();
+/* depth: mouse moves each layer a different amount; cards tilt towards the pointer */
+const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+if(!calm&&matchMedia('(hover:hover)').matches){
+ addEventListener('pointermove',e=>{const x=e.clientX/innerWidth-.5,y=e.clientY/innerHeight-.5;
+  document.querySelectorAll('.orb').forEach(o=>o.style.transform=`translate(${-x*o.dataset.d}px,${-y*o.dataset.d}px)`);
+  $('#h1').style.transform=`rotateY(${x*10}deg) rotateX(${-y*10}deg)`});
+ document.querySelectorAll('.tilt').forEach(c=>{c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  c.style.transform=`perspective(700px) rotateY(${x*9}deg) rotateX(${-y*9}deg) translateZ(6px)`});c.addEventListener('pointerleave',()=>c.style.transform='')})}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(e=>io.observe(e));
+</script>
 </body>
 </html>
