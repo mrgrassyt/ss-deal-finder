@@ -94,5 +94,28 @@
    "date": "2026-09-15",
    "description": "Boston, \"Don't Look Back\".\n\n- Format: vinyl record\n- Publication year: 1978\n- Condition: good. The sleeve shows wear, see the photos."
   }
+ },
+ {
+  "key": "vinted-trefl-harry-potter-1500",
+  "type": "listing",
+  "published": true,
+  "created": 1789473780.0,
+  "images": {
+   "images": [
+    "trefl-hp-1500-1.webp"
+   ]
+  },
+  "data": {
+   "title": "Trefl Harry Potter puzzle, 1500 pieces",
+   "platform": "Vinted",
+   "url": "https://www.vinted.lv/items/9791506468-trefl-harry-potter-1500",
+   "price": 6,
+   "currency": "EUR",
+   "status": "Available",
+   "condition": "Very good",
+   "category": "Games",
+   "date": "2026-09-15",
+   "description": "Trefl Harry Potter jigsaw puzzle, 1500 pieces, with characters and scenes from the Harry Potter films.\n\n- Brand: Trefl\n- Condition: very good, used. The box shows some wear, see the photo."
+  }
  }
 ]
