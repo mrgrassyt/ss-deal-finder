@@ -4,14 +4,14 @@
   {% if hero_photos %}
   <div class="stage-slides" data-scene>
     {% for p in hero_photos %}
-    <a class="stage-slide{% if loop.first %} on{% endif %}" href="{{ p.href }}" data-lb="hero" data-fly data-src="{{ p.img.src }}" data-title="{{ p.title }}" data-text="{{ p.text }}" data-info="{{ p.info }}" aria-label="Open the photo{% if p.title %}: {{ p.title }}{% endif %}"{% if not loop.first %} tabindex="-1" aria-hidden="true"{% endif %}>
+    <a class="stage-slide{% if loop.first %} on{% endif %}{% if p.img.h > p.img.w %} tall{% endif %}" style="--bg:url('{{ p.img.thumb }}')" href="{{ p.href }}" data-lb="hero" data-fly data-src="{{ p.img.src }}" data-title="{{ p.title }}" data-text="{{ p.text }}" data-info="{{ p.info }}" aria-label="Open the photo{% if p.title %}: {{ p.title }}{% endif %}"{% if not loop.first %} tabindex="-1" aria-hidden="true"{% endif %}>
       <img {% if loop.first %}src="{{ p.img.src }}" fetchpriority="high"{% else %}data-lazy="{{ p.img.src }}"{% endif %} alt="{{ p.title or 'Photograph' }}" width="{{ p.img.w }}" height="{{ p.img.h }}" decoding="async">
     </a>
     {% endfor %}
   </div>
   {% endif %}
   <div class="stage-scrim" aria-hidden="true"></div>
-  <div class="wrap stage-top"><p class="stage-hello display">{{ site.greeting or "Hello." }}</p></div>
+  <div class="wrap stage-top"><p class="stage-hello display">{% for part in (site.greeting or "Shoot. Build. Flip.").split(". ") %}<span>{{ part }}{{ "." if not loop.last }}</span>{% endfor %}</p></div>
   <div class="wrap stage-bottom">
     <div class="stage-info">
       {% if site.name %}<p class="hero-name">{{ site.name }}</p>{% endif %}
@@ -32,11 +32,11 @@
 </section>
 
 <section class="wrap who">
-  <dl class="who-facts">
-    {% if site.interests %}<div><dt>Into</dt><dd><ul>{% for i in site.interests[:4] %}<li>{{ i }}</li>{% endfor %}</ul></dd></div>{% endif %}
-    {% if camera %}<div><dt>Shooting with</dt><dd>{{ camera }}</dd></div>{% endif %}
-    {% if site.goals %}<div><dt>Saving up for</dt><dd>{{ site.goals[0] }}</dd></div>{% endif %}
-    <div><dt>Elsewhere</dt><dd class="who-links">{% for name, url in site.socials %}<a href="{{ url }}" rel="noopener me" target="_blank">{{ name }}</a>{% endfor %}</dd></div>
+  <dl class="who-grid">
+    {% if site.interests %}<div class="who-card" style="--tc:var(--c-projects)"><dt>Into</dt><dd><ul class="tags">{% for i in site.interests[:6] %}<li class="tag">{{ i }}</li>{% endfor %}</ul></dd></div>{% endif %}
+    {% if camera %}{% set cam = camera.split(",", 1) %}<div class="who-card" style="--tc:var(--c-photos)"><dt>Shooting with</dt><dd><span class="who-big">{{ cam[0] }}</span>{% if cam|length > 1 %}<span class="who-sub">{{ cam[1]|trim }}</span>{% endif %}</dd></div>{% endif %}
+    {% if site.goals %}<div class="who-card" style="--tc:var(--c-shop)"><dt>Saving up for</dt><dd><span class="who-big">{{ site.goals[0] }}</span></dd></div>{% endif %}
+    <div class="who-card" style="--tc:var(--c-about)"><dt>Elsewhere</dt><dd class="who-links">{% for name, url in site.socials %}<a class="chip" href="{{ url }}" rel="noopener me" target="_blank">{{ name }}</a>{% endfor %}</dd></div>
   </dl>
 </section>
 

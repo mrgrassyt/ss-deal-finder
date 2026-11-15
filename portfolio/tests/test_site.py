@@ -304,5 +304,5 @@ def test_theme_studio_lists_every_look_and_has_no_inline_script(anon):
 
 def test_home_hero_is_fullscreen_with_photo_picker(anon):
     home = anon.get("/").text
-    assert 'data-stage' in home and 'stage-hello' in home and 'Hello.' in home and 'class="cut' not in home
+    assert 'data-stage' in home and 'stage-hello' in home and 'Shoot.' in home and 'class="cut' not in home
     assert home.count('class="stage-slide') == home.count('aria-label="Show photo') or 'aria-label="Show photo' not in home
