@@ -46,5 +46,29 @@
    "date": "2026-09-15",
    "description": "\"De Chirico\" by Pere Gimferrer, published by Rizzoli in 1989. First American edition.\n\n- Format: hardcover with dust jacket\n- Language: English\n- ISBN: 0847810429\n- Condition: very good. Clean interior, only light shelf wear on the corners, consistent with age."
   }
+ },
+ {
+  "key": "vinted-simon-garfunkel-greatest-hits",
+  "type": "listing",
+  "published": true,
+  "created": 1789473660.0,
+  "images": {
+   "images": [
+    "simon-garfunkel-1.webp",
+    "simon-garfunkel-2.webp"
+   ]
+  },
+  "data": {
+   "title": "Simon & Garfunkel, Simon and Garfunkel's Greatest Hits (vinyl, 1972)",
+   "platform": "Vinted",
+   "url": "https://www.vinted.lv/items/9780965272-simon-garfunkel-simon-and-garfunkels-greatest-hits",
+   "price": 9,
+   "currency": "EUR",
+   "status": "Available",
+   "condition": "Good",
+   "category": "Books and vinyl",
+   "date": "2026-09-15",
+   "description": "Simon & Garfunkel, \"Simon and Garfunkel's Greatest Hits\".\n\n- Format: vinyl record\n- Publication year: 1972\n- Condition: good. The sleeve shows its age, see the photos."
+  }
  }
 ]
