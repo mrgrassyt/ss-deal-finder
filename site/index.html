@@ -32,6 +32,7 @@ section{margin-bottom:10vh}
 h2{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin:0 0 1rem;font-weight:700}
 .glass{border:1px solid var(--edge);background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:20px;box-shadow:var(--sh)}
 .about{padding:24px 26px;font-size:1.1rem}
+.hobs{display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem}.hob{font-size:.85rem;padding:4px 12px;border:1px solid var(--line);border-radius:99px;color:var(--mut)}
 .tilt{display:block;text-decoration:none;color:inherit;padding:24px 26px;transform-style:preserve-3d;will-change:transform;transition:transform .15s ease-out,border-color .2s}
 .tilt:hover{border-color:var(--acc)}
 .tilt b{display:flex;justify-content:space-between;align-items:center;font-size:1.25rem;transform:translateZ(30px)}
@@ -58,7 +59,7 @@ footer{max-width:860px;margin:0 auto;padding:20px;color:var(--mut);font-size:.85
     <h1 id="h1">mr<span>grass</span></h1>
     <p class="tag" data-t="tag"></p>
   </div>
-  <section class="reveal"><h2 data-t="about_h"></h2><div class="glass about" data-t="about"></div></section>
+  <section class="reveal"><h2 data-t="about_h"></h2><div class="glass about"><div data-t="about"></div><div class="hobs" id="hob"></div></div></section>
   <section class="reveal"><h2 data-t="proj_h"></h2>
     <a class="glass tilt" href="https://deals.mrgrass.me">
       <b>SS.lv Deal Finder <i>→</i></b><p data-t="deal"></p><span class="chip" data-t="deal_tag"></span>
@@ -70,28 +71,35 @@ footer{max-width:860px;margin:0 auto;padding:20px;color:var(--mut);font-size:.85
 <footer>© <span id="y"></span> mrgrass</footer>
 <script>
 /* ===== EDIT HERE ===== */
-const LINKS = [            /* shown as buttons; add yours, e.g. {name:"GitHub", url:"https://github.com/mrgrassyt"} */
+const LINKS = [
+  {name:"Discord", url:"https://discord.gg/5hSj8fX2u"},
+  {name:"YouTube", url:"https://www.youtube.com/@mrgrass_gltouiu"},
+  {name:"TikTok", url:"https://www.tiktok.com/@mrgrassyt"},
+  {name:"Steam", url:"https://steamcommunity.com/profiles/76561199803288336/"},
   {name:"GitHub", url:"https://github.com/mrgrassyt"}
 ];
-const CONTACT = "";        /* e.g. "mailto:you@example.com" or a Discord link; empty = button hidden */
+const MAIL = ["mrgrass.gustavs","gmail.com"];   /* split so simple spam bots do not read it from the page */
+const HOBBIES = {en:["Building apps","Hunting second-hand tech deals","Fixing broken electronics","PC & gaming hardware"],
+                 lv:["Lietotņu veidošana","Lietotas tehnikas izdevīgu cenu meklēšana","Bojātas elektronikas labošana","PC un spēļu aparatūra"]};
 const TEXT = {
  en:{tag:"I build web apps and tools.",about_h:"About",about:"Hi, I'm mrgrass. I build things that solve my own problems, then share them.",proj_h:"Projects",
-     deal:"Watches SS.lv and flags underpriced listings, with model-age checks and alerts. Invite only.",deal_tag:"web app · private",links_h:"Links",contact_h:"Contact",contact:"Get in touch"},
+     deal:"Watches SS.lv and flags underpriced listings, with model-age checks and alerts. Invite only.",deal_tag:"web app · private",links_h:"Links",contact_h:"Contact",contact:"Email me"},
  lv:{tag:"Veidoju tīmekļa lietotnes un rīkus.",about_h:"Par mani",about:"Sveiki, esmu mrgrass. Daru lietas, kas atrisina manas problēmas, un dalos ar tām.",proj_h:"Projekti",
-     deal:"Seko SS.lv un atrod izdevīgus sludinājumus, pārbauda modeļa vecumu un sūta paziņojumus. Tikai ar ielūgumu.",deal_tag:"tīmekļa lietotne · privāta",links_h:"Saites",contact_h:"Kontakti",contact:"Sazināties"}
+     deal:"Seko SS.lv un atrod izdevīgus sludinājumus, pārbauda modeļa vecumu un sūta paziņojumus. Tikai ar ielūgumu.",deal_tag:"tīmekļa lietotne · privāta",links_h:"Saites",contact_h:"Kontakti",contact:"Rakstīt e-pastu"}
 };
 /* ===================== */
 const $=s=>document.querySelector(s), store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 let lang=store.get('lang')||((navigator.language||'').startsWith('lv')?'lv':'en');
 function setLang(l){lang=l;store.set('lang',l);document.documentElement.lang=l;$('#lang').textContent=l==='en'?'LV':'EN';
- document.querySelectorAll('[data-t]').forEach(e=>e.textContent=TEXT[l][e.dataset.t])}
+ document.querySelectorAll('[data-t]').forEach(e=>e.textContent=TEXT[l][e.dataset.t]);
+ $('#hob').innerHTML='';HOBBIES[l].forEach(h=>{const c=document.createElement('span');c.className='hob';c.textContent=h;$('#hob').append(c)})}
 $('#lang').onclick=()=>setLang(lang==='en'?'lv':'en');
 const root=document.documentElement;
 function setTheme(t){root.dataset.theme=t;store.set('theme',t)}
 setTheme(store.get('theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
 $('#theme').onclick=()=>setTheme(root.dataset.theme==='dark'?'light':'dark');
 if(LINKS.length){$('#links-sec').hidden=false;$('#links').innerHTML='';LINKS.forEach(l=>{const a=document.createElement('a');a.className='glass';a.href=l.url;a.rel='noopener';a.textContent=l.name;$('#links').append(a)})}
-if(CONTACT){$('#contact-sec').hidden=false;$('#contact').href=CONTACT}
+$('#contact-sec').hidden=false;$('#contact').href='mailto:'+MAIL.join('@')
 setLang(lang);$('#y').textContent=new Date().getFullYear();
 /* depth: mouse moves each layer a different amount; cards tilt towards the pointer */
 const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
