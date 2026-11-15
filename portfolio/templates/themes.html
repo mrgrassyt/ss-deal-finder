@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block head %}<script src="{{ static('js/studio.js') }}" defer></script>{% endblock %}
+{% block main %}
+<div class="wrap">
+  <header class="page-head"><h1 class="display">Theme Studio</h1><p class="lede">Eleven complete looks for this site. Pick one on the left, try it in the preview, then press <b>Use this look</b>. Your choice is saved on this device only.</p></header>
+</div>
+<div class="wrap studio" id="studio">
+  <div class="st-list" role="radiogroup" aria-label="Looks">
+    {% for key, name, blurb, sw in looks %}
+    <button class="st-item" type="button" role="radio" aria-checked="false" data-look="{{ key }}" data-name="{{ name }}">
+      <span class="st-sw" aria-hidden="true">{% for c in sw %}<i style="background:{{ c }}"></i>{% endfor %}</span>
+      <span class="st-t"><b>{{ name }}</b><span>{{ blurb }}</span></span>
+      <em class="st-now" hidden>In use</em>
+    </button>
+    {% endfor %}
+  </div>
+
+  <div class="st-main">
+    <div class="sp" id="sp" data-look="aurora" aria-label="Preview of the selected look">
+      <div class="sp-bar"><div class="nav-in"><span class="brand"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="9" height="9" rx="3" fill="var(--c-projects)"/><rect x="13" y="2" width="9" height="9" rx="4.5" fill="var(--c-photos)"/><rect x="2" y="13" width="9" height="9" rx="4.5" fill="var(--c-lab)"/><rect x="13" y="13" width="9" height="9" rx="3" fill="var(--c-devlog)"/></svg>mrgrass.me</span>
+        <span class="nav-links"><a aria-current="page">Home</a><a>Projects</a><a>Photography</a><a>Devlog</a></span></div></div>
+      <div class="sp-hero">
+        <div class="sp-text">
+          <p class="hero-name">{{ site.name or 'mrgrass' }}</p>
+          <p class="display sp-h">Building things.<br>Learning by doing.</p>
+          <p class="lede">I game, take photos, flip gear and build software.</p>
+          <div class="row"><span class="btn">See the projects</span><span class="btn ghost">Get in touch</span></div>
+          <ul class="hero-stats"><li><b>3</b><span>Projects</span></li><li><b>5</b><span>Photographs</span></li><li><b>3</b><span>Articles</span></li></ul>
+        </div>
+        <div class="cut">{% if samples %}<div class="cut-main"><img src="{{ samples[0].image.src }}" alt=""></div>{% endif %}</div>
+      </div>
+      <div class="sp-row">
+        <div class="sp-card">{% if samples|length > 1 %}<img class="sp-photo" src="{{ samples[1].image.thumb }}" alt="">{% endif %}<div><span class="status s-in-development">In development</span><h3>SS.lv Deal Finder</h3><ul class="tags"><li class="tag">Python</li><li class="tag">Docker</li></ul></div></div>
+        <div class="sp-card">{% if samples|length > 2 %}<img class="sp-photo" src="{{ samples[2].image.thumb }}" alt="">{% endif %}<div><span class="status s-available">Available</span><h3>Vinyl and books</h3><ul class="tags"><li class="tag">Listings</li></ul></div></div>
+        <div class="sp-form"><label>Say hello<input class="input" placeholder="Your message" tabindex="-1" readonly></label><div class="chips"><span class="chip on">All</span><span class="chip">Photos</span><span class="chip">Code</span></div></div>
+      </div>
+    </div>
+
+    <div class="st-controls">
+      <div class="st-field"><label for="st-anim">Animation intensity <output id="st-anim-o">100</output></label><input id="st-anim" type="range" min="0" max="100" step="5" value="100"></div>
+      <label class="st-switch"><input type="checkbox" id="st-motion"><span>Reduce motion</span></label>
+      <label class="st-switch"><input type="checkbox" id="st-fx" checked><span>Background effects</span></label>
+      <label class="st-switch"><input type="checkbox" id="st-3d" checked><span>3D effects</span></label>
+      <label class="st-switch"><input type="checkbox" id="st-perf"><span>Performance mode</span></label>
+      <div class="st-actions">
+        <button class="btn" id="st-use" type="button">Use this look</button>
+        <button class="btn ghost" id="st-reset" type="button">Reset everything</button>
+        <span class="mut" id="st-msg" role="status" aria-live="polite"></span>
+      </div>
+    </div>
+    <p class="mut st-note">Reduce motion switches animation off. Performance mode also removes blur, glow and the background layers, which helps on older phones. Both are on automatically if your device asks for less motion.</p>
+  </div>
+</div>
+{% endblock %}

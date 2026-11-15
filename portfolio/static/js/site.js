@@ -3,7 +3,7 @@
   const $ = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const el = (tag, props = {}, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
-  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduced' || document.documentElement.dataset.anim === 'off' || document.documentElement.dataset.perf === 'on';
 
   // ---- theme, menu ---------------------------------------------------------------------------------------------
   $('#theme-btn')?.addEventListener('click', () => {

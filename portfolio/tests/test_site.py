@@ -40,7 +40,7 @@ def add(admin, type_, data, published=True):
 # ---- public pages ----------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize("url", ["/", "/projects", "/projects/ss-lv-deal-finder", "/projects/pc-toolkit", "/lab", "/photos", "/shop", "/listings",
                                  "/devlog", "/about", "/now", "/playground", "/playground/flip-calculator", "/playground/value-compare",
-                                 "/playground/exposure", "/search", "/search?q=deal", "/robots.txt", "/sitemap.xml", "/healthz", "/admin"])
+                                 "/playground/exposure", "/themes", "/search", "/search?q=deal", "/robots.txt", "/sitemap.xml", "/healthz", "/admin"])
 def test_pages_load(anon, url):
     assert anon.get(url).status_code == 200
 
@@ -288,3 +288,15 @@ def test_home_has_no_grass_and_has_sections_in_colour(anon):
     assert 'data-sec="home"' in home and 'data-sec="lab"' in anon.get("/lab").text and "mrgrass.me" in home
     assert anon.get("/playground/grass").status_code == 404
     assert "Same exposure calculator" in anon.get("/playground").text and 'id="expo"' in anon.get("/playground/exposure").text
+
+
+def test_theme_studio_lists_every_look_and_has_no_inline_script(anon):
+    from app.schema import LOOKS, clean_settings
+    r = anon.get("/themes")
+    assert r.status_code == 200
+    for key, *_ in LOOKS:
+        assert f'data-look="{key}"' in r.text
+    assert len(LOOKS) == 11 and "<script>" not in r.text and "js/studio.js" in r.text
+    assert 'data-default-look="aurora"' in anon.get("/").text
+    data, bad = clean_settings({"look": "Blueprint"})
+    assert data["look"] == "Blueprint" and "look" not in bad

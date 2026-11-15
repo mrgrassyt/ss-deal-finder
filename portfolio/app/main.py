@@ -28,7 +28,7 @@ from starlette.staticfiles import StaticFiles
 from . import importer, media, seed
 from .auth import COOKIE, SESSION_DAYS, Auth
 from .db import DB
-from .schema import ACCENTS, EXTRA_PAGES, PAGES, SETTINGS, STATS, TYPES, clean, clean_settings
+from .schema import ACCENTS, EXTRA_PAGES, LOOKS, PAGES, SETTINGS, STATS, TYPES, clean, clean_settings
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = Path(os.environ.get("SITE_DATA") or ROOT / "data")
@@ -118,7 +118,7 @@ def page(request: Request, template: str, status: int = 200, **ctx) -> HTMLRespo
     ctx.setdefault("description", site["intro"])
     html = env.get_template(template).render(
         request=request, site=site, path=request.url.path, sec=(request.url.path.strip("/").split("/")[0] or "home"), nav=[p for p in PAGES if p[0] not in hidden],
-        extra_nav=[p for p in EXTRA_PAGES if p[0] not in hidden], accent=(site.get("accent") or "Ember").lower(),
+        extra_nav=[p for p in EXTRA_PAGES if p[0] not in hidden], accent=(site.get("accent") or "Ember").lower(), look=next((k for k, n, _, _ in LOOKS if n == site.get("look")), "aurora"),
         site_url=SITE_URL or str(request.base_url).rstrip("/"), year=date.today().year, **ctx)
     return HTMLResponse(html, status_code=status)
 
@@ -145,17 +145,15 @@ async def home(request: Request):
     working = [n for n in public("now") if n.get("section") == "Working on"] or \
               [{"text": p["title"], "note": p.get("summary", "")} for p in projects if p.get("status") == "In Development"]
     ranked = sorted(public("photo"), key=lambda i: (bool(i.get("featured")), i["created"]), reverse=True)
-    shots = ranked[:3]
     site = settings()
-    if site.get("portrait"):                      # a picture of you, uploaded in Settings, wins; otherwise one of the photos not already in the stack
-        band = {"img": site["portrait"], "alt": site.get("name") or "mrgrass"}
-    elif ranked:
-        pick = (ranked[3:] or ranked)[0]
-        band = {"img": pick["image"], "alt": pick.get("title") or "Photograph"}
-    else:
-        band = None
+    shots = [{"href": f"/photos#p-{p['slug']}", "title": p.get("title") or "", "text": p.get("caption") or "", "img": p["image"],
+              "info": "|".join(x for x in (p.get("camera"), p.get("lens"), p.get("settings")) if x)} for p in ranked[:3]]
+    if site.get("portrait"):                      # a picture of you, uploaded in Settings, goes first
+        shots = [{"href": "/about", "title": site.get("name") or "mrgrass", "text": "", "img": site["portrait"], "info": ""}] + shots[:2]
     camera = next((g.get("details") or g.get("name") for g in public("gear") if g.get("group") == "Camera"), "")
-    return page(request, "home.html", hero_photos=shots, band=band, camera=camera, featured=[p for p in projects if p.get("featured")][:4], working=working[:4], feed=feed[:6],
+    numbers = {x["key"]: x for x in stats(site)}
+    hero_stats = [numbers[k] for k in ("projects", "photos", "posts", "listings") if k in numbers][:3]
+    return page(request, "home.html", hero_photos=shots, hero_stats=hero_stats, camera=camera, featured=[p for p in projects if p.get("featured")][:4], working=working[:4], feed=feed[:6],
                 counts={t: len(public(t)) for t in ("project", "experiment", "photo", "product", "listing", "post")})
 
 
@@ -240,6 +238,12 @@ async def about(request: Request):
     gear = public("gear")
     groups = [(g, [x for x in reversed(gear) if x.get("group") == g]) for g in TYPES["gear"]["fields"][1]["options"]]
     return page(request, "about.html", title="About", stats=stats(settings()), gear=[g for g in groups if g[1]])
+
+
+async def themes(request: Request):
+    photos = sorted(public("photo"), key=lambda i: (bool(i.get("featured")), i["created"]), reverse=True)[:3]
+    return page(request, "themes.html", title="Themes", description="Ten complete looks for this site. Try them, pick one and keep it.",
+                looks=LOOKS, samples=photos)
 
 
 async def now(request: Request):
@@ -587,7 +591,7 @@ routes = [
     Route("/", home), Route("/projects", projects), Route("/projects/{slug}", project),
     Route("/lab", lab), Route("/lab/{slug}", experiment), Route("/photos", photos),
     Route("/shop", shop), Route("/shop/{slug}", product), Route("/listings", listings), Route("/listings/{slug}", listing),
-    Route("/devlog", devlog), Route("/devlog/{slug}", post), Route("/about", about), Route("/now", now),
+    Route("/devlog", devlog), Route("/devlog/{slug}", post), Route("/about", about), Route("/now", now), Route("/themes", themes),
     Route("/playground", playground), Route("/playground/embed/{slug}", toy_embed), Route("/playground/{slug}", toy),
     Route("/search", search_page), Route("/api/search", api_search), Route("/api/site", api_site),
     Route("/api/inquiry", api_inquiry, methods=["POST"]),

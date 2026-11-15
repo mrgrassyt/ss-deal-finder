@@ -175,16 +175,31 @@ PAGES = [  # main navigation, in order; the key is what Settings -> hidden pages
     ("photos", "Photography", "/photos"), ("shop", "Shop", "/shop"), ("listings", "My Listings", "/listings"),
     ("devlog", "Devlog", "/devlog"), ("about", "About", "/about"),
 ]
-EXTRA_PAGES = [("now", "Now", "/now"), ("playground", "Playground", "/playground")]
+EXTRA_PAGES = [("now", "Now", "/now"), ("playground", "Playground", "/playground"), ("themes", "Themes", "/themes")]
 STATS = [("projects", "Projects"), ("current", "In development"), ("completed", "Completed projects"), ("photos", "Photographs"),
          ("posts", "Devlog articles"), ("listings", "Active listings"), ("sold", "Items sold"), ("sales", "Total sales")]
 ACCENTS = ["Ember", "Rose", "Ice", "Violet"]
+LOOKS = [  # key, name, one line, four swatch colours (built by tools/build_looks.py)
+    ("aurora", "Aurora", "The current look: a colour for every page, soft glow, glass bars.", ["#ff8a3d", "#ff5f9e", "#a58bff", "#3cc8f4"]),
+    ("liquid-morph", "Liquid Morph", "Soft blobs that melt into each other, pill shapes, springy hovers.", ["#7c4dff", "#00e5ff", "#ff4fd8", "#0b0a1f"]),
+    ("3d-spatial", "3D Spatial", "Everything floats above the page on its own layer and tilts towards you.", ["#3d5afe", "#ffffff", "#dfe5f0", "#10162b"]),
+    ("holographic", "Holographic", "Iridescent foil: colours that shift as the light moves across them.", ["#ff6ec7", "#7873ff", "#00e5ff", "#7dffb2"]),
+    ("cyberpunk-neon", "Cyberpunk Neon", "Black glass, neon yellow, cut corners, a little glitch.", ["#fcee09", "#ff2bd6", "#00f0ff", "#0a0510"]),
+    ("wireframe-3d", "Wireframe 3D", "Everything is an outline: edges only, with a grid floor receding into the distance.", ["#7ee8ff", "#05070a", "#dff7ff", "#2c6e80"]),
+    ("retro-vhs", "Retro VHS", "A tape from 1994: scanlines, colour fringes, a tracking glitch.", ["#ff4fa0", "#2ee6d6", "#ffb347", "#15101f"]),
+    ("minimal-editorial", "Minimal Editorial", "A printed page: serif headlines, hairlines, one ink colour, lots of air.", ["#111111", "#1d3fd1", "#f7f7f4", "#c9c9c2"]),
+    ("clay-3d", "Clay 3D", "Soft, chunky and pastel, as if everything was pressed from modelling clay.", ["#ff7ab8", "#ffd45e", "#7fd6ff", "#ece4f7"]),
+    ("blueprint", "Blueprint", "White lines on drawing-paper blue: grid, dashes and labelled dimensions.", ["#0d3b8c", "#ffffff", "#7fe3ff", "#0a2f70"]),
+    ("ascii-terminal", "ASCII Terminal", "Green phosphor on black, monospace everywhere, brackets around the buttons.", ["#5dff5d", "#b6ffb0", "#2b7a2b", "#050805"]),
+]
+LOOK_NAMES = [n for _, n, _, _ in LOOKS]
 
 SETTINGS = [
     f("headline", "text", "Home page headline", required=True),
     f("name", "text", "Your name on the home page", help="Shown under the big photo, for example: Gustavs, aka mrgrass."),
     f("intro", "textarea", "Home page introduction", rows=3),
-    f("accent", "select", "Accent colour", options=ACCENTS, default="Ember"),
+    f("accent", "select", "Accent colour", options=ACCENTS, default="Ember", help="Used by the Aurora look on the home page."),
+    f("look", "select", "Default look of the site", options=LOOK_NAMES, default="Aurora", help="What new visitors see first. Everyone can pick their own on the Themes page."),
     f("portrait", "image", "Photo or avatar for the About page"),
     f("bio", "markdown", "About: biography"),
     f("interests", "list", "About: current interests", help="One per line."),

@@ -1,0 +1,112 @@
+{
+ "aurora": {
+  "name": "Aurora",
+  "blurb": "The current look: a colour for every page, soft glow, glass bars.",
+  "swatch": [
+   "#ff8a3d",
+   "#ff5f9e",
+   "#a58bff",
+   "#3cc8f4"
+  ]
+ },
+ "liquid-morph": {
+  "name": "Liquid Morph",
+  "blurb": "Soft blobs that melt into each other, pill shapes, springy hovers.",
+  "swatch": [
+   "#7c4dff",
+   "#00e5ff",
+   "#ff4fd8",
+   "#0b0a1f"
+  ]
+ },
+ "3d-spatial": {
+  "name": "3D Spatial",
+  "blurb": "Everything floats above the page on its own layer and tilts towards you.",
+  "swatch": [
+   "#3d5afe",
+   "#ffffff",
+   "#dfe5f0",
+   "#10162b"
+  ]
+ },
+ "holographic": {
+  "name": "Holographic",
+  "blurb": "Iridescent foil: colours that shift as the light moves across them.",
+  "swatch": [
+   "#ff6ec7",
+   "#7873ff",
+   "#00e5ff",
+   "#7dffb2"
+  ]
+ },
+ "cyberpunk-neon": {
+  "name": "Cyberpunk Neon",
+  "blurb": "Black glass, neon yellow, cut corners, a little glitch.",
+  "swatch": [
+   "#fcee09",
+   "#ff2bd6",
+   "#00f0ff",
+   "#0a0510"
+  ]
+ },
+ "wireframe-3d": {
+  "name": "Wireframe 3D",
+  "blurb": "Everything is an outline: edges only, with a grid floor receding into the distance.",
+  "swatch": [
+   "#7ee8ff",
+   "#05070a",
+   "#dff7ff",
+   "#2c6e80"
+  ]
+ },
+ "retro-vhs": {
+  "name": "Retro VHS",
+  "blurb": "A tape from 1994: scanlines, colour fringes, a tracking glitch.",
+  "swatch": [
+   "#ff4fa0",
+   "#2ee6d6",
+   "#ffb347",
+   "#15101f"
+  ]
+ },
+ "minimal-editorial": {
+  "name": "Minimal Editorial",
+  "blurb": "A printed page: serif headlines, hairlines, one ink colour, lots of air.",
+  "swatch": [
+   "#111111",
+   "#1d3fd1",
+   "#f7f7f4",
+   "#c9c9c2"
+  ]
+ },
+ "clay-3d": {
+  "name": "Clay 3D",
+  "blurb": "Soft, chunky and pastel, as if everything was pressed from modelling clay.",
+  "swatch": [
+   "#ff7ab8",
+   "#ffd45e",
+   "#7fd6ff",
+   "#ece4f7"
+  ]
+ },
+ "blueprint": {
+  "name": "Blueprint",
+  "blurb": "White lines on drawing-paper blue: grid, dashes and labelled dimensions.",
+  "swatch": [
+   "#0d3b8c",
+   "#ffffff",
+   "#7fe3ff",
+   "#0a2f70"
+  ]
+ },
+ "ascii-terminal": {
+  "name": "ASCII Terminal",
+  "blurb": "Green phosphor on black, monospace everywhere, brackets around the buttons.",
+  "swatch": [
+   "#5dff5d",
+   "#b6ffb0",
+   "#2b7a2b",
+   "#050805"
+  ]
+ }
+}
