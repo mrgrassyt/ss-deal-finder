@@ -242,6 +242,7 @@ PART_WORDS = (
     r"ekran\w*", r"displej\w*", r"дисплей\w*", r"экран\w*", r"screens?", r"displays?", r"lcd",
     r"matesplat\w*", r"motherboards?", r"материнск\w+ плат\w*", r"kameras? modul\w*", r"camera modules?",
     r"flekss?", r"шлейф\w*", r"aizmugurej\w* (?:vak|stikl|panel)\w*", r"back (?:glass|cover|housing)", r"крышк\w* (?:задн|корпус)\w*",
+    r"dzesetaj\w*", r"coolers?", r"ventilator\w*", r"radiator\w*", r"heatsinks?", r"diskdzin\w*", r"disc drives?", r"дисковод\w*",
     r"korpus\w*", r"housing", r"матриц\w*", r"matric\w*", r"клавиатур\w* для", r"tastatur\w* priekš", r"rezerves dal\w*", r"запчаст\w*", r"spare parts?",
 )
 ACCESSORY_WORDS = (
@@ -254,6 +255,9 @@ ACCESSORY_WORDS = (
     r"steering wheels?", r"racing wheels?", r"sture\w*", r"руль\w*", r"wheels?", r"headsets?", r"ausinas", r"austin\w*", r"наушник\w*",
     r"spele\w*", r"games?", r"игр\w*", r"disks?", r"discs?", r"диск\w*", r"memory cards?", r"charging (?:dock|station)", r"dock\w*", r"dokstacij\w*", r"uzlades stacij\w*", r"lades stacij\w*", r"док-?станц\w*", r"зарядн\w* станц\w*",
 )
+# accessories that, right after a device name, mean the accessory is for sale ("Xbox Series X kontrolieris", "PS5 statīvs")
+HEADLINE_ACCESSORY = (r"kontrolier\w*|controllers?|pult\w*|dualsense|dualshock|gamepads?|joysticks?|stativ\w*|stands?|"
+                      r"kabel\w*|cables?|adapter\w*|ladetaj\w*|chargers?|dock\w*|apvalk\w*|vacin\w*|cases?|covers?|siksn\w*|straps?")
 # gaming peripherals recognised ANYWHERE in the headline ("Logitech G29 stūre PS5/PC"), unless the ad is clearly a console
 GAMING_ACCESSORY = r"(?:ssd|hdd|m\.?2|heatsink|dzesetaj\w*|kontrolier\w*|joy-?cons?|apvalk\w*|vaks|stends|ventilator\w*|dzesesanas|cooling|kamera|atminas kart\w*|memory cards?|hdmi|kabel\w*|cables?|logitech|thrustmaster|fanatec|g29|g920|g923|t300|t150|dualsense|dualshock|controllers?|gamepads?|pult\w*|sture\w*|steering|racing wheel|joystick|geймпад|геймпад\w*|руль\w*|headsets?|spelu stur\w*|spele\w*|games?|игр\w*)"
 CONSOLE_NOUN = r"(?:konsol\w*|console|приставк\w*|playstation ?[345] (?:slim|pro|digital)|ps[345] (?:slim|pro|digital)|xbox series [sx]|xbox one (?:s|x)|switch (?:oled|lite))"
@@ -263,7 +267,7 @@ SALE_VERBS = r"(?:pardodu|pardod|piedavaju|продаю|продам|selling|sel
 STOP_BETWEEN = {"ar", "with", "с", "со", "и", "un", "+", "bez", "без", "and", "plus", "ieskaitot", "kopa"}
 DAMAGE_AFTER = (r"bojat", r"saplis", r"plis", r"cracked", r"broken", r"разбит", r"треснут", r"nestrada", r"not working", r"не работает")
 FOR_WORDS = r"(?:priekš\w*|priekš|paredz\w*|piemerot\w*|saderig\w*|for|compatible with|для|под|совместим\w*)"
-KIND_CATEGORIES = {"peripheral", "phone", "tablet", "wearable", "laptop", "console", "drone", "camera", "other", "smart_home", "pc_parts_other"}
+KIND_CATEGORIES = {"gpu", "peripheral", "phone", "tablet", "wearable", "laptop", "console", "drone", "camera", "other", "smart_home", "pc_parts_other"}
 
 
 def _first_sentence(text: str, n: int = 220) -> str:
@@ -322,6 +326,8 @@ def detect_kind(title: str, description: str, category: str | None = None) -> tu
     if sold_whole_for_parts(f"{title}\n{description or ''}") and not re.search(rf"^(?:\S+\s+){{0,2}}(?:{parts_re}|{acc_re})", norm(title or "")):
         return "device", "whole device sold for parts"
     candidates = [norm(title or "")[:140], _first_sentence(description or "")]
+    if category == "gpu":                 # a graphics card ad describes its fans and cooler: only the headline decides
+        candidates = candidates[:1]
     for kind, rx in (("accessory", acc_re), ("part", parts_re)):
         for text in candidates:
             if not text:
@@ -348,6 +354,14 @@ def detect_kind(title: str, description: str, category: str | None = None) -> tu
                 if not withy and not re.search(fold(CONSOLE_NOUN), text):
                     return kind, f"title ends with a {kind}"
             # B3) "<device name/model code> battery|screen ..." in a short headline, no "with/ar/+" before it
+            if kind == "accessory" and len(words) <= 8:
+                hl = " ".join(words)
+                mm = re.search(rf"(?:^|\s)({HEADLINE_ACCESSORY})(?:\s|$)", hl)
+                if mm:
+                    head = hl[:mm.start(1)]
+                    if head.strip() and "," not in head and not re.search(r"(?:^|\s)\d{1,2}\s*$", head) and "+" not in head \
+                            and not any(re.search(rf"(?<![a-z]){w}(?![a-z])", head) for w in ("ar", "with", "с", "un", "and", "komplekta", "ieskaitot", "bez")):
+                        return kind, f"headline names a device and an accessory: '{mm.group(1)}'"
             if kind == "part" and len(words) <= 8:
                 mm = re.search(rf"(?:^|\s)({rx})(?:\s|$)", " ".join(words))
                 if mm:

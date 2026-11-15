@@ -111,6 +111,13 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     },
     "ntfy": {"enabled": False, "server": "https://ntfy.sh", "topic": ""},
     "telegram": {"enabled": False, "chat_id": ""},
+    "ai": {                                  # Gemini second opinion on what an ad sells (see ssdeal/ai.py)
+        "enabled": True,                     # only does anything once a key exists (own, or the server's)
+        "model": "gemini-3.5-flash-lite",
+        "daily_limit": 300,                  # checks per day for this account
+        "scope": "flagged",                  # "flagged" = only listings the rules found interesting; "all" = every new one
+        "min_confidence": 0.6,
+    },
     "preferences": {
         "categories": {},     # category_key -> -1..1 explicit interest
         "brands": {},         # brand -> -1..1
@@ -134,7 +141,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     "api": {"host": "127.0.0.1", "port": 8765, "allow_lan": False, "trust_tailscale": True},
 }
 
-SECRET_KEYS = ("discord_token", "ntfy_token", "api_token", "telegram_token")
+SECRET_KEYS = ("discord_token", "ntfy_token", "api_token", "telegram_token", "gemini_api_key")
 
 
 def _deep_merge(base: dict, override: dict) -> dict:

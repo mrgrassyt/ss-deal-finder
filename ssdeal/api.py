@@ -195,6 +195,10 @@ def create_api(svc) -> FastAPI:
     def status():
         return svc.status()
 
+    @app.get("/api/ai")
+    def ai_status():
+        return svc.scanner.ai.status()
+
     @app.get("/api/dashboard")
     def dashboard():
         now = time.time()

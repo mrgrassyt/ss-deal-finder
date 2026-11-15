@@ -38,6 +38,7 @@ from starlette.routing import Route
 
 from . import server as server_mod
 from .config import Settings
+from . import ai as ai_mod
 from .fetcher import PoliteFetcher
 from .logs import get_logger
 
@@ -205,6 +206,79 @@ class Broker:
             self.db.commit()
         return out
 
+    # ---- shared AI second opinion: one Gemini call per ad text for every account, with a daily cap
+    def ai_setup(self, secrets_path: Path) -> None:
+        self.ai_path = secrets_path
+        self.db.execute("CREATE TABLE IF NOT EXISTS ai (hash TEXT PRIMARY KEY, at REAL, result TEXT)")
+        self.db.execute("CREATE TABLE IF NOT EXISTS ai_calls (day TEXT PRIMARY KEY, n INTEGER)")
+        self.db.commit()
+        self.ai_error = ""
+
+    def ai_conf(self) -> dict:
+        try:
+            d = json.loads(self.ai_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            d = {}
+        return {"key": os.environ.get("SSDEAL_GEMINI_KEY") or d.get("gemini_api_key", ""),
+                "model": d.get("gemini_model") or ai_mod.DEFAULT_MODEL,
+                "daily_limit": int(d.get("ai_daily_limit") or os.environ.get("SSDEAL_AI_DAILY", "500"))}
+
+    def ai_save(self, **kw) -> None:
+        try:
+            d = json.loads(self.ai_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            d = {}
+        d.update({k: v for k, v in kw.items() if v is not None})
+        tmp = self.ai_path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(d), encoding="utf-8")
+        with contextlib.suppress(OSError):
+            tmp.chmod(0o600)
+        os.replace(tmp, self.ai_path)
+
+    def ai_used_today(self) -> int:
+        row = self.db.execute("SELECT n FROM ai_calls WHERE day=?", (time.strftime("%Y-%m-%d"),)).fetchone()
+        return row[0] if row else 0
+
+    async def ai_review(self, item: dict, transport=None) -> tuple[int, dict]:
+        h = ai_mod.text_hash(item.get("title", ""), item.get("description", ""))
+        row = self.db.execute("SELECT result FROM ai WHERE hash=?", (h,)).fetchone()
+        if row:
+            return 200, {"review": json.loads(row[0]), "cached": True}
+        conf = self.ai_conf()
+        if not conf["key"]:
+            return 503, {"detail": "No Gemini key on this server yet (admin: Manage users -> AI check)"}
+        if self.ai_used_today() >= conf["daily_limit"]:
+            return 429, {"detail": f"Daily AI limit ({conf['daily_limit']}) reached on this server"}
+        if h in self.inflight:
+            return 200, await asyncio.shield(self.inflight[h])
+        fut = asyncio.ensure_future(self._ai_call(conf, item, h, transport))
+        self.inflight[h] = fut
+        try:
+            res = await fut
+        finally:
+            self.inflight.pop(h, None)
+        return (200, res) if "review" in res else (502, res)
+
+    async def _ai_call(self, conf: dict, item: dict, h: str, transport) -> dict:
+        day = time.strftime("%Y-%m-%d")
+        self.db.execute("INSERT INTO ai_calls VALUES (?,1) ON CONFLICT(day) DO UPDATE SET n=n+1", (day,))
+        self.db.commit()
+        try:
+            res = await ai_mod.ask_gemini(conf["key"], item, conf["model"], transport)
+        except ai_mod.AIError as e:
+            self.ai_error = str(e)
+            return {"detail": str(e)}
+        self.ai_error = ""
+        self.db.execute("INSERT OR REPLACE INTO ai VALUES (?,?,?)", (h, time.time(), json.dumps(res)))
+        self.db.commit()
+        return {"review": res, "cached": False}
+
+    def ai_status(self) -> dict:
+        c = self.ai_conf()
+        n = self.db.execute("SELECT COUNT(*) FROM ai").fetchone()[0]
+        return {"key_set": bool(c["key"]), "model": c["model"], "used_today": self.ai_used_today(), "daily_limit": c["daily_limit"],
+                "reviews_stored": n, "last_error": self.ai_error}
+
     def stats(self) -> dict:
         n = self.db.execute("SELECT COUNT(*) FROM pages").fetchone()[0]
         total = self.hits + self.misses
@@ -244,6 +318,7 @@ class Hub:
             d.mkdir(parents=True, exist_ok=True)
         self.store = Store(self.hub_home)
         self.broker = Broker(Settings(self.hub_home), self.hub_home / "pages.db")
+        self.broker.ai_setup(self.hub_home / "secrets.json")
         self.token = secrets.token_hex(24)                      # only the child copies know it
         self.children: dict[str, Child] = {}
         self.throttle = Throttle()
@@ -487,7 +562,12 @@ async function load(){
  const iv=$('#invites');iv.replaceChildren();
  for(const c of d.invites){const p=el('p');p.append(el('code',location.origin+'/signup?code='+c));iv.append(p)}
  $('#cap').textContent=d.users.length+' of '+d.max+' accounts used';
+ if(d.ai)aiShow(d.ai);
  $('#cache').textContent='One shared scan for everyone: '+d.broker.requests+' requests to SS.lv, '+d.broker.cache_hits+' pages handed out from the shared copy ('+d.broker.shared_pct+'% of all page requests).'}
+function aiShow(a){$('#aistat').textContent=(a.key_set?'Key saved. ':'No key yet — the app works without it, using its rules only. ')+'Model: '+a.model+'. Checks today: '+a.used_today+' of '+a.daily_limit+'. Ads checked so far: '+a.reviews_stored+'.'+(a.last_error?' Last problem: '+a.last_error:'');$('#aimodel').placeholder=a.model}
+$('#aisave').onclick=async()=>{try{const r=await api('/hub/ai',{key:$('#aikey').value,model:$('#aimodel').value,daily_limit:$('#ailim').value});$('#aikey').value='';aiShow(r.status);$('#aimsg').textContent='Saved.'}catch(e){$('#aimsg').textContent=e.message}};
+$('#airm').onclick=async()=>{if(confirm('Remove the Gemini key?')){const r=await api('/hub/ai',{remove:true});aiShow(r.status);$('#aimsg').textContent='Key removed.'}};
+$('#aitest').onclick=async()=>{$('#aimsg').textContent='Asking Gemini about a test ad ("PS5 SSD 1TB")...';try{const r=await api('/hub/ai',{test:true});aiShow(r.status);$('#aimsg').textContent='Works. Gemini says: '+r.test.kind+' — '+r.test.item+(r.test.problem?' ('+r.test.problem+')':'')}catch(e){$('#aimsg').textContent='Problem: '+e.message}};
 $('#inv').onclick=async()=>{try{await api('/hub/invite',{});load()}catch(e){alert(e.message)}};
 load().catch(e=>alert(e.message));setInterval(()=>load().catch(()=>{}),15000);
 """
@@ -498,6 +578,15 @@ def admin_page() -> HTMLResponse:
 <h1>Manage users</h1><p><a href=/>Back to the app</a> · <a href=/account>Account</a></p>
 <div class=card><table><thead><tr><th>User<th>State<th>Memory<th></thead><tbody id=users></tbody></table>
 <p id=cap style=margin-top:12px></p><p id=cache></p></div>
+<div class=card><h2 style=margin-top:0>AI check (Gemini)</h2>
+<p>Before an alert goes out, Gemini reads the ad and says whether it is really the device (not an SSD <i>for</i> a PS5, not GDDR5 sold as DDR5...).
+One check per ad is shared by everyone on this server. Get a free key at <a href="https://aistudio.google.com/apikey" target=_blank rel=noopener>aistudio.google.com/apikey</a> and paste it here.</p>
+<p id=aistat></p>
+<label for=aikey>Gemini API key</label><input id=aikey type=password autocomplete=off placeholder="paste the key (it is never shown again)">
+<label for=aimodel>Model</label><input id=aimodel placeholder="gemini-3.5-flash-lite">
+<label for=ailim>Max checks per day (whole server)</label><input id=ailim inputmode=numeric placeholder="500">
+<div class=row><button id=aisave>Save</button><button id=aitest class=sec style="margin-top:16px">Test the key</button><button id=airm class=sec style="margin-top:16px">Remove key</button></div>
+<p id=aimsg></p></div>
 <div class=card><h2 style=margin-top:0>Invite someone</h2><p>Make a link, send it to your friend. It works once and for 7 days.</p>
 <div id=invites></div><button id=inv>New invite link</button></div><script>{ADMIN_JS}</script>""", wide=True)
 
@@ -644,7 +733,7 @@ def create_app(hub: Hub) -> Starlette:
         users = [{"name": n, "admin": u["admin"], "running": hub.child(n).running, "mem_mb": hub.child(n).mem_mb()} for n, u in hub.store.users.items()]
         hub.store.prune_invites()
         return {"users": users, "invites": list(hub.store.data["invites"]), "max": hub.max_users,
-                "broker": hub.broker.stats()}
+                "broker": hub.broker.stats(), "ai": hub.broker.ai_status()}
 
     async def hub_invite(request: Request):
         me = admin_user(request)
@@ -712,6 +801,41 @@ def create_app(hub: Hub) -> Starlette:
         url = str((await request.json()).get("url", ""))
         return await hub.broker.fetch(url)
 
+    async def broker_ai(request: Request):
+        if not broker_ok(request):
+            return JSONResponse({"detail": "no"}, status_code=403)
+        code, body = await hub.broker.ai_review((await request.json()).get("item") or {})
+        return JSONResponse(body, status_code=code)
+
+    async def broker_ai_status(request: Request):
+        if not broker_ok(request):
+            return JSONResponse({"detail": "no"}, status_code=403)
+        return {"key_set": hub.broker.ai_status()["key_set"]}
+
+    async def hub_ai(request: Request):
+        if not admin_user(request) or not same_origin(request):
+            return JSONResponse({"detail": "Admins only"}, status_code=403)
+        d = await request.json()
+        if d.get("remove"):
+            hub.broker.ai_save(gemini_api_key="")
+        elif d.get("key") is not None or d.get("model") or d.get("daily_limit"):
+            key = str(d.get("key") or "").strip()
+            hub.broker.ai_save(gemini_api_key=key or None, gemini_model=(str(d.get("model") or "").strip() or None),
+                               ai_daily_limit=(int(d["daily_limit"]) if str(d.get("daily_limit") or "").isdigit() else None))
+        if d.get("test"):
+            sample = {"title": "PS5 SSD 1TB WD Black SN850X", "description": "Pārdodu SSD priekš PS5, lietots 3 mēnešus.", "price": 90,
+                      "ss_path": "/lv/electronics/game-consoles/", "guess": {"product": "PlayStation 5", "category": "console",
+                                                                              "kind": "device", "condition": "used"}}
+            conf = hub.broker.ai_conf()
+            if not conf["key"]:
+                return JSONResponse({"detail": "Save a key first."}, status_code=400)
+            try:
+                res = await ai_mod.ask_gemini(conf["key"], sample, conf["model"])
+            except ai_mod.AIError as e:
+                return JSONResponse({"detail": str(e)}, status_code=400)
+            return {"ok": True, "test": res, "status": hub.broker.ai_status()}
+        return {"ok": True, "status": hub.broker.ai_status()}
+
     async def broker_reset(request: Request):
         if not broker_ok(request):
             return JSONResponse({"detail": "no"}, status_code=403)
@@ -774,6 +898,9 @@ def create_app(hub: Hub) -> Starlette:
         Route("/api/server/import", J(server_import), methods=["POST"]),
         Route("/_broker/fetch", J(broker_fetch), methods=["POST"]),
         Route("/_broker/reset", J(broker_reset), methods=["POST"]),
+        Route("/_broker/ai", J(broker_ai), methods=["POST"]),
+        Route("/_broker/ai_status", J(broker_ai_status)),
+        Route("/hub/ai", J(hub_ai), methods=["POST"]),
         Route("/{path:path}", J(proxy), methods=methods),
     ]
 

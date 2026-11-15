@@ -5,12 +5,15 @@ something is re-evaluated (e.g. after market recalculation or feedback).
 """
 from __future__ import annotations
 
+import json
+
 import re
 import time
 
 from .catalog import Match, identify
 from .db import Database, jdumps, jloads
 from .feeds import CATEGORIES, category_from_path, is_service_path
+from .ai import apply_review, text_hash
 from .flip import compute_flip
 from .learning import PreferenceModel
 from .logs import get_logger
@@ -43,6 +46,7 @@ class Engine:
         match = identify(title, description or "", path_cat)
         category = path_cat
         if match and (path_cat in ("pc_parts_other", "other", "camera_accessory") or
+                      (match.category == "storage" and path_cat == "console") or
                       (match.category in CAT_REFINE and path_cat in CAT_REFINE)):
             category = match.category if match.category in CATEGORIES else path_cat
         cond, evidence = detect_condition(text, attrs)
@@ -192,7 +196,12 @@ class Engine:
                               self.settings.get("flip", {}) or {})
             if fl and not fl.get("rough") and fl["profit"] < 0:
                 level, why = "IGNORE", f"would be a loss to resell (about −€{abs(fl['profit'])})"
+        ai = self.ai_review(listing)
+        ai_flags: list[str] = []
+        if ai:
+            level, why, ai_flags = apply_review(ai, level, why, listing, float((self.settings.get("ai", {}) or {}).get("min_confidence", 0.6)))
         details = {
+            "ai": ({**ai, "flags": ai_flags} if ai else None),
             "deal": {k: deal[k] for k in ("score", "confidence", "reasons", "headline", "repair", "flags_out")},
             "valuation": deal["valuation"],
             "personal": personal,
@@ -204,6 +213,18 @@ class Engine:
         return {"deal_score": deal["score"], "personal_score": personal["score"], "confidence": deal["confidence"],
                 "classification": level, "score_details": details, "watch_hits": hits, "new_kind": new_kind, "rekey": rekey,
                 "flags": listing["flags"]}
+
+    def ai_review(self, listing: dict) -> dict | None:
+        """The stored Gemini review for this exact ad text, if any (made by the scanner, see ssdeal/ai.py)."""
+        if not listing.get("id"):
+            return None
+        row = self.db.one("SELECT text_hash, result FROM ai_reviews WHERE listing_id=?", (listing["id"],))
+        if not row or row["text_hash"] != text_hash(listing.get("title") or "", listing.get("description") or ""):
+            return None
+        try:
+            return json.loads(row["result"])
+        except ValueError:
+            return None
 
     def classify(self, listing: dict, deal: dict, personal: dict, hits: list[dict]) -> tuple[str, str]:
         n = self.settings.get("notify", {})

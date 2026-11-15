@@ -16,6 +16,7 @@ from .engine import Engine
 from .feeds import effective_feeds
 from .fetcher import PoliteFetcher
 from .logs import get_logger
+from .ai import AIReviewer
 from .notify import Notifier
 from .parsers import ListRow, looks_like_rss, parse_detail_page, parse_list_page, parse_rss
 
@@ -39,6 +40,7 @@ class Scanner:
         self.settings = settings
         self.fetcher = fetcher
         self.engine = engine
+        self.ai = AIReviewer(db, settings)
         self.notifier = notifier
         self.current: str | None = None
         self.feed_last_run: dict[str, float] = {}
@@ -341,6 +343,10 @@ class Scanner:
                     continue
                 res = self.engine.evaluate(row)
                 self.engine.apply_scores(lid, res)
+            if res["classification"] != "IGNORE" and self.ai.available():
+                if await self.ai.check(row):                     # a second opinion before anyone is alerted
+                    res = self.engine.evaluate(row)
+                    self.engine.apply_scores(lid, res)
             self._record_watch_matches(row, res)
             log.event("listing.scored", listing_id=lid, deal=res["deal_score"], personal=res["personal_score"],
                       level=res["classification"], confidence=res["confidence"],
@@ -384,6 +390,26 @@ class Scanner:
         for w in res["watch_hits"]:
             self.db.execute("INSERT OR IGNORE INTO watch_matches(watch_id, listing_id, matched_at, price) VALUES(?,?,?,?)",
                             (w["id"], row["id"], time.time(), row["price"]))
+
+    # ---------------------------------------------------------------- AI second opinion in the background
+    async def ai_step(self, n: int = 4) -> int:
+        """Check a few listings that have no AI review yet: the interesting ones first (from history crawls etc.), and
+        with scope "all" also every new listing. Alerts are checked inline in process_candidates instead."""
+        if not self.ai.available():
+            return 0
+        scope = (self.settings.get("ai", {}) or {}).get("scope", "flagged")
+        cond = "l.classification!='IGNORE'" if scope != "all" else "(l.classification!='IGNORE' OR l.first_seen>?)"
+        args = () if scope != "all" else (time.time() - 86400,)
+        rows = self.db.query(f"""SELECT l.* FROM listings l LEFT JOIN ai_reviews a ON a.listing_id=l.id
+                                 WHERE l.status='active' AND a.listing_id IS NULL AND {cond}
+                                 ORDER BY (l.classification='GOOD_DEAL') DESC, l.deal_score DESC LIMIT ?""", args + (n,))
+        done = 0
+        for row in rows:
+            if not await self.ai.check(row):
+                break
+            self.engine.apply_scores(row["id"], self.engine.evaluate(row))
+            done += 1
+        return done
 
     # ---------------------------------------------------------------- older listings
     async def history_step(self) -> dict:

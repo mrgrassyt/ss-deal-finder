@@ -145,7 +145,28 @@ function scan(el, d, reload) {
     <div class="table-wrap"><table class="data"><thead><tr><th>Section</th><th>Path</th><th>Enabled</th><th>Fast</th></tr></thead><tbody>
     ${d.feeds.map((f) => `<tr><td>${esc(f.key.replace(/_/g, ' '))}</td><td class="small muted">${esc(f.path)}</td>
       <td><input type="checkbox" data-feed="${f.key}" data-f="enabled" ${f.enabled ? 'checked' : ''}></td><td><input type="checkbox" data-feed="${f.key}" data-f="priority" ${f.priority ? 'checked' : ''}></td></tr>`).join('')}
-    </tbody></table></div></div>`;
+    </tbody></table></div></div>
+  <div class="card" style="margin-top:14px" id="aicard"><h2>AI check (Gemini)</h2>
+    <p class="hint">Before an alert, Gemini reads the ad and says whether it is really the device: not an SSD <i>for</i> a PS5, not GDDR5 graphics memory sold as DDR5 RAM, not an old model with a new name.
+      It never sets prices. On a shared server the admin's key is used; your own key here takes over if you set one. Free key: <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a></p>
+    <p class="hint" id="aistat">Checking…</p>
+    <form id="aif" class="field-row" style="margin-top:10px">
+      <label class="field">Your own Gemini key ${d.secrets.gemini_api_key ? '<span class="tag good">saved</span>' : '<span class="tag">not set</span>'}<input type="password" id="aikey" autocomplete="off" placeholder="optional"></label>
+      ${num('daily_limit', 'Max checks per day', (d.settings.ai || {}).daily_limit ?? 300, 'min=0 max=5000')}
+      <label class="field">Which listings<select name="scope"><option value="flagged" ${(d.settings.ai || {}).scope !== 'all' ? 'selected' : ''}>Only ones the rules find interesting (cheapest)</option><option value="all" ${(d.settings.ai || {}).scope === 'all' ? 'selected' : ''}>Every new listing</option></select></label>
+    </form>
+    <div class="row" style="margin-top:12px">${chk('ai_enabled', 'AI check on', (d.settings.ai || {}).enabled !== false)}<button class="btn primary" id="aisave">Save</button>${d.secrets.gemini_api_key ? '<button class="btn" id="airm">Remove my key</button>' : ''}</div></div>`;
+  get('/ai').then((a) => {
+    el.querySelector('#aistat').textContent = !a.own_key && !a.shared ? (a.on_server ? 'The server has no Gemini key yet (the admin adds it under Manage users), and you have not set your own: the app uses its rules only.' : 'No key yet: the app uses its rules only.')
+      : `${a.own_key ? 'Using your own key' : 'Using the server\'s shared key'} · model ${a.model} · ${a.used_today} checks today (limit ${a.daily_limit})${a.last_error ? ' · last problem: ' + a.last_error : ''}`;
+  }).catch(() => { el.querySelector('#aistat').textContent = ''; });
+  el.querySelector('#aisave').onclick = async () => {
+    const v = collect(el.querySelector('#aif')), k = el.querySelector('#aikey').value.trim();
+    try { if (k) await post('/settings/secret', { key: 'gemini_api_key', value: k });
+      await save({ ai: { daily_limit: v.daily_limit, scope: v.scope, enabled: el.querySelector('[name=ai_enabled]').checked } }, 'AI settings saved'); reload(); } catch (e) { fail(e); }
+  };
+  const airm = el.querySelector('#airm');
+  if (airm) airm.onclick = async () => { await post('/settings/secret', { key: 'gemini_api_key', value: '' }); ok('Key removed'); reload(); };
   const est = () => {
     const v = collect(el.querySelector('#sf'));
     const fast = d.feeds.filter((f) => f.enabled && f.priority).length, slow = d.feeds.filter((f) => f.enabled && !f.priority).length;

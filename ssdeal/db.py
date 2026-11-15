@@ -237,6 +237,13 @@ CREATE TABLE IF NOT EXISTS app_errors (
     message TEXT
 );
 
+CREATE TABLE IF NOT EXISTS ai_reviews (
+    listing_id INTEGER PRIMARY KEY,
+    text_hash TEXT NOT NULL,
+    result TEXT NOT NULL,
+    at REAL NOT NULL,
+    source TEXT DEFAULT 'own'
+);
 CREATE TABLE IF NOT EXISTS pending_clarifications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     listing_id INTEGER,

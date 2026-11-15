@@ -184,7 +184,7 @@ def _cap_bucket(value: float, unit: str) -> str:
 
 
 def match_ram(t: str) -> Match | None:
-    m = re.search(r"ddr\s*([2-5])", t)
+    m = re.search(r"(?<![a-z])(?:lp)?ddr\s*([2-5])", t)                 # not GDDR5/GDDR6 = graphics card memory
     if not m:
         return None
     gen = m.group(1)
@@ -206,7 +206,7 @@ def match_ram(t: str) -> Match | None:
 
 def match_storage(t: str) -> Match | None:
     kind = None
-    if re.search(r"nvme|m\.2|m2 ", t):
+    if re.search(r"nvme|m\.2|m2 |9[789]0 ?(?:pro|evo|plus)|\bsn\d{3}x?\b|kc3000|firecuda 5", t):
         kind = "nvme"
     elif re.search(r"\bssd\b", t):
         kind = "ssd-sata"
@@ -496,6 +496,22 @@ def loose_match(t: str, category: str) -> Match | None:
 
 # ---------------------------------------------------------------- main entry
 
+_DRIVE = r"(?:ssd|nvme|m\.?2|hdd|cietais disks?|sn\d{3}x?|9[789]0 ?(?:pro|evo|plus)|firecuda|kc3000)"
+_HOST = r"(?:ps ?[2-5]|playstation ?[2-5]|xbox(?: series [sx]| one)?|steam deck|rog ally|legion go)"
+_WITH = r"(?:\+|\bar\b|\bwith\b|\bun\b|\band\b|\bkomplekt\w*|\bieskaitot\b|\bc\b|\bупгрейд\w*|\buzlabot\w*|\bupgraded?\b|\bnomainit\w*)"
+
+
+def drive_for_device(t: str) -> bool:
+    """A storage drive offered for a console ("PS5 SSD 1TB", "SSD priekš PS5", "WD SN850X 2TB, der PS5") rather than a
+    console that comes with a bigger drive ("PS5 ar 2TB SSD", "PS5 + 1TB SSD")."""
+    head = " ".join(t.split()[:14])
+    d, h = re.search(rf"(?<![a-z0-9]){_DRIVE}(?![a-z0-9])", head), re.search(rf"(?<![a-z0-9]){_HOST}(?![a-z0-9])", head)
+    if not d or not h or re.search(r"konsol|console|приставк|\bspel|\bgames?\b|kontrolier|controller|dualsense", head):
+        return False
+    first, second = (d, h) if d.start() < h.start() else (h, d)
+    return not re.search(_WITH, head[first.start():second.start()]) or d.start() < h.start()
+
+
 def identify(title: str, description: str = "", category: str = "other") -> Match | None:
     """Identify the product in an ad. ``category`` is the category implied by the SS.lv path."""
     head = norm(title)
@@ -520,6 +536,14 @@ def identify(title: str, description: str = "", category: str = "other") -> Matc
             return match_lens(t, False)
         if category in ("monitor", "tv"):
             return match_simple(t) if category == "tv" and re.search(r"switch|ps\d|xbox", t) else match_display(t, category)
+        if category in COMPONENT_FIRST:                       # an ad in the SSD feed is an SSD, even if it says "for PS5"
+            mt = COMPONENT_FIRST[category](t)
+            if mt:
+                return mt
+            if category == "motherboard":                     # "AM5 motherboard DDR5": DDR5 is what it supports, not RAM
+                return match_simple(t) if re.search(r"laptop|notebook", t) else None
+        if drive_for_device(t):                               # "PS5 SSD 1TB", "SN850X 2TB der PS5": the drive, not the console
+            return match_storage(t) or Match("storage:nvme", "NVMe SSD", "storage", find_brand(t), 0.3)
         return (match_gpu(t) or match_cpu(t) or match_simple(t) or match_ram(t) or match_storage(t)
                 or match_psu(t) or match_motherboard(t) or match_camera(t, photo_ctx) or match_lens(t, photo_ctx)
                 or match_display(t, category))
@@ -531,6 +555,10 @@ def identify(title: str, description: str = "", category: str = "other") -> Matc
         m.brand = find_brand(full)
     from .generations import refine
     return refine(m, title, description or "")
+
+
+COMPONENT_FIRST = {"storage": match_storage, "ram": match_ram, "gpu": match_gpu, "cpu": match_cpu, "psu": match_psu,
+                   "motherboard": match_motherboard}
 
 
 def pc_components(title: str, description: str = "") -> list[Match]:
