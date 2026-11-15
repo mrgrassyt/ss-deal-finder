@@ -1,0 +1,82 @@
+[
+ {
+  "key": "photo-gate-puddle",
+  "type": "photo",
+  "published": true,
+  "created": 1793534400.0,
+  "images": {
+   "image": "gate-puddle.jpg"
+  },
+  "data": {
+   "title": "Gate and puddle",
+   "caption": "An old gate reflected in a puddle on a grey day.",
+   "album": "Autumn",
+   "camera": "Nikon D610",
+   "featured": true
+  }
+ },
+ {
+  "key": "photo-autumn-path",
+  "type": "photo",
+  "published": true,
+  "created": 1793534460.0,
+  "images": {
+   "image": "autumn-path.jpg"
+  },
+  "data": {
+   "title": "Autumn path",
+   "caption": "A path covered in fallen leaves between tall trees.",
+   "album": "Autumn",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-forest-trail",
+  "type": "photo",
+  "published": true,
+  "created": 1793534520.0,
+  "images": {
+   "image": "forest-trail.jpg"
+  },
+  "data": {
+   "title": "Forest trail",
+   "caption": "A paved trail curving through the forest in autumn.",
+   "album": "Autumn",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-tree-avenue",
+  "type": "photo",
+  "published": true,
+  "created": 1793534580.0,
+  "images": {
+   "image": "tree-avenue.webp"
+  },
+  "data": {
+   "title": "Tree-lined avenue",
+   "caption": "A long road lined with trees under an overcast sky.",
+   "album": "Autumn",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-courtyard-autumn",
+  "type": "photo",
+  "published": true,
+  "created": 1793534640.0,
+  "images": {
+   "image": "courtyard-autumn.jpg"
+  },
+  "data": {
+   "title": "Courtyard in autumn",
+   "caption": "A quiet courtyard behind an apartment building, with a puddle and yellow leaves.",
+   "album": "Autumn",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ }
+]
