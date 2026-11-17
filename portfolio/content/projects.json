@@ -1,20 +1,20 @@
 [
  {
-  "key": "project-mrgrass-me-hero-2",
+  "key": "project-mrgrass-me-hero-3",
   "type": "project",
   "update": "mrgrass-me",
   "images": {
-   "hero": "mrgrass-me-hero.jpg"
+   "hero": "mrgrass-me-hero-3.jpg"
   },
   "data": {
-   "description": "One place for everything I make and learn. Projects, hardware notes, photos, a devlog and the things I am selling all live here, and I can add or change any of it from a private dashboard without touching code.\n\nEvery page has its own colour, and the home page is built around my own photographs.",
+   "description": "One place for everything I make and learn. Projects, hardware notes, photos, a devlog and the things I am selling all live here, and I can add or change any of it from a private dashboard without touching code.\n\nEvery page has its own colour, and the home page is a full-screen photo you can switch between my own shots.",
    "features": [
     "Separate sections for projects, tech lab, photography, listings and devlog",
     "Private dashboard for adding and editing everything, with image uploads",
     "Search across the whole site",
     "A terminal, for those who prefer typing",
-    "Light and dark themes, a colour for every page",
-    "Small tools in the playground, including a flip calculator and an exposure calculator"
+    "Small tools in the playground, including a flip calculator and an exposure calculator",
+    "Theme Studio with 11 complete looks, saved per visitor"
    ]
   }
  }
