@@ -1,0 +1,67 @@
+[
+ {
+  "key": "photo-night-lamp-zona",
+  "type": "photo",
+  "published": true,
+  "created": 1794960060.0,
+  "images": {
+   "image": "night-lamp-zona.jpg"
+  },
+  "data": {
+   "title": "Zona",
+   "caption": "A street lamp glowing yellow through the night haze above a parking-zone sign, in black and white with only the lamp in colour.",
+   "album": "Night",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-night-canal-lamps",
+  "type": "photo",
+  "published": true,
+  "created": 1794960120.0,
+  "images": {
+   "image": "night-canal-lamps.jpg"
+  },
+  "data": {
+   "title": "Three lamps, one canal",
+   "caption": "Three street lamps and their reflections in a canal at night, in black and white with only the water left in colour.",
+   "album": "Night",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-night-fire-basket",
+  "type": "photo",
+  "published": true,
+  "created": 1794960180.0,
+  "images": {
+   "image": "night-fire-basket.jpg",
+   "before": "night-fire-basket-colour.jpg"
+  },
+  "data": {
+   "title": "Fire basket",
+   "caption": "Glowing embers in a cut-out steel fire basket. Everything except the fire is in black and white. Drag the slider to see the colour version.",
+   "album": "Night",
+   "camera": "Nikon D610",
+   "featured": true
+  }
+ },
+ {
+  "key": "photo-night-red-arch",
+  "type": "photo",
+  "published": true,
+  "created": 1794960240.0,
+  "images": {
+   "image": "night-red-arch.jpg"
+  },
+  "data": {
+   "title": "Red arch",
+   "caption": "An old stone arch lit in red at night, with people walking through it as silhouettes.",
+   "album": "Night",
+   "camera": "Nikon D610",
+   "featured": true
+  }
+ }
+]
