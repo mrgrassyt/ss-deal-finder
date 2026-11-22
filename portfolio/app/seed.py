@@ -29,7 +29,6 @@ SETTINGS = {
     "contact_email": "",
     "hidden_pages": [],
     "hidden_stats": ["sold", "sales"],
-    "terminal": True,
 }
 
 PROJECTS = [
@@ -71,7 +70,7 @@ PROJECTS = [
         "purpose": "I wanted a home for my work that I control, instead of scattering it across profiles.",
         "features": ["Separate sections for projects, tech lab, photography, shop, marketplace listings and devlog",
                      "Private dashboard for adding and editing everything, with image uploads",
-                     "Search across the whole site", "A terminal, for those who prefer typing", "Light and dark themes"],
+                     "Search across the whole site", "Light and dark themes"],
         "technologies": ["Python", "Starlette", "SQLite", "HTML", "CSS", "JavaScript", "Docker", "Caddy"],
         "changelog": [["2026-11-15", "First version online."]],
         "demo": "https://mrgrass.me",

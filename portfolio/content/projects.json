@@ -1,6 +1,6 @@
 [
  {
-  "key": "project-mrgrass-me-hero-3",
+  "key": "project-mrgrass-me-hero-4",
   "type": "project",
   "update": "mrgrass-me",
   "images": {
@@ -12,7 +12,6 @@
     "Separate sections for projects, tech lab, photography, listings and devlog",
     "Private dashboard for adding and editing everything, with image uploads",
     "Search across the whole site",
-    "A terminal, for those who prefer typing",
     "Small tools in the playground, including a flip calculator and an exposure calculator",
     "Theme Studio with 11 complete looks, saved per visitor"
    ]

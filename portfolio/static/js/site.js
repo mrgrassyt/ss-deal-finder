@@ -35,7 +35,6 @@
   document.addEventListener('keydown', e => {
     const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
     if ((e.key === '/' && !typing) || (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey))) { e.preventDefault(); open('search'); }
-    if (e.key === '`' && !typing) { e.preventDefault(); open('term'); }
   });
 
   // ---- search overlay ------------------------------------------------------------------------------------------
@@ -278,63 +277,5 @@
       });
       hero.addEventListener('pointerleave', () => { nx = ny = 0; raf = raf || requestAnimationFrame(apply); });
     }
-  }
-
-  // ---- terminal ------------------------------------------------------------------------------------------------
-  const term = $('#term');
-  if (term) {
-    const log = $('#term-log'), input = $('#term-input'), body = $('#term-body');
-    let data = null, history = [], hi = 0;
-    const out = (...parts) => { const p = el('p', { className: 'out' }); p.append(...parts); log.append(p); };
-    const link = (text, href) => el('a', { href, textContent: text });
-    const load = async () => data || (data = await (await fetch('/api/site')).json());
-    const page = key => data.pages.find(p => p[0] === key);
-    const go = key => { const p = page(key); if (p) { out('Opening ', link(p[2], p[2]), ' …'); setTimeout(() => { location.href = p[2]; }, 500); } else out('That page is not available.'); };
-    const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
-    const commands = {
-      help: () => { out('Commands:'); [['about', 'who runs this place'], ['projects', 'what is being built'], ['lab', 'hardware experiments'], ['photography', 'open the gallery'],
-        ['shop', 'things for sale here'], ['listings', 'Vinted and eBay listings'], ['devlog', 'latest articles'], ['now', 'what is happening at the moment'],
-        ['contact', 'how to reach me'], ['search <words>', 'search the site'], ['theme', 'switch dark and light'], ['clear', 'empty the screen'], ['exit', 'close the terminal']]
-        .forEach(([c, d]) => out(`  ${c.padEnd(16)}${d}`)); },
-      about: () => { out(data.intro); out('More: ', link('/about', '/about')); },
-      projects: () => { if (!data.projects.length) return out('No projects yet.'); data.projects.forEach(p => out('  ', link(p.title, p.url), `  [${p.status}]`)); },
-      lab: () => { out(count(data.counts.experiment, 'experiment', 'experiments') + ' written up. '); go('lab'); },
-      photography: () => { out(count(data.counts.photo, 'photograph', 'photographs') + ' in the gallery.'); go('photos'); },
-      photos: () => commands.photography(),
-      shop: () => { out(count(data.counts.product, 'item', 'items') + ' in the shop.'); go('shop'); },
-      listings: () => { out(count(data.counts.listing, 'listing', 'listings') + ' from Vinted and eBay.'); go('listings'); },
-      devlog: () => { if (!data.posts.length) return out('Nothing published yet.'); data.posts.forEach(p => out('  ', link(p.title, p.url))); },
-      now: () => go('now'),
-      contact: () => { data.socials.forEach(([n, u]) => out(`  ${n.padEnd(10)}`, link(u, u))); if (data.email) out(`  ${'Email'.padEnd(10)}`, link(data.email, 'mailto:' + data.email)); out('  Or use the form: ', link('/about#contact', '/about#contact')); },
-      search: args => { if (!args) return out('Usage: search <words>'); location.href = '/search?q=' + encodeURIComponent(args); },
-      theme: () => { $('#theme-btn').click(); out('Switched.'); },
-      ls: () => out(data.pages.map(p => p[2] === '/' ? '/' : p[2].slice(1) + '/').join('   ')),
-      cd: args => { const key = (args || '').replace(/\//g, ''); const p = data.pages.find(x => x[2].slice(1) === key || x[0] === key); p ? go(p[0]) : out(`cd: no such page: ${args || ''}`); },
-      open: args => commands.cd(args),
-      whoami: () => out('visitor'),
-      date: () => out(new Date().toString()),
-      echo: args => out(args || ''),
-      sudo: () => out('Nice try.'),
-      clear: () => log.replaceChildren(),
-      exit: () => term.close(),
-    };
-    const run = async line => {
-      log.append(el('p', { className: 'cmd', textContent: line }));
-      const [name, ...rest] = line.trim().split(/\s+/);
-      if (!name) return;
-      try {
-        await load();
-        const fn = commands[name.toLowerCase()];
-        fn ? fn(rest.join(' ')) : out(`${name}: command not found. Type help to see what works.`);
-      } catch (e) { out('The site did not answer. Try again in a moment.'); }
-      body.scrollTop = body.scrollHeight;
-    };
-    term.addEventListener('opened', () => { if (!log.childNodes.length) out('Welcome. Type help and press Enter.'); input.focus(); });
-    body.addEventListener('click', e => { if (!e.target.closest('a') && !getSelection().toString()) input.focus(); });
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { const v = input.value; input.value = ''; if (v.trim()) { history.push(v); hi = history.length; } run(v); }
-      else if (e.key === 'ArrowUp' && history.length) { e.preventDefault(); hi = Math.max(0, hi - 1); input.value = history[hi]; }
-      else if (e.key === 'ArrowDown') { e.preventDefault(); hi = Math.min(history.length, hi + 1); input.value = history[hi] || ''; }
-    });
   }
 })();

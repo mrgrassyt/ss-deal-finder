@@ -319,18 +319,6 @@ async def api_search(request: Request):
     return JSONResponse(search(request.query_params.get("q", "").strip()[:80])[:12])
 
 
-async def api_site(request: Request):
-    """What the terminal needs to answer its commands."""
-    site = settings()
-    return JSONResponse({
-        "intro": site["intro"], "socials": site.get("socials") or [], "email": site.get("contact_email") or "",
-        "projects": [{"title": p["title"], "status": p.get("status"), "url": url_of(p)} for p in public("project")],
-        "posts": [{"title": p["title"], "url": url_of(p)} for p in public("post")[:8]],
-        "counts": {t: len(public(t)) for t in ("experiment", "photo", "product", "listing")},
-        "pages": [[k, label, url] for k, label, url in PAGES + EXTRA_PAGES if k not in set(site.get("hidden_pages") or [])],
-    })
-
-
 # ---- contact form -------------------------------------------------------------------------------------------------------
 _inquiries: dict[str, list[float]] = {}
 
@@ -593,7 +581,7 @@ routes = [
     Route("/shop", shop), Route("/shop/{slug}", product), Route("/listings", listings), Route("/listings/{slug}", listing),
     Route("/devlog", devlog), Route("/devlog/{slug}", post), Route("/about", about), Route("/now", now), Route("/themes", themes),
     Route("/playground", playground), Route("/playground/embed/{slug}", toy_embed), Route("/playground/{slug}", toy),
-    Route("/search", search_page), Route("/api/search", api_search), Route("/api/site", api_site),
+    Route("/search", search_page), Route("/api/search", api_search),
     Route("/api/inquiry", api_inquiry, methods=["POST"]),
     Route("/media/{name}", media_file), Route("/robots.txt", robots), Route("/sitemap.xml", sitemap),
     Route("/healthz", lambda r: PlainTextResponse("ok")),

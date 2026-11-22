@@ -1,0 +1,66 @@
+[
+ {
+  "key": "photo-oldtown-museum-gable",
+  "type": "photo",
+  "published": true,
+  "created": 1795392060.0,
+  "images": {
+   "image": "oldtown-museum-gable.jpg"
+  },
+  "data": {
+   "title": "Rooftops and the museum gable",
+   "caption": "Rīga Old Town rooftops in yellow, orange and red tile, with a dark cathedral tower rising behind a gable marked MUSEUM.",
+   "album": "Old Town",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-oldtown-cathedral-tower",
+  "type": "photo",
+  "published": true,
+  "created": 1795392120.0,
+  "images": {
+   "image": "oldtown-cathedral-tower.jpg"
+  },
+  "data": {
+   "title": "Cathedral tower",
+   "caption": "The cathedral tower with its two clocks, seen from a side street. The sky was replaced in editing.",
+   "album": "Old Town",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-oldtown-brass-band",
+  "type": "photo",
+  "published": true,
+  "created": 1795392180.0,
+  "images": {
+   "image": "oldtown-brass-band.jpg"
+  },
+  "data": {
+   "title": "Brass band",
+   "caption": "A military brass band marching over the cobblestones, tuba and cymbals at the front.",
+   "album": "Old Town",
+   "camera": "Nikon D610",
+   "featured": false
+  }
+ },
+ {
+  "key": "photo-oldtown-swedish-gate",
+  "type": "photo",
+  "published": true,
+  "created": 1795392240.0,
+  "images": {
+   "image": "oldtown-swedish-gate.jpg"
+  },
+  "data": {
+   "title": "Through the Swedish Gate",
+   "caption": "Looking through an old stone gate down a cobbled street hung with bunting and Latvian flags, with one walker in the middle.",
+   "album": "Old Town",
+   "camera": "Nikon D610",
+   "featured": true
+  }
+ }
+]

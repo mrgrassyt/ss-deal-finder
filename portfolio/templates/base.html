@@ -34,7 +34,6 @@
     </nav>
     <div class="nav-tools">
       <button class="icon-btn" data-open="search" aria-label="Search (press /)" title="Search (press /)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.500-3.500"/></svg></button>
-      {% if site.terminal %}<button class="icon-btn" data-open="term" aria-label="Terminal" title="Terminal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 4 4-4 4M12 17h7"/></svg></button>{% endif %}
       <button class="icon-btn" id="theme-btn" aria-label="Switch between dark and light" title="Dark or light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8.500"/><path d="M12 3.500v17a8.500 8.500 0 0 0 0-17z" fill="currentColor"/></svg></button>
       <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg></button>
     </div>
@@ -65,12 +64,6 @@
   </form>
   <div class="s-results" id="s-results"><p class="s-hint">Type to search everything on the site.</p></div>
 </dialog>
-{% if site.terminal %}
-<dialog class="overlay glass term" id="term" aria-label="Terminal">
-  <div class="term-bar"><span>mrgrass.me terminal</span><span class="kbd">esc</span></div>
-  <div class="term-body" id="term-body"><div id="term-log"></div><div class="term-in"><input id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Command"></div></div>
-</dialog>
-{% endif %}
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Image viewer">
   <div class="lb-stage" id="lb-stage">
     <button class="lb-btn lb-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
@@ -79,5 +72,6 @@
   </div>
   <div class="lb-bar" id="lb-bar"></div>
 </div>
+{% if path != '/themes' %}<a class="fun-btn" href="/themes" aria-label="Themes: change how the site looks" title="Themes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.7-.8 1.7-1.7 0-1-.9-1.4-.9-2.4 0-1 .8-1.7 1.8-1.7H17a4 4 0 0 0 4-4c0-4.4-4-8.2-9-8.2z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.500" r="1"/></svg></a>{% endif %}
 </body>
 </html>

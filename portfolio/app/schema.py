@@ -212,7 +212,6 @@ SETTINGS = [
     f("contact_email", "text", "Public contact email", help="Leave empty to keep your address private. Visitors can still use the contact form; messages arrive under Messages."),
     f("hidden_pages", "tags", "Hidden pages", help="Pages to take out of the menu until they have content: " + ", ".join(k for k, _, _ in PAGES[1:] + EXTRA_PAGES)),
     f("hidden_stats", "tags", "Hidden statistics", help="Any of: " + ", ".join(k for k, _ in STATS) + ". Write all to hide the whole block."),
-    f("terminal", "bool", "Show the terminal button"),
 ]
 
 
